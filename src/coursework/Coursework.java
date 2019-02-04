@@ -1,12 +1,19 @@
 package coursework;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,14 +21,18 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JTextArea;
+import javax.swing.JToolBar;
 
 public class Coursework extends JFrame implements ActionListener, KeyListener {
     
     JPanel pnl = new JPanel(new BorderLayout());
     
-    // Note text field
-    JTextField txtShowText = new JTextField(20);
+    // Note input
+    JTextArea txtNewNote = new JTextArea();
+    // Note output
+    JTextArea txtDisplaynotes = new JTextArea();
+    ArrayList<String> note = new ArrayList<>();
     
     public static void main(String[] args) {
         Coursework prg = new Coursework();
@@ -35,13 +46,13 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     }
 
     private void model() {
-        System.out.println("model  not coded yet.");
+        // Add notes to array
+        note.add("Arrays are of fixed length and are inflexible.");
+        note.add("ArrayList can be added to and items can be deleted.");
     }
 
     private void view() {
         Font fnt = new Font("Georgia", Font.PLAIN, 24);
-        
-        JPanel pnlTop = new JPanel();
         
         JMenuBar menuBar = new JMenuBar();
         
@@ -57,25 +68,43 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         menuBar.add(note);        
         menuBar.add(makeMenuItem("Exit", "Exit", "Close this program.", fnt));
         
-        pnlTop.add(menuBar);        
-        add(pnlTop, BorderLayout.NORTH);
+        this.setJMenuBar(menuBar);
         
-        JPanel pnlWest = new JPanel(new FlowLayout());
+        JToolBar toolBar = new JToolBar();
         
-        JButton btnShowText = new JButton("Show note");
-        btnShowText.setActionCommand("NewNote");
-        btnShowText.addActionListener(this);
+        JButton button = null;
+        // makeButton(imgName, toolTipText, actionCommand, altText)
+        button = makeButton("Create", "New Note", "NewNote", "New");
+        toolBar.add(button);
+        button = makeButton("closed door", "Close this note", "Close", "Close");
+        toolBar.add(button);
+        button = makeButton("exit", "Exit from this program", "Exit", "Exit");
+        toolBar.add(button);
         
-        pnlWest.add(btnShowText);
-        pnlWest.add(txtShowText);
+        add(toolBar, BorderLayout.NORTH);
+        
+        JPanel pnlWest = new JPanel();
+        pnlWest.setLayout(new BoxLayout(pnlWest, BoxLayout.Y_AXIS));
+        pnlWest.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        
+        txtNewNote.setFont(fnt);
+        
+        pnlWest.add(txtNewNote);
+        
+        JButton btnAddNote = new JButton("Add note");
+        btnAddNote.setActionCommand("NewNote");
+        btnAddNote.addActionListener(this);
+        
+        pnlWest.add(btnAddNote);
         
         add(pnlWest, BorderLayout.WEST);
         
-        JPanel cen = new JPanel(new FlowLayout());
+        JPanel cen = new JPanel();
+        cen.setLayout(new BoxLayout(cen, BoxLayout.Y_AXIS));
+        cen.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         
-        JLabel cenlbl = new JLabel("Hello world");
-        cenlbl.setFont(fnt);
-        cen.add(cenlbl);
+        txtDisplaynotes.setFont(fnt);
+        cen.add(txtDisplaynotes);
         
         add(cen, BorderLayout.CENTER);
         
@@ -88,7 +117,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     }
 
     private void controller() {
-        System.out.println("controller  not coded yet.");
+        addAllNotes();
     }
     
     protected JMenuItem makeMenuItem(
@@ -106,14 +135,63 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         
         return menuItem;
     }
+    
+    protected JButton makeButton(
+            String imgName,
+            String toolTipText,
+            String actionCommand,
+            String altText){
+        JButton button = new JButton();
+        button.setToolTipText(toolTipText);
+        button.setActionCommand(actionCommand);
+        
+        // Look for the image
+        String imgLocation = System.getProperty("user.dir")
+                + "\\icons\\"
+                + imgName
+                + ".png";
+        
+        File fyle = new File(imgLocation);
+        if(fyle.exists() && !fyle.isDirectory()) {
+            // Image found
+            Icon img = new ImageIcon(imgLocation);
+            button.setIcon(img);
+        } else {
+            // Image NOT found
+            button.setText(altText);
+            System.err.println("Resource not found: " + imgLocation);
+        }
+        
+        return button;
+    }
+    
+    private void addAllNotes() {
+        String allNotes = "";
+        
+        for(String n: note) {
+            allNotes += n + "\n";
+        }
+        
+        txtDisplaynotes.setText(allNotes);
+    }
+    
+    private void addNote(String text) {
+        note.add(text);
+        addAllNotes();
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if("NewNote".equals(e.getActionCommand())) {
-            txtShowText.setText("This is a note.");
+            String newNote = txtNewNote.getText();
+            if(newNote.equals("")) {
+            } else {
+                addNote(newNote);
+                txtNewNote.setText("");
+            }
         }
         if("Close".equals(e.getActionCommand())) {
-            txtShowText.setText("");
+            txtNewNote.setText("");
         }
         if("Exit".equals(e.getActionCommand())) {
             System.exit(0);

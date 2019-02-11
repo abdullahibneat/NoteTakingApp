@@ -2,21 +2,22 @@ package coursework;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -33,6 +34,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     // Note output
     JTextArea txtDisplaynotes = new JTextArea();
     ArrayList<String> note = new ArrayList<>();
+    ArrayList<String> course = new ArrayList<>();
+    JComboBox courseList = new JComboBox();
+    String crse = "";
+    AllNotes allNotes = new AllNotes();
     
     public static void main(String[] args) {
         Coursework prg = new Coursework();
@@ -46,9 +51,25 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     }
 
     private void model() {
-        // Add notes to array
-        note.add("Arrays are of fixed length and are inflexible.");
-        note.add("ArrayList can be added to and items can be deleted.");
+        // Add courses here
+        course.add("COMP1752");
+        course.add("COMP1753");
+        crse = course.get(0);
+        
+        // Create note instances
+        Note nt = new Note();
+        
+        nt.noteID = 1;
+        nt.dayte = getDateAndTime();
+        nt.course = crse;
+        nt.note = "Arrays are of fixed length and are inflexible.";
+        allNotes.allNotes.add(nt);
+        
+        nt.noteID = 2;
+        nt.dayte = getDateAndTime();
+        nt.course = crse;
+        nt.note = "ArrayList can be added to and items can be deleted.";
+        allNotes.allNotes.add(nt);        
     }
 
     private void view() {
@@ -67,6 +88,18 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         
         menuBar.add(note);        
         menuBar.add(makeMenuItem("Exit", "Exit", "Close this program.", fnt));
+        
+        // Add courses to combobox
+        for(String crse: course){
+            courseList.addItem(crse);
+        }
+        courseList.setFont(fnt);
+        courseList.setMaximumSize(courseList.getPreferredSize());
+        courseList.addActionListener(this);
+        courseList.setActionCommand("Course");
+        
+        // Add combobox to menubar
+        menuBar.add(courseList);
         
         this.setJMenuBar(menuBar);
         
@@ -180,6 +213,16 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         addAllNotes();
     }
 
+    private String getDateAndTime() {
+        String UK_DATE_FORMAT_NOW = "dd-MM-yyyy HH:mm:ss";
+        String ukDateAndTime;
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat uksdf = new SimpleDateFormat(UK_DATE_FORMAT_NOW);
+        ukDateAndTime = uksdf.format(cal.getTime());
+        
+        return ukDateAndTime;
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         if("NewNote".equals(e.getActionCommand())) {
@@ -195,6 +238,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         }
         if("Exit".equals(e.getActionCommand())) {
             System.exit(0);
+        }
+        // When selecting course from combobox, update crse
+        if("Course".equals(e.getActionCommand())) {
+            crse = courseList.getSelectedItem().toString();
+            System.out.println(crse);
         }
     }
 

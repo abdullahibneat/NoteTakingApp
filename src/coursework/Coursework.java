@@ -8,9 +8,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
@@ -21,6 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
@@ -38,6 +42,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     JComboBox courseList = new JComboBox();
     String crse = "";
     AllNotes allNotes = new AllNotes();
+    CommonCode cc = new CommonCode();
+    // Store courses in text file
+    ArrayList<String> coursesFile = cc.readTextFile(cc.appDir + "//Courses.txt");
     
     public static void main(String[] args) {
         Coursework prg = new Coursework();
@@ -51,9 +58,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     }
 
     private void model() {
-        // Add courses here
-        course.add("COMP1752");
-        course.add("COMP1753");
+        for(String c: coursesFile){
+            course.add(c);
+        }
         crse = course.get(0);
         
         // Create note instances
@@ -111,6 +118,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         button = makeButton("closed door", "Close this note", "Close", "Close");
         toolBar.add(button);
         button = makeButton("exit", "Exit from this program", "Exit", "Exit");
+        toolBar.add(button);
+        button = makeButton("book", "Add a new course", "AddCourse", "Add course");
         toolBar.add(button);
         
         add(toolBar, BorderLayout.NORTH);
@@ -176,6 +185,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         JButton button = new JButton();
         button.setToolTipText(toolTipText);
         button.setActionCommand(actionCommand);
+        button.addActionListener(this);
         
         // Look for the image
         String imgLocation = System.getProperty("user.dir")
@@ -242,6 +252,21 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         if("Course".equals(e.getActionCommand())) {
             crse = courseList.getSelectedItem().toString();
             System.out.println(crse);
+        }
+        if("AddCourse".equals(e.getActionCommand())) {
+            // Input dialog
+            String newCourse = JOptionPane.showInputDialog("Enter course name");
+            // Add new course to arraylist
+            coursesFile.add(newCourse);
+            try {
+                // Write new arraylist to file
+                cc.writeTextFile(cc.appDir + "//Courses.txt", coursesFile);
+                courseList.addItem(newCourse);
+                // Auto-select new course in combobox
+                courseList.setSelectedItem(newCourse);
+            } catch (IOException ex) {
+                System.err.println("Error while adding course to text file: " + ex);
+            }
         }
     }
 

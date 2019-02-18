@@ -44,7 +44,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     }
     
     // Using MVC
-    public Coursework() {
+    private Coursework() {
         model();
         view();
         controller();
@@ -57,19 +57,18 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         crse = course.get(0);
         
         // Create note instances
-        Note nt = new Note();
-        
-        nt.noteID = 1;
-        nt.dayte = getDateAndTime();
-        nt.course = crse;
-        nt.note = "Arrays are of fixed length and are inflexible.";
-        allNotes.allNotes.add(nt);
-        
-        nt.noteID = 2;
-        nt.dayte = getDateAndTime();
-        nt.course = crse;
-        nt.note = "ArrayList can be added to and items can be deleted.";
-        allNotes.allNotes.add(nt);        
+        // ONLY REQUIRED ON FIRST TIME RUNNING THIS PROGRAM
+//        Note nt = new Note();
+//        
+//        nt.setNoteID(1);
+//        nt.setCourse(crse);
+//        nt.setNote("Arrays are of fixed length and are inflexible.");
+//        allNotes.addNote(nt.getNoteID(), nt.getCourse(), nt.getNote());
+//        
+//        nt.setNoteID(2);
+//        nt.setCourse(crse);
+//        nt.setNote("ArrayList can be added to and items can be deleted.");
+//        allNotes.addNote(nt.getNoteID(), nt.getCourse(), nt.getNote());
     }
 
     private void view() {
@@ -199,13 +198,13 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     }
     
     private void addAllNotes() {
-        String allNotes = "";
+        String txtNotes = "";
         
-        for(String n: note) {
-            allNotes += n + "\n";
+        for(Note n: allNotes.getAllNotes()) {
+            txtNotes += n.getNote() + "\n";
         }
         
-        txtDisplaynotes.setText(allNotes);
+        txtDisplaynotes.setText(txtNotes);
     }
     
     private void addNote(String text) {

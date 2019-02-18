@@ -1,0 +1,2 @@
+1	COMP1752	2019-02-24 19:16:59	Arrays are of fixed length and are inflexible.
+2	COMP1752	2019-02-24 19:16:59	ArrayList can be added to and items can be deleted.

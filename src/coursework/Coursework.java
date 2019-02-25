@@ -264,7 +264,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
      * 
      */
     private void addNote(String text) {
-        note.add(text);
+        Note nt = new Note();
+        nt.setNoteID(allNotes.getAllNotes().size()+1);
+        nt.setCourse(crse);
+        nt.setNote(text);
+        allNotes.addNote(nt.getNoteID(), nt.getCourse(), nt.getNote());
         addAllNotes();
     }
 

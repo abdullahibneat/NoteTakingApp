@@ -1,11 +1,10 @@
 package coursework;
 
-public class Note {
+public class Note extends CommonCode {
     private int noteID = 0;
     private String course = "";
     private String dayte = "";
     private String note = "";
-    private CommonCode cc = new CommonCode();
     
     public Note() {
         
@@ -30,7 +29,7 @@ public class Note {
     }
     
     public void setDayte() {
-        dayte = cc.orderedDate;
+        dayte = orderedDate;
     }
     
     public void setDayte(String d) {

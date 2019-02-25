@@ -3,10 +3,9 @@ package coursework;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class AllNotes {
+public class AllNotes extends CommonCode {
     private ArrayList<Note> allNotes = new ArrayList<>();
     private String crse = "";
-    private CommonCode cc = new CommonCode();
     
     public AllNotes() {
         readAllNotes();
@@ -15,7 +14,7 @@ public class AllNotes {
     private void readAllNotes() {
         ArrayList<String> readNotes = new ArrayList<>();
         
-        readNotes = cc.readTextFile(cc.appDir + "\\Notes.txt");
+        readNotes = readTextFile(appDir + "\\Notes.txt");
         System.out.println(readNotes.get(0));
         
         if("File not found".equals(readNotes.get(0))) {
@@ -49,7 +48,7 @@ public class AllNotes {
     }
 
     private void writeAllNotes() {
-        String path = cc.appDir + "\\Notes.txt";
+        String path = appDir + "\\Notes.txt";
         ArrayList<String> writeNote = new ArrayList<>();
         
         for(Note n: allNotes) {
@@ -60,7 +59,7 @@ public class AllNotes {
             writeNote.add(tmp);
         }
         try {
-            cc.writeTextFile(path, writeNote);
+            writeTextFile(path, writeNote);
         } catch (IOException ex) {
             System.out.println("Problem! " + path);
         }

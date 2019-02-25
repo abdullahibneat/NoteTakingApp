@@ -3,14 +3,28 @@ package coursework;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * AllNotes class
+ * It holds all the Note objects within an array.
+ *
+ * @author Abdullah Ibne Atiq
+ */
 public class AllNotes extends CommonCode {
     private ArrayList<Note> allNotes = new ArrayList<>();
     private String crse = "";
     
+    /**
+     * Constructor
+     * 
+     */
     public AllNotes() {
         readAllNotes();
     }
 
+    /**
+     * Function to read all the notes from the "Notes.txt" file.
+     * 
+     */
     private void readAllNotes() {
         ArrayList<String> readNotes = new ArrayList<>();
         
@@ -33,6 +47,13 @@ public class AllNotes extends CommonCode {
         }
     }
     
+    /**
+     * Function to add a new note to the ArrayList and store it permanently inside the "Notes.txt" file.
+     *
+     * @param NoteID Note ID
+     * @param course Course
+     * @param note Note contents
+     */
     public void addNote(int NoteID, String course, String note) {
         Note myNote = new Note();
         myNote.setNoteID(NoteID);
@@ -43,10 +64,19 @@ public class AllNotes extends CommonCode {
         writeAllNotes();
     }
     
+    /**
+     * Get all the notes as an ArrayList.
+     *
+     * @return Notes
+     */
     public ArrayList<Note> getAllNotes() {
         return allNotes;
     }
 
+    /**
+     * Function to write notes to disk.
+     * 
+     */
     private void writeAllNotes() {
         String path = appDir + "\\Notes.txt";
         ArrayList<String> writeNote = new ArrayList<>();

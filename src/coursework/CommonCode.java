@@ -18,9 +18,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 
+/**
+ * Collection of commonly used methods.
+ * 
+ * @author Abdullah Ibne Atiq
+ */
 public class CommonCode {
+    
     // These allow the system date to be accessed in ordered, UK and US formats.
-
     public static final String ORDERED_DATE_TIME_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
     public static final String UK_DATE_TIME_FORMAT_NOW = "dd-MM-yyyy HH:mm:ss";
     public static final String US_DATE_TIME_FORMAT_NOW = "MM-dd-yyyy HH:mm:ss";
@@ -33,7 +38,7 @@ public class CommonCode {
     public String orderedDate;
     public String ukDate;
     public String usDate;
-
+    
     // These are some useful items.
     public final String userName = System.getProperty("user.name");
     public final String appDir = System.getProperty("user.dir");
@@ -42,16 +47,25 @@ public class CommonCode {
 
     private ActionListener calledBy;
 
+    /**
+     * Constructor (with ActionListener)
+     */
     CommonCode(ActionListener call) {
         calledBy = call;
         initialiseVariables();
     }
 
+    /**
+     * Constructor
+     */
     CommonCode() {
         initialiseVariables();
     }
 
-    // This is used by CommonCode to set up the public variables.
+    /**
+     * This is used by CommonCode to set up the public variables.
+     * 
+     */
     private void initialiseVariables() {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat o1sdf = new SimpleDateFormat(ORDERED_DATE_TIME_FORMAT_NOW);
@@ -68,6 +82,15 @@ public class CommonCode {
         usDate = us2sdf.format(cal.getTime());
     }
 
+    /**
+     * Function to create JMenuItems in a single line.
+     *
+     * @param txt Sets text of menuItem
+     * @param actionCommand Sets actionCommand name
+     * @param toolTipText Sets tool-tip text
+     * @param fnt Sets font
+     * @return menuItem
+     */
     protected JMenuItem makeMenuItem(String txt,
             String actionCommand,
             String toolTipText,
@@ -81,6 +104,15 @@ public class CommonCode {
         return mnuItem;
     }
 
+    /**
+     * Function to create a button with icon in a single line.
+     *
+     * @param imageName Name of PNG icon (without extension)
+     * @param actionCommand Set actionCommand name
+     * @param toolTipText Sets tool-tip text
+     * @param altText Sets text of button when icon not found
+     * @return button
+     */
     protected JButton makeNavigationButton(String imageName,
             String actionCommand,
             String toolTipText,
@@ -108,6 +140,11 @@ public class CommonCode {
         return button;
     }
 
+    /**
+     * Automatically get the current date and time, with correct format
+     *
+     * @return Date
+     */
     public String getDateAndTime() {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat uksdf = new SimpleDateFormat(UK_DATE_FORMAT_NOW);
@@ -116,10 +153,13 @@ public class CommonCode {
         return ukDateAndTime;
     }
 
-    // This reads a text file into an ArrayList of Strings. The path to the
-    // file has to be added. Use appDir if the files are in the application
-    // directory. Use fileSeperator if the app may be running under a
-    // different OS.
+    /**
+     * Function to read the contents of a file and return each line
+     * as an element within an ArrayList.
+     *
+     * @param fileName File Name
+     * @return File contents
+     */
     public ArrayList<String> readTextFile(String fileName) {
         ArrayList file = new ArrayList();
         String line;
@@ -145,17 +185,13 @@ public class CommonCode {
 
         return file;
     }
-
-    // This writes to a text file using an ArrayList of Strings. The path to the
-    // file has to be added. Use appDir if the files are in the application
-    // directory. Use fileSeperator if the app may be running under a
-    // different OS.
+    
     /**
      * Change the contents of text file in its entirety, overwriting any
      * existing text.
      *
-     * @param fn
-     * @param aContents
+     * @param fn File name
+     * @param outputText ArrayList to write
      * @throws java.io.FileNotFoundException
      */
     public void writeTextFile(String fn, ArrayList<String> outputText)

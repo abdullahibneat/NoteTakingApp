@@ -9,11 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
@@ -29,40 +25,56 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 
+/**
+ * Main program
+ *
+ * @author Abdullah Ibne Atiq
+ */
 public class Coursework extends JFrame implements ActionListener, KeyListener {
-    
-    JPanel pnl = new JPanel(new BorderLayout());
-    
+
+    private JPanel pnl = new JPanel(new BorderLayout());
+
     // Note input
-    JTextArea txtNewNote = new JTextArea();
+    private JTextArea txtNewNote = new JTextArea();
     // Note output
-    JTextArea txtDisplaynotes = new JTextArea();
-    ArrayList<String> note = new ArrayList<>();
-    ArrayList<String> course = new ArrayList<>();
-    JComboBox courseList = new JComboBox();
-    String crse = "";
-    AllNotes allNotes = new AllNotes();
-    CommonCode cc = new CommonCode();
+    private JTextArea txtDisplaynotes = new JTextArea();
+    private ArrayList<String> note = new ArrayList<>();
+    private ArrayList<String> course = new ArrayList<>();
+    private JComboBox courseList = new JComboBox();
+    private String crse = "";
+    private AllNotes allNotes = new AllNotes();
+    private CommonCode cc = new CommonCode();
     // Store courses in text file
-    ArrayList<String> coursesFile = cc.readTextFile(cc.appDir + "//Courses.txt");
-    
+    private ArrayList<String> coursesFile = cc.readTextFile(cc.appDir + "//Courses.txt");
+
+    /**
+     * Main class
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         Coursework prg = new Coursework();
     }
-    
-    // Using MVC
+
+    /**
+     * Constructor Use MVC
+     */
     private Coursework() {
         model();
         view();
         controller();
     }
 
+    /**
+     * Model
+     *
+     */
     private void model() {
-        for(String c: coursesFile){
+        for (String c : coursesFile) {
             course.add(c);
         }
         crse = course.get(0);
-        
+
         // Create note instances
         // ONLY REQUIRED ON FIRST TIME RUNNING THIS PROGRAM
 //        Note nt = new Note();
@@ -78,123 +90,149 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
 //        allNotes.addNote(nt.getNoteID(), nt.getCourse(), nt.getNote());
     }
 
+    /**
+     * View
+     *
+     */
     private void view() {
         Font fnt = new Font("Georgia", Font.PLAIN, 24);
-        
+
         JMenuBar menuBar = new JMenuBar();
-        
-        JMenu note = new JMenu("Note");        
+
+        JMenu note = new JMenu("Note");
         note.setToolTipText("Note tasks");
         note.setFont(fnt);
-        
+
         // makeMenuItem(txt, actionCommand, toolTipText, fnt)
         note.add(makeMenuItem("New", "NewNote", "Create a new note.", fnt));
-        note.addSeparator();        
+        note.addSeparator();
         note.add(makeMenuItem("Close", "Close", "Clear the current note.", fnt));
-        
-        menuBar.add(note);        
+
+        menuBar.add(note);
         menuBar.add(makeMenuItem("Exit", "Exit", "Close this program.", fnt));
-        
+
         // Add courses to combobox
-        for(String crse: course){
+        for (String crse : course) {
             courseList.addItem(crse);
         }
         courseList.setFont(fnt);
         courseList.setMaximumSize(courseList.getPreferredSize());
         courseList.addActionListener(this);
         courseList.setActionCommand("Course");
-        
+
         // Add combobox to menubar
         menuBar.add(courseList);
-        
+
         this.setJMenuBar(menuBar);
-        
+
         JToolBar toolBar = new JToolBar();
-        
+
         JButton button = null;
-        // makeButton(imgName, toolTipText, actionCommand, altText)
-        button = makeButton("Create", "New Note", "NewNote", "New");
+        // makeButton(imgName, actionCommand, toolTipText, altText)
+        button = makeButton("Create", "NewNote", "New Note", "New");
         toolBar.add(button);
-        button = makeButton("closed door", "Close this note", "Close", "Close");
+        button = makeButton("closed door", "Close", "Close this note", "Close");
         toolBar.add(button);
-        button = makeButton("exit", "Exit from this program", "Exit", "Exit");
+        button = makeButton("exit", "Exit", "Exit from this program", "Exit");
         toolBar.add(button);
-        button = makeButton("book", "Add a new course", "AddCourse", "Add course");
+        button = makeButton("book", "AddCourse", "Add a new course", "Add course");
         toolBar.add(button);
-        
+
         add(toolBar, BorderLayout.NORTH);
-        
+
         JPanel pnlWest = new JPanel();
         pnlWest.setLayout(new BoxLayout(pnlWest, BoxLayout.Y_AXIS));
         pnlWest.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        
+
         txtNewNote.setFont(fnt);
-        
+
         pnlWest.add(txtNewNote);
-        
+
         JButton btnAddNote = new JButton("Add note");
         btnAddNote.setActionCommand("NewNote");
         btnAddNote.addActionListener(this);
-        
+
         pnlWest.add(btnAddNote);
-        
+
         add(pnlWest, BorderLayout.WEST);
-        
+
         JPanel cen = new JPanel();
         cen.setLayout(new BoxLayout(cen, BoxLayout.Y_AXIS));
         cen.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        
+
         txtDisplaynotes.setFont(fnt);
         cen.add(txtDisplaynotes);
-        
+
         add(cen, BorderLayout.CENTER);
-        
+
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setTitle("Note Taking App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         // Show JFrame
         setVisible(true);
     }
 
+    /**
+     * Controller
+     *
+     */
     private void controller() {
         addAllNotes();
     }
-    
+
+    /**
+     * Function to create JMenuItems in a single line.
+     *
+     * @param txt Sets text of menuItem
+     * @param actionCommand Sets actionCommand name
+     * @param toolTipText Sets tool-tip text
+     * @param fnt Sets font
+     * @return menuItem
+     */
     protected JMenuItem makeMenuItem(
             String txt,
             String actionCommand,
             String toolTipText,
             Font fnt) {
-        
+
         JMenuItem menuItem = new JMenuItem();
         menuItem.setText(txt);
         menuItem.setActionCommand(actionCommand);
         menuItem.setToolTipText(txt);
         menuItem.setFont(fnt);
         menuItem.addActionListener(this);
-        
+
         return menuItem;
     }
-    
+
+    /**
+     * Function to create a button with icon in a single line.
+     *
+     * @param imgName Name of PNG icon (without extension)
+     * @param actionCommand Set actionCommand name
+     * @param toolTipText Sets tool-tip text
+     * @param altText Sets text of button when icon not found
+     * @return button
+     */
     protected JButton makeButton(
             String imgName,
-            String toolTipText,
             String actionCommand,
-            String altText){
+            String toolTipText,
+            String altText) {
         JButton button = new JButton();
         button.setToolTipText(toolTipText);
         button.setActionCommand(actionCommand);
         button.addActionListener(this);
-        
+
         // Look for the image
         String imgLocation = System.getProperty("user.dir")
                 + "\\icons\\"
                 + imgName
                 + ".png";
-        
+
         File fyle = new File(imgLocation);
-        if(fyle.exists() && !fyle.isDirectory()) {
+        if (fyle.exists() && !fyle.isDirectory()) {
             // Image found
             Icon img = new ImageIcon(imgLocation);
             button.setIcon(img);
@@ -203,57 +241,66 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
             button.setText(altText);
             System.err.println("Resource not found: " + imgLocation);
         }
-        
+
         return button;
     }
-    
+
+    /**
+     * Loads all notes into the text field on runtime.
+     *
+     */
     private void addAllNotes() {
         String txtNotes = "";
-        
-        for(Note n: allNotes.getAllNotes()) {
+
+        for (Note n : allNotes.getAllNotes()) {
             txtNotes += n.getNote() + "\n";
         }
-        
+
         txtDisplaynotes.setText(txtNotes);
     }
-    
+
+    /**
+     * Create and store a new note.
+     * 
+     */
     private void addNote(String text) {
         note.add(text);
         addAllNotes();
     }
 
-    private String getDateAndTime() {
-        String UK_DATE_FORMAT_NOW = "dd-MM-yyyy HH:mm:ss";
-        String ukDateAndTime;
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat uksdf = new SimpleDateFormat(UK_DATE_FORMAT_NOW);
-        ukDateAndTime = uksdf.format(cal.getTime());
-        
-        return ukDateAndTime;
-    }
-    
     @Override
+    /**
+     * actionPerformed
+     * Logic for user behaviour
+     */
     public void actionPerformed(ActionEvent e) {
-        if("NewNote".equals(e.getActionCommand())) {
+        // "Add Note" button
+        if ("NewNote".equals(e.getActionCommand())) {
             String newNote = txtNewNote.getText();
-            if(newNote.equals("")) {
+            if (newNote.equals("")) {
             } else {
                 addNote(newNote);
                 txtNewNote.setText("");
             }
         }
-        if("Close".equals(e.getActionCommand())) {
+        
+        // "Close" button
+        if ("Close".equals(e.getActionCommand())) {
             txtNewNote.setText("");
         }
-        if("Exit".equals(e.getActionCommand())) {
+        
+        // Exit button
+        if ("Exit".equals(e.getActionCommand())) {
             System.exit(0);
         }
         // When selecting course from combobox, update crse
-        if("Course".equals(e.getActionCommand())) {
+        if ("Course".equals(e.getActionCommand())) {
             crse = courseList.getSelectedItem().toString();
             System.out.println(crse);
         }
-        if("AddCourse".equals(e.getActionCommand())) {
+        
+        // "Add course" button
+        if ("AddCourse".equals(e.getActionCommand())) {
             // Input dialog
             String newCourse = JOptionPane.showInputDialog("Enter course name");
             // Add new course to arraylist

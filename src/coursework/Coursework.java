@@ -40,7 +40,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     private JTextArea txtDisplaynotes = new JTextArea();
     private ArrayList<String> note = new ArrayList<>();
     private ArrayList<String> course = new ArrayList<>();
-    private JComboBox courseList = new JComboBox();
+    // Add <String> to fix raw type warning
+    private JComboBox<String> courseList = new JComboBox<String>();
     private String crse = "";
     private AllNotes allNotes = new AllNotes();
     private CommonCode cc = new CommonCode();

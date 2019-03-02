@@ -192,19 +192,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         txtDisplaynotes.setText(txtNotes);
     }
 
-    /**
-     * Create and store a new note.
-     * 
-     */
-    private void addNote(String text) {
-        Note nt = new Note();
-        nt.setNoteID(allNotes.getAllNotes().size()+1);
-        nt.setCourse(crse);
-        nt.setNote(text);
-        allNotes.addNote(nt.getNoteID(), nt.getCourse(), nt.getNote());
-        addAllNotes();
-    }
-
     @Override
     /**
      * actionPerformed
@@ -216,7 +203,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
             String newNote = txtNewNote.getText();
             if (newNote.equals("")) {
             } else {
-                addNote(newNote);
+                allNotes.addNote(crse, newNote);
+                addAllNotes();
                 txtNewNote.setText("");
             }
         }

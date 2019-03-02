@@ -161,7 +161,8 @@ public class CommonCode {
      * @return File contents
      */
     public ArrayList<String> readTextFile(String fileName) {
-        ArrayList file = new ArrayList();
+        // Add <String> to fix raw type warning
+        ArrayList<String> file = new ArrayList<>();
         String line;
         if ((fileName == null) || (fileName.equals(""))) {
             System.out.println("No file name specified.");

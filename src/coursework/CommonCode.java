@@ -49,6 +49,8 @@ public class CommonCode {
 
     /**
      * Constructor (with ActionListener)
+     * 
+     * @param call Reference to ActionListener
      */
     CommonCode(ActionListener call) {
         calledBy = call;

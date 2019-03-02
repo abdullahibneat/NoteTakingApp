@@ -112,6 +112,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         for (String crse : course) {
             courseList.addItem(crse);
         }
+        // Create an "All Courses" item
+        courseList.addItem("All Courses");
         courseList.setFont(fnt);
         courseList.setMaximumSize(courseList.getPreferredSize());
         courseList.addActionListener(this);
@@ -186,7 +188,16 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         String txtNotes = "";
 
         for (Note n : allNotes.getAllNotes()) {
-            txtNotes += n.getNote() + "\n";
+            // If user selects "All Courses" from dropdown, show all the notes
+            if(crse.equals("All Courses")){
+                txtNotes += n.getNote() + "\n";
+            }
+            else {
+                // If user selects a specific course, show its notes
+                if(n.getCourse().equals(crse)){
+                    txtNotes += n.getNote() + "\n";
+                }
+            }
         }
 
         txtDisplaynotes.setText(txtNotes);
@@ -220,8 +231,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         }
         // When selecting course from combobox, update crse
         if ("Course".equals(e.getActionCommand())) {
-            crse = courseList.getSelectedItem().toString();
-            System.out.println(crse);
+            // Simple sorting: add relevant notes every time ComboBox value is changed
+            addAllNotes();
         }
         
         // "Add course" button

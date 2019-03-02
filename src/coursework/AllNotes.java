@@ -49,6 +49,25 @@ public class AllNotes extends CommonCode {
     
     /**
      * Function to add a new note to the ArrayList and store it permanently inside the "Notes.txt" file.
+     * NoteID is set automatically.
+     *
+     * @param course Course
+     * @param note Note contents
+     */
+    public void addNote(String course, String note) {
+        Note myNote = new Note();
+        myNote.setNoteID(allNotes.size() + 1);
+        myNote.setCourse(course);
+        myNote.setDayte();
+        myNote.setNote(note);
+        allNotes.add(myNote);
+        writeAllNotes();
+    }
+    
+    /**
+     * Not recommended
+     * Function to add a new note to the ArrayList and store it permanently inside the "Notes.txt" file.
+     * Note ID is defined manually.
      *
      * @param NoteID Note ID
      * @param course Course

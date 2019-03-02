@@ -28,21 +28,21 @@ import javax.swing.JToolBar;
  */
 public class Coursework extends JFrame implements ActionListener, KeyListener {
 
-    private JPanel pnl = new JPanel(new BorderLayout());
+    private final JPanel pnl = new JPanel(new BorderLayout());
 
     // Note input
-    private JTextArea txtNewNote = new JTextArea();
+    private final JTextArea txtNewNote = new JTextArea();
     // Note output
-    private JTextArea txtDisplaynotes = new JTextArea();
-    private ArrayList<String> note = new ArrayList<>();
-    private ArrayList<String> course = new ArrayList<>();
+    private final JTextArea txtDisplaynotes = new JTextArea();
+    private final ArrayList<String> note = new ArrayList<>();
+    private final ArrayList<String> course = new ArrayList<>();
     // Add <String> to fix raw type warning
-    private JComboBox<String> courseList = new JComboBox<String>();
+    private final JComboBox<String> courseList = new JComboBox<>();
     private String crse = "";
-    private AllNotes allNotes = new AllNotes();
-    private CommonCode cc = new CommonCode(this);
+    private final AllNotes allNotes = new AllNotes();
+    private final CommonCode cc = new CommonCode(this);
     // Store courses in text file
-    private ArrayList<String> coursesFile = cc.readTextFile(cc.appDir + "//Courses.txt");
+    private final ArrayList<String> coursesFile = cc.readTextFile(cc.appDir + "//Courses.txt");
 
     /**
      * Main class
@@ -96,16 +96,16 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
 
         JMenuBar menuBar = new JMenuBar();
 
-        JMenu note = new JMenu("Note");
-        note.setToolTipText("Note tasks");
-        note.setFont(fnt);
+        JMenu menuItem = new JMenu("Note");
+        menuItem.setToolTipText("Note tasks");
+        menuItem.setFont(fnt);
 
         // makeMenuItem(txt, actionCommand, toolTipText, fnt)
-        note.add(cc.makeMenuItem("New", "NewNote", "Create a new note.", fnt));
-        note.addSeparator();
-        note.add(cc.makeMenuItem("Close", "Close", "Clear the current note.", fnt));
+        menuItem.add(cc.makeMenuItem("New", "NewNote", "Create a new note.", fnt));
+        menuItem.addSeparator();
+        menuItem.add(cc.makeMenuItem("Close", "Close", "Clear the current note.", fnt));
 
-        menuBar.add(note);
+        menuBar.add(menuItem);
         menuBar.add(cc.makeMenuItem("Exit", "Exit", "Close this program.", fnt));
 
         // Add courses to combobox

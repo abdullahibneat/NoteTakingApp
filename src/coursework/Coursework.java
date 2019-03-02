@@ -7,19 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -44,7 +40,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     private JComboBox<String> courseList = new JComboBox<String>();
     private String crse = "";
     private AllNotes allNotes = new AllNotes();
-    private CommonCode cc = new CommonCode();
+    private CommonCode cc = new CommonCode(this);
     // Store courses in text file
     private ArrayList<String> coursesFile = cc.readTextFile(cc.appDir + "//Courses.txt");
 
@@ -105,12 +101,12 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         note.setFont(fnt);
 
         // makeMenuItem(txt, actionCommand, toolTipText, fnt)
-        note.add(makeMenuItem("New", "NewNote", "Create a new note.", fnt));
+        note.add(cc.makeMenuItem("New", "NewNote", "Create a new note.", fnt));
         note.addSeparator();
-        note.add(makeMenuItem("Close", "Close", "Clear the current note.", fnt));
+        note.add(cc.makeMenuItem("Close", "Close", "Clear the current note.", fnt));
 
         menuBar.add(note);
-        menuBar.add(makeMenuItem("Exit", "Exit", "Close this program.", fnt));
+        menuBar.add(cc.makeMenuItem("Exit", "Exit", "Close this program.", fnt));
 
         // Add courses to combobox
         for (String crse : course) {
@@ -130,13 +126,13 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
 
         JButton button = null;
         // makeButton(imgName, actionCommand, toolTipText, altText)
-        button = makeButton("Create", "NewNote", "New Note", "New");
+        button = cc.makeNavigationButton("Create", "NewNote", "New Note", "New");
         toolBar.add(button);
-        button = makeButton("closed door", "Close", "Close this note", "Close");
+        button = cc.makeNavigationButton("closed door", "Close", "Close this note", "Close");
         toolBar.add(button);
-        button = makeButton("exit", "Exit", "Exit from this program", "Exit");
+        button = cc.makeNavigationButton("exit", "Exit", "Exit from this program", "Exit");
         toolBar.add(button);
-        button = makeButton("book", "AddCourse", "Add a new course", "Add course");
+        button = cc.makeNavigationButton("book", "AddCourse", "Add a new course", "Add course");
         toolBar.add(button);
 
         add(toolBar, BorderLayout.NORTH);
@@ -180,70 +176,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
      */
     private void controller() {
         addAllNotes();
-    }
-
-    /**
-     * Function to create JMenuItems in a single line.
-     *
-     * @param txt Sets text of menuItem
-     * @param actionCommand Sets actionCommand name
-     * @param toolTipText Sets tool-tip text
-     * @param fnt Sets font
-     * @return menuItem
-     */
-    protected JMenuItem makeMenuItem(
-            String txt,
-            String actionCommand,
-            String toolTipText,
-            Font fnt) {
-
-        JMenuItem menuItem = new JMenuItem();
-        menuItem.setText(txt);
-        menuItem.setActionCommand(actionCommand);
-        menuItem.setToolTipText(txt);
-        menuItem.setFont(fnt);
-        menuItem.addActionListener(this);
-
-        return menuItem;
-    }
-
-    /**
-     * Function to create a button with icon in a single line.
-     *
-     * @param imgName Name of PNG icon (without extension)
-     * @param actionCommand Set actionCommand name
-     * @param toolTipText Sets tool-tip text
-     * @param altText Sets text of button when icon not found
-     * @return button
-     */
-    protected JButton makeButton(
-            String imgName,
-            String actionCommand,
-            String toolTipText,
-            String altText) {
-        JButton button = new JButton();
-        button.setToolTipText(toolTipText);
-        button.setActionCommand(actionCommand);
-        button.addActionListener(this);
-
-        // Look for the image
-        String imgLocation = System.getProperty("user.dir")
-                + "\\icons\\"
-                + imgName
-                + ".png";
-
-        File fyle = new File(imgLocation);
-        if (fyle.exists() && !fyle.isDirectory()) {
-            // Image found
-            Icon img = new ImageIcon(imgLocation);
-            button.setIcon(img);
-        } else {
-            // Image NOT found
-            button.setText(altText);
-            System.err.println("Resource not found: " + imgLocation);
-        }
-
-        return button;
     }
 
     /**

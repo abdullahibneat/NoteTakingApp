@@ -61,7 +61,7 @@ public class Note extends CommonCode {
      * Set the current date and time for this note.
      */
     public void setDayte() {
-        dayte = orderedDate;
+        dayte = ukDateAndTime;
     }
     
     /**

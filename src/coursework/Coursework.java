@@ -232,6 +232,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         // When selecting course from combobox, update crse
         if ("Course".equals(e.getActionCommand())) {
             // Simple sorting: add relevant notes every time ComboBox value is changed
+            crse = courseList.getSelectedItem().toString();
             addAllNotes();
         }
         

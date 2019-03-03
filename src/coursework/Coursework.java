@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -43,6 +42,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     private final CommonCode cc = new CommonCode(this);
     // Store courses in text file
     private final ArrayList<String> coursesFile = cc.readTextFile(cc.appDir + "//Courses.txt");
+    private final AllCourses allCourses = new AllCourses();
 
     /**
      * Main class
@@ -67,11 +67,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
      *
      */
     private void model() {
-        for (String c : coursesFile) {
-            course.add(c);
-        }
-        crse = course.get(0);
-
         // Create note instances
         // ONLY REQUIRED ON FIRST TIME RUNNING THIS PROGRAM
 //        Note nt = new Note();
@@ -108,12 +103,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         menuBar.add(menuItem);
         menuBar.add(cc.makeMenuItem("Exit", "Exit", "Close this program.", fnt));
 
-        // Add courses to combobox
-        for (String crse : course) {
-            courseList.addItem(crse);
-        }
-        // Create an "All Courses" item
-        courseList.addItem("All Courses");
         courseList.setFont(fnt);
         courseList.setMaximumSize(courseList.getPreferredSize());
         courseList.addActionListener(this);
@@ -177,7 +166,20 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
      *
      */
     private void controller() {
+        addAllCourses();
         addAllNotes();
+    }
+    
+    private void addAllCourses() {
+        courseList.removeAllItems();
+        // Add courses to combobox
+        for (Course c : allCourses.getAllCourses()) {
+            courseList.addItem(c.getCourseName());
+        }
+        crse = courseList.getItemAt(0);
+        
+        // Create an "All Courses" item
+        courseList.addItem("All Courses");
     }
 
     /**
@@ -231,8 +233,14 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         }
         // When selecting course from combobox, update crse
         if ("Course".equals(e.getActionCommand())) {
-            // Simple sorting: add relevant notes every time ComboBox value is changed
-            crse = courseList.getSelectedItem().toString();
+            // getSelectedItem() causes NullPointerException after a new course is created.
+            // However, no functionality breaks
+            try {
+                // Simple sorting: add relevant notes every time ComboBox value is changed
+                crse = courseList.getSelectedItem().toString();
+            } catch(Exception err) {
+                System.out.println("Error: " + err);
+            }
             addAllNotes();
         }
         
@@ -240,17 +248,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         if ("AddCourse".equals(e.getActionCommand())) {
             // Input dialog
             String newCourse = JOptionPane.showInputDialog("Enter course name");
-            // Add new course to arraylist
-            coursesFile.add(newCourse);
-            try {
-                // Write new arraylist to file
-                cc.writeTextFile(cc.appDir + "//Courses.txt", coursesFile);
-                courseList.addItem(newCourse);
-                // Auto-select new course in combobox
-                courseList.setSelectedItem(newCourse);
-            } catch (IOException ex) {
-                System.err.println("Error while adding course to text file: " + ex);
-            }
+            // Create new course
+            allCourses.addCourse(newCourse);
+            addAllCourses();
+            courseList.setSelectedItem(newCourse);
         }
     }
 

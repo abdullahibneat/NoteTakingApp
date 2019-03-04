@@ -12,6 +12,8 @@ import java.util.ArrayList;
 public class AllNotes extends CommonCode {
     private ArrayList<Note> allNotes = new ArrayList<>();
     private String crse = "";
+    // Unique identifier: store last note ID
+    private int lastNoteID = 0;
     
     /**
      * Constructor
@@ -43,6 +45,10 @@ public class AllNotes extends CommonCode {
                 n.setNote(tmp[3]);
                 
                 allNotes.add(n);
+                
+                if(lastNoteID < n.getNoteID()) {
+                    lastNoteID = n.getNoteID();
+                }
             }
         }
     }
@@ -56,7 +62,8 @@ public class AllNotes extends CommonCode {
      */
     public void addNote(String course, String note) {
         Note myNote = new Note();
-        myNote.setNoteID(allNotes.size() + 1);
+        lastNoteID++;
+        myNote.setNoteID(lastNoteID);
         myNote.setCourse(course);
         myNote.setDayte();
         myNote.setNote(note);

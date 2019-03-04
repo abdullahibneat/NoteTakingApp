@@ -18,6 +18,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
 /**
@@ -28,7 +29,7 @@ import javax.swing.JToolBar;
 public class Coursework extends JFrame implements ActionListener, KeyListener {
 
     private final JPanel pnl = new JPanel(new BorderLayout());
-
+    private final Font fnt = new Font("Georgia", Font.PLAIN, 24);
     // Note input
     private final JTextArea txtNewNote = new JTextArea();
     // Note output
@@ -43,6 +44,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     // Store courses in text file
     private final ArrayList<String> coursesFile = cc.readTextFile(cc.appDir + "//Courses.txt");
     private final AllCourses allCourses = new AllCourses();
+    // Search-related components
+    private final Search search = new Search();
+    private final JTextField searchBox = new JTextField();
+    private final JTextArea text = new JTextArea();
 
     /**
      * Main class
@@ -87,8 +92,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
      *
      */
     private void view() {
-        Font fnt = new Font("Georgia", Font.PLAIN, 24);
-
         JMenuBar menuBar = new JMenuBar();
 
         JMenu menuItem = new JMenu("Note");
@@ -102,6 +105,14 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
 
         menuBar.add(menuItem);
         menuBar.add(cc.makeMenuItem("Exit", "Exit", "Close this program.", fnt));
+        
+        // Add search components to frame
+        JButton searchButton = new JButton("Search");
+        searchButton.addActionListener(this);
+        searchButton.setActionCommand("Search");
+        
+        menuBar.add(searchBox);
+        menuBar.add(searchButton);
 
         courseList.setFont(fnt);
         courseList.setMaximumSize(courseList.getPreferredSize());
@@ -141,6 +152,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         btnAddNote.addActionListener(this);
 
         pnlWest.add(btnAddNote);
+        
+        // Temporary input box for search feature
+        text.setFont(fnt);
+        pnlWest.add(text);
 
         add(pnlWest, BorderLayout.WEST);
 
@@ -252,6 +267,19 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
             allCourses.addCourse(newCourse);
             addAllCourses();
             courseList.setSelectedItem(newCourse);
+        }
+        
+        // Search button
+        if ("Search".equals(e.getActionCommand())) {
+            
+            // Add each word in string to ArrayList
+            ArrayList<String> searchText = new ArrayList<>();
+            for (String s: text.getText().split(" ")) {
+                searchText.add(s);
+            }
+            
+            // Perform search
+            search.formatSearch(search.search(searchText, searchBox.getText()), txtNewNote, Color.yellow, Color.darkGray, fnt);
         }
     }
 

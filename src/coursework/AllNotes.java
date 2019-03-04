@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class AllNotes extends CommonCode {
     private ArrayList<Note> allNotes = new ArrayList<>();
     private String crse = "";
-    // Unique identifier: store last note ID
-    private int lastNoteID = 0;
+    // Unique identifier: store ID the note after will hold
+    private int nextNoteID = 0;
     
     /**
      * Constructor
@@ -40,14 +40,14 @@ public class AllNotes extends CommonCode {
                 
                 Note n = new Note();
                 n.setNoteID(Integer.parseInt(tmp[0]));
-                n.setCourse(tmp[1]);
+                n.setCourseID(Integer.parseInt(tmp[1]));
                 n.setDayte(tmp[2]);
                 n.setNote(tmp[3]);
                 
                 allNotes.add(n);
                 
-                if(lastNoteID < n.getNoteID()) {
-                    lastNoteID = n.getNoteID();
+                if(nextNoteID <= n.getNoteID()) {
+                    nextNoteID = n.getNoteID() + 1;
                 }
             }
         }
@@ -56,19 +56,22 @@ public class AllNotes extends CommonCode {
     /**
      * Function to add a new note to the ArrayList and store it permanently inside the "Notes.txt" file.
      * NoteID is set automatically.
+     * 
+     * To get a course ID based on course name, refer to:
+     * @see coursework.AllCourses#toCourseID(java.lang.String)
      *
-     * @param course Course
+     * @param courseID CourseID
      * @param note Note contents
-     */
-    public void addNote(String course, String note) {
+     */    
+    public void addNote(int courseID, String note) {
         Note myNote = new Note();
-        lastNoteID++;
-        myNote.setNoteID(lastNoteID);
-        myNote.setCourse(course);
+        myNote.setNoteID(nextNoteID);
+        nextNoteID++;
+        myNote.setCourseID(courseID);
         myNote.setDayte();
         myNote.setNote(note);
         allNotes.add(myNote);
-        writeAllNotes();
+        writeAllNotes();    
     }
     
     /**
@@ -77,13 +80,13 @@ public class AllNotes extends CommonCode {
      * Note ID is defined manually.
      *
      * @param NoteID Note ID
-     * @param course Course
+     * @param courseID  Course ID
      * @param note Note contents
      */
-    public void addNote(int NoteID, String course, String note) {
+    public void addNote(int NoteID, int courseID, String note) {
         Note myNote = new Note();
         myNote.setNoteID(NoteID);
-        myNote.setCourse(course);
+        myNote.setCourseID(courseID);
         myNote.setDayte();
         myNote.setNote(note);
         allNotes.add(myNote);
@@ -109,7 +112,7 @@ public class AllNotes extends CommonCode {
         
         for(Note n: allNotes) {
             String tmp = n.getNoteID() + "\t";
-            tmp += n.getCourse() + "\t";
+            tmp += n.getCourseID() + "\t";
             tmp += n.getDayte() + "\t";
             tmp += n.getNote();
             writeNote.add(tmp);

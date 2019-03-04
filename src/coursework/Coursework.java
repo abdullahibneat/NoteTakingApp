@@ -76,15 +76,21 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         // ONLY REQUIRED ON FIRST TIME RUNNING THIS PROGRAM
 //        Note nt = new Note();
 //        
-//        nt.setNoteID(1);
-//        nt.setCourse(crse);
+//        nt.setCourseID(0);
 //        nt.setNote("Arrays are of fixed length and are inflexible.");
-//        allNotes.addNote(nt.getNoteID(), nt.getCourse(), nt.getNote());
+//        allNotes.addNote(nt.getCourseID(), nt.getNote());
 //        
-//        nt.setNoteID(2);
-//        nt.setCourse(crse);
+//        nt.setCourseID(1);
 //        nt.setNote("ArrayList can be added to and items can be deleted.");
-//        allNotes.addNote(nt.getNoteID(), nt.getCourse(), nt.getNote());
+//        allNotes.addNote(nt.getCourseID(), nt.getNote());
+//        
+//        Course c = new Course();
+//        
+//        c.setCourseName("COMP1752");
+//        allCourses.addCourse(c.getCourseName());
+//        
+//        c.setCourseName("COMP1753");
+//        allCourses.addCourse(c.getCourseName());
     }
 
     /**
@@ -211,7 +217,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
             }
             else {
                 // If user selects a specific course, show its notes
-                if(n.getCourse().equals(crse)){
+                int courseID = allCourses.toCourseID(crse);
+                if(n.getCourseID() == courseID){
                     txtNotes += n.getNote() + "\n";
                 }
             }
@@ -228,12 +235,17 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
         // "Add Note" button
         if ("NewNote".equals(e.getActionCommand())) {
-            String newNote = txtNewNote.getText();
-            if (newNote.equals("")) {
-            } else {
-                allNotes.addNote(crse, newNote);
-                addAllNotes();
-                txtNewNote.setText("");
+            if(!crse.equals("All Courses")) {
+                String newNote = txtNewNote.getText();
+                if (newNote.equals("")) {
+                } else {
+                    allNotes.addNote(allCourses.toCourseID(crse), newNote);
+                    addAllNotes();
+                    txtNewNote.setText("");
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Select a course first!");
             }
         }
         

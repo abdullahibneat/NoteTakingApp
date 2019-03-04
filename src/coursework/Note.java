@@ -8,7 +8,7 @@ package coursework;
  */
 public class Note extends CommonCode {
     private int noteID = 0;
-    private String course = "";
+    private int courseID = 0;
     private String dayte = "";
     private String note = "";
     
@@ -44,17 +44,16 @@ public class Note extends CommonCode {
      * 
      * @param c
      */
-    public void setCourse(String c) {
-        String crse = c;
-        course = c;
+    public void setCourseID(int id) {
+        courseID = id;
     }
     
     /**
      * Return the course of this note.
      * @return Course
      */
-    public String getCourse() {
-        return course;
+    public int getCourseID() {
+        return courseID;
     }
     
     /**

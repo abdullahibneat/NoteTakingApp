@@ -2,6 +2,7 @@ package coursework;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  * AllCourses class
@@ -11,8 +12,8 @@ import java.util.ArrayList;
  */
 public class AllCourses extends CommonCode {    
     private final ArrayList<Course> allCourses = new ArrayList<>();
-    // Unique identifier: store the last course ID
-    private int lastCourseID = 0;
+    // Unique identifier: store the ID the course after will hold
+    private int nextCourseID = 0;
     
     /**
      * Constructor
@@ -39,8 +40,8 @@ public class AllCourses extends CommonCode {
                 c.setCourseName(tmp[1]);
                 allCourses.add(c);
                 
-                if(lastCourseID < c.getCourseID()) {
-                    lastCourseID = c.getCourseID();
+                if(nextCourseID <= c.getCourseID()) {
+                    nextCourseID = c.getCourseID() + 1;
                 }
             }
         }
@@ -52,10 +53,10 @@ public class AllCourses extends CommonCode {
      * @param course
      */
     public void addCourse(String course) {
-        lastCourseID++;
         Course c = new Course();
         c.setCourseName(course);
-        c.setCourseID(lastCourseID);
+        c.setCourseID(nextCourseID);
+        nextCourseID++;
         allCourses.add(c);
         writeAllCourses();
     }
@@ -86,5 +87,16 @@ public class AllCourses extends CommonCode {
         } catch (IOException ex) {
             System.out.println("Problem! " + path);
         }
+    }
+    
+    public int toCourseID(String courseName) {
+        for(Course c: allCourses) {
+            if(c.getCourseName().equalsIgnoreCase(courseName)) {
+                return c.getCourseID();
+            }
+        }
+        JOptionPane.showMessageDialog(null, "Course " + courseName + " not found...");
+        
+        return -1;
     }
 }

@@ -8,6 +8,7 @@ package coursework;
  */
 public class Course {
     private String courseName;
+    private int courseID;
     
     /**
      * Constructor
@@ -34,5 +35,23 @@ public class Course {
      */
     public String getCourseName() {
         return courseName;
+    }
+    
+    /**
+     * Set the Course ID
+     * 
+     * @param id Course ID
+     */
+    public void setCourseID(int id) {
+        courseID = id;
+    }
+    
+    /**
+     * Get the course ID
+     * 
+     * @return Course ID
+     */
+    public int getCourseID() {
+        return courseID;
     }
 }

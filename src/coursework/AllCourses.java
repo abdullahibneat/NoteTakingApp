@@ -9,8 +9,10 @@ import java.util.ArrayList;
  *
  * @author Abdullah Ibne Atiq
  */
-public class AllCourses extends CommonCode {
+public class AllCourses extends CommonCode {    
     private final ArrayList<Course> allCourses = new ArrayList<>();
+    // Unique identifier: store the last course ID
+    private int lastCourseID = 0;
     
     /**
      * Constructor
@@ -30,10 +32,16 @@ public class AllCourses extends CommonCode {
 
         if("File not found".equals(readCourses.get(0))){
         } else {
-            for(String str: readCourses){                
+            for(String str: readCourses){
+                String[] tmp = str.split("\t");
                 Course c = new Course();
-                c.setCourseName(str);
+                c.setCourseID(Integer.parseInt(tmp[0]));
+                c.setCourseName(tmp[1]);
                 allCourses.add(c);
+                
+                if(lastCourseID < c.getCourseID()) {
+                    lastCourseID = c.getCourseID();
+                }
             }
         }
     }
@@ -44,8 +52,10 @@ public class AllCourses extends CommonCode {
      * @param course
      */
     public void addCourse(String course) {
+        lastCourseID++;
         Course c = new Course();
         c.setCourseName(course);
+        c.setCourseID(lastCourseID);
         allCourses.add(c);
         writeAllCourses();
     }
@@ -67,7 +77,8 @@ public class AllCourses extends CommonCode {
         ArrayList<String> writeCourse = new ArrayList<>();
         
         for(Course c: allCourses) {
-            String tmp = c.getCourseName();
+            String tmp = c.getCourseID() + "\t";
+            tmp += c.getCourseName();
             writeCourse.add(tmp);
         }
         try {

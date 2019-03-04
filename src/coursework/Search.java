@@ -21,12 +21,24 @@ public class Search {
      * @param search Object to search
      * @return Search outcome
      */
-    public String search(ArrayList<String> text, String search) {
-        if(text.contains(search)) {
-            return search + " appears " + Collections.frequency(text, search) + " time(s).";
+    public String search(String[] text, String search) {
+        int count = 0;
+        
+        for(String s: text) {
+            if(s.equalsIgnoreCase(search)) {
+                count++;
+            }
         }
+        if(count > 0) {
+            if(count > 1){
+                return "\"" + search + "\" appears " + count + " times.";
+            }
+            else {
+                return "\"" + search + "\" appears " + count + " time.";
+            }
+        }        
         else {
-            return search + " not found.";
+            return "\"" + search + "\" not found.";
         }
     }
     

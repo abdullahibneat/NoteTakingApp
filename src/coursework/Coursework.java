@@ -273,10 +273,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         if ("Search".equals(e.getActionCommand())) {
             
             // Add each word in string to ArrayList
-            ArrayList<String> searchText = new ArrayList<>();
-            for (String s: text.getText().split(" ")) {
-                searchText.add(s);
-            }
+            String[] searchText = text.getText().split(" ");
             
             // Perform search
             search.formatSearch(search.search(searchText, searchBox.getText()), txtNewNote, Color.yellow, Color.darkGray, fnt);

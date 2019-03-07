@@ -89,6 +89,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         if(!coursesFile.exists()) {
             
             // If Courses.txt AND Notes.txt don't exists,
+            // Display a welcome message
+            JOptionPane.showMessageDialog(null, "Welcome first time user!");
+            
             // Create dummy content
             if(!notesFile.exists()) {
                 Course c = new Course();

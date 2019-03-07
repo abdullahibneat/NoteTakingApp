@@ -98,6 +98,30 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
      *
      */
     private void view() {
+        setTitle("Note Taking App");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        
+        // Menu bar
+        menuBar();
+        
+        // Tool bar
+        toolBar();
+
+        // West panel
+        panelWest();
+
+        // Central panel
+        panelCentre();
+
+        // Show JFrame
+        setVisible(true);
+    }
+    
+    /**
+     * Menu bar
+     */
+    private void menuBar() {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu menuItem = new JMenu("Note");
@@ -128,8 +152,13 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         // Add combobox to menubar
         menuBar.add(courseList);
 
-        this.setJMenuBar(menuBar);
-
+        this.setJMenuBar(menuBar);    
+    }
+    
+    /**
+     * Tool bar
+     */
+    private void toolBar() {
         JToolBar toolBar = new JToolBar();
 
         JButton button = null;
@@ -143,8 +172,13 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         button = cc.makeNavigationButton("book", "AddCourse", "Add a new course", "Add course");
         toolBar.add(button);
 
-        add(toolBar, BorderLayout.NORTH);
-
+        add(toolBar, BorderLayout.NORTH);    
+    }
+    
+    /**
+     * West panel
+     */
+    private void panelWest() {
         JPanel pnlWest = new JPanel();
         pnlWest.setLayout(new BoxLayout(pnlWest, BoxLayout.Y_AXIS));
         pnlWest.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -163,8 +197,13 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         text.setFont(fnt);
         pnlWest.add(text);
 
-        add(pnlWest, BorderLayout.WEST);
-
+        add(pnlWest, BorderLayout.WEST);    
+    }
+    
+    /**
+     * Central panel
+     */
+    private void panelCentre() {
         JPanel cen = new JPanel();
         cen.setLayout(new BoxLayout(cen, BoxLayout.Y_AXIS));
         cen.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -172,14 +211,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         txtDisplaynotes.setFont(fnt);
         cen.add(txtDisplaynotes);
 
-        add(cen, BorderLayout.CENTER);
-
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setTitle("Note Taking App");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Show JFrame
-        setVisible(true);
+        add(cen, BorderLayout.CENTER);    
     }
 
     /**

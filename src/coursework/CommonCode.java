@@ -24,7 +24,7 @@ import javax.swing.JMenuItem;
  * @author Abdullah Ibne Atiq
  */
 public class CommonCode {
-    public static final String UK_DATE_FORMAT_NOW = "dd-MM-yyyy";
+    public static final String UK_DATE_TIME_FORMAT_NOW = "dd-MM-yyyy HH:mm:ss";
     public String ukDateAndTime;
     
     // These are some useful items.
@@ -48,6 +48,16 @@ public class CommonCode {
      * Constructor
      */
     CommonCode() {
+        initialiseVariables();
+    }
+    
+    /**
+     * This is used by CommonCode to set up the public variables
+     */
+    private void initialiseVariables(){
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat uk1sdf = new SimpleDateFormat(UK_DATE_TIME_FORMAT_NOW);
+        ukDateAndTime = uk1sdf.format(cal.getTime());
     }
 
     /**
@@ -115,7 +125,7 @@ public class CommonCode {
      */
     public String getDateAndTime() {
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat uksdf = new SimpleDateFormat(UK_DATE_FORMAT_NOW);
+        SimpleDateFormat uksdf = new SimpleDateFormat(UK_DATE_TIME_FORMAT_NOW);
         ukDateAndTime = uksdf.format(cal.getTime());
 
         return ukDateAndTime;

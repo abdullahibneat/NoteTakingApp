@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -65,28 +66,74 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
 
     /**
      * Model
-     *
+     * 
+     * This method will check if the Notes.txt and Courses.txt files exist.
+     * 
+     * If they do, nothing happens.
+     * 
+     * If Courses.txt exists, but Notes.txt does not, a message will appear
+     * informing the user that all courses are empty.
+     * 
+     * If Notes.txt exists, but Courses.txt does not exist,
+     * loop through all the notes, and create a Courses.txt file
+     * with all the courses that appear in Notes.txt.
+     * 
+     * Otherwise, neither file exists, and this method creates dummy
+     * contents (2 courses with 1 note each).
      */
     private void model() {        
-        // Create note instances
-        // ONLY REQUIRED ON FIRST TIME RUNNING THIS PROGRAM
-//        Note nt = new Note();
-//        
-//        nt.setCourseID(0);
-//        nt.setNote("Arrays are of fixed length and are inflexible.");
-//        allNotes.addNote(nt.getCourseID(), nt.getNote());
-//        
-//        nt.setCourseID(1);
-//        nt.setNote("ArrayList can be added to and items can be deleted.");
-//        allNotes.addNote(nt.getCourseID(), nt.getNote());
-//        
-//        Course c = new Course();
-//        
-//        c.setCourseName("COMP1752");
-//        allCourses.addCourse(c.getCourseName());
-//        
-//        c.setCourseName("COMP1753");
-//        allCourses.addCourse(c.getCourseName());
+        File notesFile = new File(cc.appDir + "\\Notes.txt");
+        File coursesFile = new File(cc.appDir + "\\Courses.txt");
+        
+        // If Courses.txt doesn't exist
+        if(!coursesFile.exists()) {
+            
+            // If Courses.txt AND Notes.txt don't exists,
+            // Create dummy content
+            if(!notesFile.exists()) {
+                Course c = new Course();
+
+                c.setCourseName("COMP1752");
+                allCourses.addCourse(c.getCourseName());
+
+                c.setCourseName("COMP1753");
+                allCourses.addCourse(c.getCourseName());
+                
+                Note nt = new Note();
+
+                nt.setCourseID(0);
+                nt.setNote("Arrays are of fixed length and are inflexible.");
+                allNotes.addNote(nt.getCourseID(), nt.getNote());
+
+                nt.setCourseID(1);
+                nt.setNote("ArrayList can be added to and items can be deleted.");
+                allNotes.addNote(nt.getCourseID(), nt.getNote());
+            }
+            
+            // If ONLY Courses.txt doesn't exist
+            // Fetch all courses from notes, and reconstruct Courses.txt
+            else {
+                JOptionPane.showMessageDialog(null, "Warning: found notes, but no course specified. Generating courses...");
+                ArrayList<Integer> allCoursesID = new ArrayList<>();
+                for(Note n: allNotes.getAllNotes()) {
+                    if(allCoursesID.contains(n.getCourseID())) {
+                    }
+                    else {
+                        allCoursesID.add(n.getNoteID());
+                        Course c = new Course();
+                        c.setCourseID(n.getCourseID());
+                        c.setCourseName("Course name for ID " + n.getCourseID() + " not found");
+                        allCourses.addCourse(c.getCourseID(), c.getCourseName());
+                    }
+                }
+            }
+        }
+        
+        // If ONLY Notes.txt doesn't exist
+        // Show warning
+        else {
+            JOptionPane.showMessageDialog(null, "Found courses but no notes.");
+        }
     }
 
     /**

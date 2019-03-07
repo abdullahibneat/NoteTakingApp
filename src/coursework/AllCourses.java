@@ -48,6 +48,23 @@ public class AllCourses extends CommonCode {
     }
     
     /**
+     * WARNING:
+     * Prefer to use addCourse(String courseName)
+     * This function might create duplicate IDs.
+     * 
+     * Function to add a new course to the ArrayList and store it permanently inside the "Courses.txt" file.
+     *
+     * @param course
+     */
+    public void addCourse(int courseID, String course) {
+        Course c = new Course();
+        c.setCourseName(course);
+        c.setCourseID(courseID);
+        allCourses.add(c);
+        writeAllCourses();
+    }
+    
+    /**
      * Function to add a new course to the ArrayList and store it permanently inside the "Courses.txt" file.
      *
      * @param course

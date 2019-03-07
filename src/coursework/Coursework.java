@@ -132,7 +132,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         // If ONLY Notes.txt doesn't exist
         // Show warning
         else {
-            JOptionPane.showMessageDialog(null, "Found courses but no notes.");
+            if(!notesFile.exists()) {
+                JOptionPane.showMessageDialog(null, "Found courses but no notes.");
+            }
         }
     }
 

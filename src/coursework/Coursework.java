@@ -9,13 +9,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -143,6 +143,14 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
         menuBar.add(helpMenu);
+        
+        // Combobox for list of courses
+        courseList.setFont(fnt);
+        courseList.addActionListener(this);
+        courseList.setActionCommand("Course");
+        // Place the combobox on the right side
+        menuBar.add(Box.createGlue());
+        menuBar.add(courseList);
         
         this.setJMenuBar(menuBar);    
     }

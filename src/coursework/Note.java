@@ -42,7 +42,7 @@ public class Note extends CommonCode {
     /**
      * Set the course for the note.
      * 
-     * @param c
+     * @param id Course ID
      */
     public void setCourseID(int id) {
         courseID = id;
@@ -64,7 +64,11 @@ public class Note extends CommonCode {
     }
     
     /**
-     * Set a custom date for this note.
+     * IMPORTANT:
+     * Should only be used to import notes.
+     * For new notes, use without parameter.
+     * 
+     * Set a custom date for this note. 
      * 
      * @param d
      */

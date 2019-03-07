@@ -24,20 +24,8 @@ import javax.swing.JMenuItem;
  * @author Abdullah Ibne Atiq
  */
 public class CommonCode {
-    
-    // These allow the system date to be accessed in ordered, UK and US formats.
-    public static final String ORDERED_DATE_TIME_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
-    public static final String UK_DATE_TIME_FORMAT_NOW = "dd-MM-yyyy HH:mm:ss";
-    public static final String US_DATE_TIME_FORMAT_NOW = "MM-dd-yyyy HH:mm:ss";
-    public static final String ORDERED_DATE_FORMAT_NOW = "yyyy-MM-dd";
     public static final String UK_DATE_FORMAT_NOW = "dd-MM-yyyy";
-    public static final String US_DATE_FORMAT_NOW = "MM-dd-yyyy";
-    public String orderedDateAndTime;
     public String ukDateAndTime;
-    public String usDateAndTime;
-    public String orderedDate;
-    public String ukDate;
-    public String usDate;
     
     // These are some useful items.
     public final String userName = System.getProperty("user.name");
@@ -54,34 +42,12 @@ public class CommonCode {
      */
     CommonCode(ActionListener call) {
         calledBy = call;
-        initialiseVariables();
     }
 
     /**
      * Constructor
      */
     CommonCode() {
-        initialiseVariables();
-    }
-
-    /**
-     * This is used by CommonCode to set up the public variables.
-     * 
-     */
-    private void initialiseVariables() {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat o1sdf = new SimpleDateFormat(ORDERED_DATE_TIME_FORMAT_NOW);
-        orderedDateAndTime = o1sdf.format(cal.getTime());
-        SimpleDateFormat uk1sdf = new SimpleDateFormat(UK_DATE_TIME_FORMAT_NOW);
-        ukDateAndTime = uk1sdf.format(cal.getTime());
-        SimpleDateFormat us1sdf = new SimpleDateFormat(US_DATE_TIME_FORMAT_NOW);
-        usDateAndTime = us1sdf.format(cal.getTime());
-        SimpleDateFormat o2sdf = new SimpleDateFormat(ORDERED_DATE_TIME_FORMAT_NOW);
-        orderedDate = o2sdf.format(cal.getTime());
-        SimpleDateFormat uk2sdf = new SimpleDateFormat(UK_DATE_TIME_FORMAT_NOW);
-        ukDate = uk2sdf.format(cal.getTime());
-        SimpleDateFormat us2sdf = new SimpleDateFormat(US_DATE_TIME_FORMAT_NOW);
-        usDate = us2sdf.format(cal.getTime());
     }
 
     /**
@@ -200,16 +166,13 @@ public class CommonCode {
     public void writeTextFile(String fn, ArrayList<String> outputText)
             throws FileNotFoundException, IOException {
         File fileName = new File(fn);
-        Writer output = new BufferedWriter(new FileWriter(fileName));
-        try {
+        try (Writer output = new BufferedWriter(new FileWriter(fileName))) {
             for (int i = 0; i < outputText.size(); i++) {
-                output.write(outputText.get(i).toString() + "\n");
+                output.write(outputText.get(i) + "\n");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw e;
-        } finally {
-            output.close();
         }
     }
 }

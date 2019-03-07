@@ -10,8 +10,7 @@ import java.util.ArrayList;
  * @author Abdullah Ibne Atiq
  */
 public class AllNotes extends CommonCode {
-    private ArrayList<Note> allNotes = new ArrayList<>();
-    private String crse = "";
+    private final ArrayList<Note> allNotes = new ArrayList<>();
     // Unique identifier: store ID the note after will hold
     private int nextNoteID = 0;
     
@@ -72,25 +71,6 @@ public class AllNotes extends CommonCode {
         myNote.setNote(note);
         allNotes.add(myNote);
         writeAllNotes();    
-    }
-    
-    /**
-     * Not recommended
-     * Function to add a new note to the ArrayList and store it permanently inside the "Notes.txt" file.
-     * Note ID is defined manually.
-     *
-     * @param NoteID Note ID
-     * @param courseID  Course ID
-     * @param note Note contents
-     */
-    public void addNote(int NoteID, int courseID, String note) {
-        Note myNote = new Note();
-        myNote.setNoteID(NoteID);
-        myNote.setCourseID(courseID);
-        myNote.setDayte();
-        myNote.setNote(note);
-        allNotes.add(myNote);
-        writeAllNotes();
     }
     
     /**

@@ -23,9 +23,7 @@ public class Course {
      * @param c Course name
      */
     public void setCourseName(String c) {
-        String crse = c;
-        
-        courseName = crse;
+        courseName = c;
     }
     
     /**

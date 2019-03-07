@@ -29,21 +29,16 @@ import javax.swing.JToolBar;
  */
 public class Coursework extends JFrame implements ActionListener, KeyListener {
 
-    private final JPanel pnl = new JPanel(new BorderLayout());
     private final Font fnt = new Font("Georgia", Font.PLAIN, 24);
     // Note input
     private final JTextArea txtNewNote = new JTextArea();
     // Note output
     private final JTextArea txtDisplaynotes = new JTextArea();
-    private final ArrayList<String> note = new ArrayList<>();
-    private final ArrayList<String> course = new ArrayList<>();
     // Add <String> to fix raw type warning
     private final JComboBox<String> courseList = new JComboBox<>();
     private String crse = "";
     private final AllNotes allNotes = new AllNotes();
     private final CommonCode cc = new CommonCode(this);
-    // Store courses in text file
-    private final ArrayList<String> coursesFile = cc.readTextFile(cc.appDir + "//Courses.txt");
     private final AllCourses allCourses = new AllCourses();
     // Search-related components
     private final Search search = new Search();
@@ -72,7 +67,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
      * Model
      *
      */
-    private void model() {
+    private void model() {        
         // Create note instances
         // ONLY REQUIRED ON FIRST TIME RUNNING THIS PROGRAM
 //        Note nt = new Note();

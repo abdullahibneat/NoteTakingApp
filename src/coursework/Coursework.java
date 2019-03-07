@@ -15,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -124,34 +125,25 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     private void menuBar() {
         JMenuBar menuBar = new JMenuBar();
 
-        JMenu menuItem = new JMenu("Note");
-        menuItem.setToolTipText("Note tasks");
-        menuItem.setFont(fnt);
-
-        // makeMenuItem(txt, actionCommand, toolTipText, fnt)
-        menuItem.add(cc.makeMenuItem("New", "NewNote", "Create a new note.", fnt));
-        menuItem.addSeparator();
-        menuItem.add(cc.makeMenuItem("Close", "Close", "Clear the current note.", fnt));
-
-        menuBar.add(menuItem);
-        menuBar.add(cc.makeMenuItem("Exit", "Exit", "Close this program.", fnt));
+        JMenu fileMenu = new JMenu("File");
+        fileMenu.setFont(fnt);
+        JMenu newMenu = new JMenu("New");
+        newMenu.setFont(fnt);
+        JMenu editMenu = new JMenu("Edit");
+        editMenu.setFont(fnt);
+        JMenu helpMenu = new JMenu("Help");
+        helpMenu.setFont(fnt);
         
-        // Add search components to frame
-        JButton searchButton = new JButton("Search");
-        searchButton.addActionListener(this);
-        searchButton.setActionCommand("Search");
+        newMenu.add(cc.makeMenuItem("Note", "NewNote", "Add a new note", fnt));
+        newMenu.add(cc.makeMenuItem("Course", "AddCourse", "Add a new course", fnt));
+        fileMenu.add(newMenu);
+        fileMenu.add(cc.makeMenuItem("Exit", "Exit", "Exit from this program", fnt));
+        editMenu.add(cc.makeMenuItem("Find...", "Search1", "Find in notes", fnt));
+        helpMenu.add(cc.makeMenuItem("About", "About", "About this program", fnt));
+        menuBar.add(fileMenu);
+        menuBar.add(editMenu);
+        menuBar.add(helpMenu);
         
-        menuBar.add(searchBox);
-        menuBar.add(searchButton);
-
-        courseList.setFont(fnt);
-        courseList.setMaximumSize(courseList.getPreferredSize());
-        courseList.addActionListener(this);
-        courseList.setActionCommand("Course");
-
-        // Add combobox to menubar
-        menuBar.add(courseList);
-
         this.setJMenuBar(menuBar);    
     }
     

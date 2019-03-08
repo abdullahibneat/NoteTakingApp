@@ -191,6 +191,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         newMenu.setFont(fnt);
         JMenu editMenu = new JMenu("Edit");
         editMenu.setFont(fnt);
+        JMenu advancedMenu = new JMenu("Advanced");
+        advancedMenu.setFont(fnt);
         JMenu helpMenu = new JMenu("Help");
         helpMenu.setFont(fnt);
         
@@ -198,6 +200,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         newMenu.add(cc.makeMenuItem("Course", "AddCourse", "Add a new course", fnt));
         fileMenu.add(newMenu);
         fileMenu.add(cc.makeMenuItem("Exit", "Exit", "Exit from this program", fnt));
+        advancedMenu.add(cc.makeMenuItem("Delete all notes", "DeleteAllNotes", "Delete all your notes", fnt));
+        advancedMenu.add(cc.makeMenuItem("Delete all courses", "DeleteAllCourses", "Delete all the courses", fnt));
+        advancedMenu.add(cc.makeMenuItem("Reset notes and courses", "DeleteAll", "Deletes all notes and courses", fnt));
+        editMenu.add(advancedMenu);
         editMenu.add(cc.makeMenuItem("Find...", "Search1", "Find in notes", fnt));
         helpMenu.add(cc.makeMenuItem("About", "About", "About this program", fnt));
         menuBar.add(fileMenu);

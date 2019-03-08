@@ -171,8 +171,18 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         // Tool bar
         toolBar();
 
-        // Central panel
-        panelCentre();
+        // Main view
+        JSplitPane mainView = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        mainView.setOneTouchExpandable(true);
+        mainView.setResizeWeight(0.8);
+        
+        // Add the center panel
+        mainView.setLeftComponent(panelCentre());
+        
+        // Add the sidebar
+        mainView.setRightComponent(panelEast());
+        
+        add(mainView, BorderLayout.CENTER);
 
         // Show JFrame
         setVisible(true);
@@ -242,8 +252,13 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     
     /**
      * Central panel
+     * 
+     * Returns a JPanel component with a slide pane (top component: all notes,
+     * bottom component: new note)
+     * 
+     * @return Central panel
      */
-    private void panelCentre() {
+    private JPanel panelCentre() {
         JPanel cen = new JPanel();
         cen.setLayout(new BoxLayout(cen, BoxLayout.Y_AXIS));
 
@@ -262,7 +277,26 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         
         cen.add(splitPane);
 
-        add(cen, BorderLayout.CENTER);    
+        return cen;
+    }
+    
+    /**
+     * East panel
+     * 
+     * Returns a JPanel component with a JTextArea
+     * 
+     * @return Sidebar panel
+     * 
+     */
+    private JPanel panelEast() {
+        JPanel pnlEast = new JPanel();
+        pnlEast.setLayout(new BoxLayout(pnlEast, BoxLayout.Y_AXIS));
+        
+        JTextArea sideBar = new JTextArea("Coursework item(s) to be added soon.");
+        sideBar.setFont(fnt);
+        pnlEast.add(sideBar);
+        
+        return pnlEast;
     }
 
     /**

@@ -360,10 +360,15 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         if ("AddCourse".equals(e.getActionCommand())) {
             // Input dialog
             String newCourse = JOptionPane.showInputDialog("Enter course name");
-            // Create new course
-            allCourses.addCourse(newCourse);
-            addAllCourses();
-            courseList.setSelectedItem(newCourse);
+            if(newCourse.equalsIgnoreCase("")) {
+                JOptionPane.showMessageDialog(null, "No course name entered");
+            }
+            else {
+                // Create new course
+                allCourses.addCourse(newCourse);
+                addAllCourses();
+                courseList.setSelectedItem(newCourse);
+            }
         }
         
         // Search button

@@ -9,7 +9,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -19,6 +18,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
@@ -169,9 +169,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         // Tool bar
         toolBar();
 
-        // West panel
-        panelWest();
-
         // Central panel
         panelCentre();
 
@@ -242,40 +239,23 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     }
     
     /**
-     * West panel
-     */
-    private void panelWest() {
-        JPanel pnlWest = new JPanel();
-        pnlWest.setLayout(new BoxLayout(pnlWest, BoxLayout.Y_AXIS));
-        pnlWest.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
-        txtNewNote.setFont(fnt);
-
-        pnlWest.add(txtNewNote);
-
-        JButton btnAddNote = new JButton("Add note");
-        btnAddNote.setActionCommand("NewNote");
-        btnAddNote.addActionListener(this);
-
-        pnlWest.add(btnAddNote);
-        
-        // Temporary input box for search feature
-        text.setFont(fnt);
-        pnlWest.add(text);
-
-        add(pnlWest, BorderLayout.WEST);    
-    }
-    
-    /**
      * Central panel
      */
     private void panelCentre() {
         JPanel cen = new JPanel();
         cen.setLayout(new BoxLayout(cen, BoxLayout.Y_AXIS));
-        cen.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        splitPane.setOneTouchExpandable(true);
+        splitPane.setResizeWeight(0.6);
+        
         txtDisplaynotes.setFont(fnt);
-        cen.add(txtDisplaynotes);
+        splitPane.setTopComponent(txtDisplaynotes);
+        
+        txtNewNote.setFont(fnt);
+        splitPane.setBottomComponent(txtNewNote);
+        
+        cen.add(splitPane);
 
         add(cen, BorderLayout.CENTER);    
     }

@@ -94,23 +94,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
             
             // Create dummy content
             if(!notesFile.exists()) {
-                Course c = new Course();
-
-                c.setCourseName("COMP1752");
-                allCourses.addCourse(c.getCourseName());
-
-                c.setCourseName("COMP1753");
-                allCourses.addCourse(c.getCourseName());
-                
-                Note nt = new Note();
-
-                nt.setCourseID(0);
-                nt.setNote("Arrays are of fixed length and are inflexible.");
-                allNotes.addNote(nt.getCourseID(), nt.getNote());
-
-                nt.setCourseID(1);
-                nt.setNote("ArrayList can be added to and items can be deleted.");
-                allNotes.addNote(nt.getCourseID(), nt.getNote());
+                addSampleCourses();
+                addSampleNotes();
             }
             
             // If ONLY Courses.txt doesn't exist
@@ -139,6 +124,34 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
                 JOptionPane.showMessageDialog(null, "Found courses but no notes.");
             }
         }
+    }
+    
+    /**
+     * Add sample courses
+     */
+    private void addSampleCourses() {
+        Course c = new Course();
+
+        c.setCourseName("COMP1752");
+        allCourses.addCourse(c.getCourseName());
+
+        c.setCourseName("COMP1753");
+        allCourses.addCourse(c.getCourseName());    
+    }
+    
+    /**
+     * Add sample notes
+     */
+    private void addSampleNotes() {
+        Note nt = new Note();
+
+        nt.setCourseID(0);
+        nt.setNote("Arrays are of fixed length and are inflexible.");
+        allNotes.addNote(nt.getCourseID(), nt.getNote());
+
+        nt.setCourseID(1);
+        nt.setNote("ArrayList can be added to and items can be deleted.");
+        allNotes.addNote(nt.getCourseID(), nt.getNote());
     }
 
     /**

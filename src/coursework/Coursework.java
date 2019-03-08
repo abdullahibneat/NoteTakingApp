@@ -199,11 +199,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         newMenu.add(cc.makeMenuItem("Course", "AddCourse", "Add a new course", fnt));
         fileMenu.add(newMenu);
         fileMenu.add(cc.makeMenuItem("Exit", "Exit", "Exit from this program", fnt));
+        editMenu.add(cc.makeMenuItem("Find...", "Search1", "Find in notes", fnt));
         advancedMenu.add(cc.makeMenuItem("Delete all notes", "DeleteAllNotes", "Delete all your notes", fnt));
         advancedMenu.add(cc.makeMenuItem("Delete all courses", "DeleteAllCourses", "Delete all the courses", fnt));
         advancedMenu.add(cc.makeMenuItem("Reset notes and courses", "DeleteAll", "Deletes all notes and courses", fnt));
         editMenu.add(advancedMenu);
-        editMenu.add(cc.makeMenuItem("Find...", "Search1", "Find in notes", fnt));
         helpMenu.add(cc.makeMenuItem("About", "About", "About this program", fnt));
         menuBar.add(fileMenu);
         menuBar.add(editMenu);

@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
@@ -28,7 +30,7 @@ import javax.swing.JToolBar;
  *
  * @author Abdullah Ibne Atiq
  */
-public class Coursework extends JFrame implements ActionListener, KeyListener {
+public class Coursework extends JFrame implements ActionListener, KeyListener, FocusListener {
 
     private final Font fnt = new Font("Georgia", Font.PLAIN, 24);
     // Note input
@@ -253,6 +255,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
         splitPane.setTopComponent(txtDisplaynotes);
         
         txtNewNote.setFont(fnt);
+        txtNewNote.setForeground(Color.GRAY);
+        txtNewNote.setText("Write a new note here...");
+        txtNewNote.addFocusListener(this);
         splitPane.setBottomComponent(txtNewNote);
         
         cen.add(splitPane);
@@ -313,17 +318,19 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
         // "Add Note" button
         if ("NewNote".equals(e.getActionCommand())) {
-            if(!crse.equals("All Courses")) {
-                String newNote = txtNewNote.getText();
-                if (newNote.equals("")) {
-                } else {
-                    allNotes.addNote(allCourses.toCourseID(crse), newNote);
-                    addAllNotes();
-                    txtNewNote.setText("");
-                }
+            String newNote = txtNewNote.getText();
+            if(newNote.equalsIgnoreCase("Write a new note here...") || newNote.equals("")) {
+                JOptionPane.showMessageDialog(null, "Write a note first!");
             }
             else {
-                JOptionPane.showMessageDialog(null, "Select a course first!");
+                if(crse.equals("All Courses")) {
+                    JOptionPane.showMessageDialog(null, "Select a course first!");
+                }
+                else {
+                        allNotes.addNote(allCourses.toCourseID(crse), newNote);
+                        addAllNotes();
+                        txtNewNote.setText("");
+                }
             }
         }
         
@@ -383,5 +390,21 @@ public class Coursework extends JFrame implements ActionListener, KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         System.out.println("keyReleased  not coded yet.");
+    }
+
+    @Override
+    public void focusGained(FocusEvent e) {
+        if(txtNewNote.getText().equalsIgnoreCase("Write a new note here...")) {
+            txtNewNote.setForeground(Color.BLACK);
+            txtNewNote.setText("");
+        }
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        if(txtNewNote.getText().equalsIgnoreCase("")) {
+            txtNewNote.setForeground(Color.GRAY);
+            txtNewNote.setText("Write a new note here...");
+        }
     }
 }

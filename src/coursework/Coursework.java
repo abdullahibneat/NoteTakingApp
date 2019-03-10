@@ -100,6 +100,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private void model() {        
         File notesFile = new File(cc.appDir + "\\Notes.txt");
         File coursesFile = new File(cc.appDir + "\\Courses.txt");
+        File courseworkFile = new File(cc.appDir + "\\Coursework.txt");
         
         // If Courses.txt doesn't exist
         if(!coursesFile.exists()) {
@@ -133,11 +134,18 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             }
         }
         
-        // If ONLY Notes.txt doesn't exist
+        // If Notes.txt doesn't exist
         // Show warning
         else {
+            // If Notes.txt doesn't exist
+            // Show warning
             if(!notesFile.exists()) {
                 JOptionPane.showMessageDialog(null, "Found courses but no notes.");
+            }
+            // If Coursework.txt doesn't exist
+            if(!courseworkFile.exists()) {
+                JOptionPane.showMessageDialog(null, "No coursework");
+                addSampleCourseworkItem();
             }
         }
     }
@@ -168,6 +176,18 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         nt.setCourseID(1);
         nt.setNote("ArrayList can be added to and items can be deleted.");
         allNotes.addNote(nt.getCourseID(), nt.getNote());
+    }
+    
+    /**
+     * Add sample coursework
+     */
+    private void addSampleCourseworkItem() {
+        CourseworkItem c = new CourseworkItem();
+        
+        c.setCourseID(0);
+        c.setCourseworkName("Sample coursework");
+        c.setCourseworkOverview("You can add multiple coursework for each course!");
+        allCoursework.addNewCoursework(c.getCourseID(), c.getCourseworkName(), c.getCourseworkOverview());
     }
 
     /**

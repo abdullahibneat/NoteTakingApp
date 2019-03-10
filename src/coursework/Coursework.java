@@ -244,6 +244,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         
         newMenu.add(cc.makeMenuItem("Note", "NewNote", "Add a new note", fnt));
         newMenu.add(cc.makeMenuItem("Course", "AddCourse", "Add a new course", fnt));
+        newMenu.add(cc.makeMenuItem("Coursework", "AddCoursework", "Add a new coursework", fnt));
         fileMenu.add(newMenu);
         fileMenu.add(cc.makeMenuItem("Exit", "Exit", "Exit from this program", fnt));
         editMenu.add(cc.makeMenuItem("Find...", "Search", "Find in notes", fnt));
@@ -280,13 +281,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         // makeButton(imgName, actionCommand, toolTipText, altText)
         button = cc.makeNavigationButton("Create", "NewNote", "New Note", "New");
         toolBar.add(button);
-        button = cc.makeNavigationButton("closed door", "Close", "Close this note", "Close");
-        toolBar.add(button);
-        button = cc.makeNavigationButton("exit", "Exit", "Exit from this program", "Exit");
+        button = cc.makeNavigationButton("No", "Close", "Close this note", "Close");
         toolBar.add(button);
         button = cc.makeNavigationButton("book", "AddCourse", "Add a new course", "Add course");
         toolBar.add(button);
-        button = cc.makeNavigationButton("book", "AddCoursework", "Add a new coursework", "Add coursework");
+        button = cc.makeNavigationButton("Bookmark", "AddCoursework", "Add a new coursework", "Add coursework");
         toolBar.add(button);
 
         add(toolBar, BorderLayout.NORTH);    

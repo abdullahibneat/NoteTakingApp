@@ -575,7 +575,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             toolBar.setVisible(toggleToolbar.isSelected());
         }
         if ("SearchField".equals(e.getActionCommand())) {
-            JOptionPane.showMessageDialog(null, search.search(txtDisplaynotes.getText().split(" "), searchField.getText()));
+            JOptionPane.showMessageDialog(null, allNotes.searchNoteByKeyword(searchField.getText()));
         }
     }
 

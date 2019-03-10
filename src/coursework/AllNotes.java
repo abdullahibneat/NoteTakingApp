@@ -103,4 +103,17 @@ public class AllNotes extends CommonCode {
             System.out.println("Problem! " + path);
         }
     }
+    
+    public String searchNoteByKeyword(String s) {
+        String searchOutput = "";
+        for(Note n: allNotes) {
+            if(n.getNote().toLowerCase().contains(s.toLowerCase())) {
+                searchOutput += n.getNote() + "\n";
+            }
+        }
+        if(searchOutput.equals("")) {
+            searchOutput = "\"" + s + "\" not found";
+        }
+        return searchOutput;
+    }
 }

@@ -144,11 +144,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             if(!notesFile.exists()) {
                 JOptionPane.showMessageDialog(null, "Found courses but no notes.");
             }
-            // If Coursework.txt doesn't exist
-            if(!courseworkFile.exists()) {
-                JOptionPane.showMessageDialog(null, "No coursework");
-                addSampleCourseworkItem();
-            }
+        }
+        // If Coursework.txt doesn't exist
+        if(!courseworkFile.exists()) {
+            JOptionPane.showMessageDialog(null, "No coursework");
+            addSampleCourseworkItem();
         }
     }
     
@@ -273,7 +273,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         menuBar.add(Box.createHorizontalGlue());
         menuBar.add(courseList);
         
-        this.setJMenuBar(menuBar);    
+        this.setJMenuBar(menuBar);
     }
     
     /**

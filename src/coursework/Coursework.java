@@ -441,7 +441,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         
         // "Close" button
         if ("Close".equals(e.getActionCommand())) {
-            txtNewNote.setText("");
+            txtNewNote.setForeground(Color.GRAY);
+            txtNewNote.setText("Write a new note here...");
         }
         
         // Exit button

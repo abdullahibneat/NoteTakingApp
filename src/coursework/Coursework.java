@@ -47,10 +47,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private final AllNotes allNotes = new AllNotes();
     private final CommonCode cc = new CommonCode(this);
     private final AllCourses allCourses = new AllCourses();
-    // Search-related components
+    // Search
     private final Search search = new Search();
-    private final JTextField searchBox = new JTextField();
-    private final JTextArea text = new JTextArea();
     // Coursework items
     private final AllCoursework allCoursework = new AllCoursework();
     // Display coursework in sidebar
@@ -227,7 +225,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         newMenu.add(cc.makeMenuItem("Course", "AddCourse", "Add a new course", fnt));
         fileMenu.add(newMenu);
         fileMenu.add(cc.makeMenuItem("Exit", "Exit", "Exit from this program", fnt));
-        editMenu.add(cc.makeMenuItem("Find...", "Search1", "Find in notes", fnt));
+        editMenu.add(cc.makeMenuItem("Find...", "Search", "Find in notes", fnt));
         advancedMenu.add(cc.makeMenuItem("Delete all notes", "DeleteAllNotes", "Delete all your notes", fnt));
         advancedMenu.add(cc.makeMenuItem("Delete all courses", "DeleteAllCourses", "Delete all the courses", fnt));
         advancedMenu.add(cc.makeMenuItem("Reset notes and courses", "DeleteAll", "Deletes all notes and courses", fnt));
@@ -450,12 +448,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         
         // Search button
         if ("Search".equals(e.getActionCommand())) {
-            
-            // Add each word in string to ArrayList
-            String[] searchText = text.getText().split(" ");
-            
-            // Perform search
-            search.formatSearch(search.search(searchText, searchBox.getText()), txtNewNote, Color.yellow, Color.darkGray, fnt);
+            String searchWord = JOptionPane.showInputDialog("Find current notes");
+            String[] currentCourseNotes = txtDisplaynotes.getText().split(" ");
+            String output = search.search(currentCourseNotes, searchWord);
+            JOptionPane.showMessageDialog(null, output);
         }
         if ("AddCoursework".equals(e.getActionCommand())) {
             crse = courseList.getSelectedItem().toString();

@@ -409,6 +409,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 }
             }
         }
+        if(txtCoursework.equals("")) {
+            txtCoursework = "No coursework added yet";
+        }
         sideBar.setText(txtCoursework);
     }
 

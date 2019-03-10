@@ -268,8 +268,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         courseList.setFont(fnt);
         courseList.addActionListener(this);
         courseList.setActionCommand("Course");
+        courseList.setMaximumSize(new Dimension(3000, 30));
         // Place the combobox on the right side
-        menuBar.add(Box.createGlue());
+        menuBar.add(Box.createHorizontalGlue());
         menuBar.add(courseList);
         
         this.setJMenuBar(menuBar);    

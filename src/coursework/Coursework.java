@@ -50,6 +50,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private final AllCourses allCourses = new AllCourses();
     // Search
     private final Search search = new Search();
+    // Search toolbar textfield
+    JTextField searchField = new JTextField();
     // Coursework items
     private final AllCoursework allCoursework = new AllCoursework();
     // Display coursework in sidebar
@@ -247,7 +249,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         newMenu.add(cc.makeMenuItem("Coursework", "AddCoursework", "Add a new coursework", fnt));
         fileMenu.add(newMenu);
         fileMenu.add(cc.makeMenuItem("Exit", "Exit", "Exit from this program", fnt));
-        editMenu.add(cc.makeMenuItem("Find...", "Search", "Find in notes", fnt));
+        editMenu.add(cc.makeMenuItem("Find...", "SearchMenu", "Find in notes", fnt));
         advancedMenu.add(cc.makeMenuItem("Delete all notes", "DeleteAllNotes", "Delete all your notes", fnt));
         advancedMenu.add(cc.makeMenuItem("Delete all courses", "DeleteAllCourses", "Delete all the courses", fnt));
         advancedMenu.add(cc.makeMenuItem("Reset notes and courses", "DeleteAll", "Deletes all notes and courses", fnt));
@@ -286,6 +288,15 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         button = cc.makeNavigationButton("book", "AddCourse", "Add a new course", "Add course");
         toolBar.add(button);
         button = cc.makeNavigationButton("Bookmark", "AddCoursework", "Add a new coursework", "Add coursework");
+        toolBar.add(button);
+        // Search field
+        toolBar.add(Box.createHorizontalGlue());
+        searchField.setMinimumSize(new Dimension(5000, 30));
+        searchField.setMaximumSize(new Dimension(5000, 30));
+        searchField.setFont(fnt);
+        toolBar.add(searchField);
+        toolBar.addSeparator();
+        button = cc.makeNavigationButton("Search", "SearchField", "Search for this text", "Search");
         toolBar.add(button);
 
         add(toolBar, BorderLayout.NORTH);    
@@ -481,7 +492,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         }
         
         // Search button
-        if ("Search".equals(e.getActionCommand())) {
+        if ("SearchMenu".equals(e.getActionCommand())) {
             String searchWord = JOptionPane.showInputDialog("Find current notes");
             String[] currentCourseNotes = txtDisplaynotes.getText().split(" ");
             String output = search.search(currentCourseNotes, searchWord);
@@ -561,6 +572,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         }
         if ("ToggleToolbar".equals(e.getActionCommand())) {
             toolBar.setVisible(toggleToolbar.isSelected());
+        }
+        if ("SearchField".equals(e.getActionCommand())) {
+            JOptionPane.showMessageDialog(null, search.search(txtDisplaynotes.getText().split(" "), searchField.getText()));
         }
     }
 

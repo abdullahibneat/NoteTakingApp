@@ -361,7 +361,15 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private void addAllCoursework() {
         String txtCoursework = "";
         for(CourseworkItem c: allCoursework.getAll()) {
-            txtCoursework += c.getCourseworkName() + "\n" + c.getCourseworkOverview() + "\n\n";
+            if(crse.equalsIgnoreCase("All Courses")) {
+                txtCoursework += c.getCourseworkName() + "\n" + c.getCourseworkOverview() + "\n\n";
+            }
+            else {
+                int courseID = allCourses.toCourseID(crse);
+                if(c.getCourseID() == courseID) {
+                    txtCoursework += c.getCourseworkName() + "\n" + c.getCourseworkOverview() + "\n\n";
+                }
+            }
         }
         sideBar.setText(txtCoursework);
     }
@@ -410,6 +418,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 System.out.println("Error: " + err);
             }
             addAllNotes();
+            addAllCoursework();
         }
         
         // "Add course" button
@@ -440,54 +449,61 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             search.formatSearch(search.search(searchText, searchBox.getText()), txtNewNote, Color.yellow, Color.darkGray, fnt);
         }
         if ("AddCoursework".equals(e.getActionCommand())) {
-            courseworkInputDialog = new JDialog(this, "Add a new coursework item");
-            courseworkInputDialog.setMinimumSize(new Dimension(500, 300));
-            JPanel courseworkInputDialogPanel = new JPanel(new BorderLayout());
-            
-            // North panel
-            JPanel n = new JPanel();
-            n.setLayout(new BoxLayout(n, BoxLayout.X_AXIS));
-            JLabel courseworkNameLabel = new JLabel("Coursework name");
-            courseworkNameInput = new JTextField();
-            n.add(courseworkNameLabel);
-            n.add(courseworkNameInput);
-            
-            courseworkInputDialogPanel.add(n, BorderLayout.NORTH);
-            
-            // Center panel
-            JPanel c = new JPanel();
-            c.setLayout(new BoxLayout(c, BoxLayout.X_AXIS));
-            
-            JLabel courseworkOverviewLabel = new JLabel("Coursework details");
-            courseworkOverviewInput = new JTextArea();
-            c.add(courseworkOverviewLabel);
-            c.add(Box.createRigidArea(new Dimension(10, 0)));
-            c.add(courseworkOverviewInput);
-            
-            courseworkInputDialogPanel.add(c, BorderLayout.CENTER);
-            
-            // South panel
-            JPanel s = new JPanel();
-            s.setLayout(new BoxLayout(s, BoxLayout.X_AXIS));
-            JButton ok = new JButton("Ok");
-            ok.addActionListener(this);
-            ok.setActionCommand("AddCourseworkItem");
-            JButton cancel = new JButton("Cancel");
-            cancel.addActionListener(this);
-            cancel.setActionCommand("CloseDialog");
-            s.add(Box.createGlue());
-            s.add(ok);
-            s.add(cancel);
-            
-            courseworkInputDialogPanel.add(s, BorderLayout.SOUTH);
-            
-            courseworkInputDialog.add(courseworkInputDialogPanel);
-            
-            courseworkInputDialog.setVisible(true);
+            crse = courseList.getSelectedItem().toString();
+            if(crse.equalsIgnoreCase("All Courses")) {
+                JOptionPane.showMessageDialog(null, "Select a course first!");
+            }
+            else {
+                courseworkInputDialog = new JDialog(this, "Add a new coursework item");
+                courseworkInputDialog.setMinimumSize(new Dimension(500, 300));
+                JPanel courseworkInputDialogPanel = new JPanel(new BorderLayout());
+
+                // North panel
+                JPanel n = new JPanel();
+                n.setLayout(new BoxLayout(n, BoxLayout.X_AXIS));
+                JLabel courseworkNameLabel = new JLabel("Coursework name");
+                courseworkNameInput = new JTextField();
+                n.add(courseworkNameLabel);
+                n.add(courseworkNameInput);
+
+                courseworkInputDialogPanel.add(n, BorderLayout.NORTH);
+
+                // Center panel
+                JPanel c = new JPanel();
+                c.setLayout(new BoxLayout(c, BoxLayout.X_AXIS));
+
+                JLabel courseworkOverviewLabel = new JLabel("Coursework details");
+                courseworkOverviewInput = new JTextArea();
+                c.add(courseworkOverviewLabel);
+                c.add(Box.createRigidArea(new Dimension(10, 0)));
+                c.add(courseworkOverviewInput);
+
+                courseworkInputDialogPanel.add(c, BorderLayout.CENTER);
+
+                // South panel
+                JPanel s = new JPanel();
+                s.setLayout(new BoxLayout(s, BoxLayout.X_AXIS));
+                JButton ok = new JButton("Ok");
+                ok.addActionListener(this);
+                ok.setActionCommand("AddCourseworkItem");
+                JButton cancel = new JButton("Cancel");
+                cancel.addActionListener(this);
+                cancel.setActionCommand("CloseDialog");
+                s.add(Box.createGlue());
+                s.add(ok);
+                s.add(cancel);
+
+                courseworkInputDialogPanel.add(s, BorderLayout.SOUTH);
+
+                courseworkInputDialog.add(courseworkInputDialogPanel);
+
+                courseworkInputDialog.setVisible(true);
+            }
         }
         if ("AddCourseworkItem".equals(e.getActionCommand())) {
             String courseworkName = courseworkNameInput.getText();
             String courseworkOverview = courseworkOverviewInput.getText();
+            int courseID = allCourses.toCourseID(crse);
             if(courseworkName.equals("")) {
                 JOptionPane.showMessageDialog(null, "Name cannot be empty");
             }
@@ -495,7 +511,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 JOptionPane.showMessageDialog(null, "Overview cannot be empty");
             }
             else {
-                allCoursework.addNewCoursework(courseworkName, courseworkOverview);
+                allCoursework.addNewCoursework(courseID, courseworkName, courseworkOverview);
                 addAllCoursework();
                 courseworkInputDialog.dispose();
             }

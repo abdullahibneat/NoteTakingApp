@@ -48,10 +48,11 @@ public class AllCoursework extends CommonCode {
         }
     }
     
-    public void addNewCoursework(String name, String overview) {
+    public void addNewCoursework(int courseID, String name, String overview) {
         CourseworkItem c = new CourseworkItem();
-        c.setCourseID(0);
-        c.setCourseworkID(0);
+        c.setCourseID(courseID);
+        c.setCourseworkID(nextCourseworkID);
+        nextCourseworkID++;
         c.setCourseworkName(name);
         c.setCourseworkOverview(overview);
         

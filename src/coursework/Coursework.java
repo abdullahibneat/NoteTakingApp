@@ -398,7 +398,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         String txtCoursework = "";
         for(CourseworkItem c: allCoursework.getAll()) {
             if(crse.equalsIgnoreCase("All Courses")) {
-                txtCoursework += c.getCourseworkName() + "\n" + c.getCourseworkOverview() + "\n\n";
+                int courseID = c.getCourseID();
+                String courseName = allCourses.toCourseName(courseID);
+                txtCoursework += c.getCourseworkName() + "\n" + "Course: " + courseName + "\n" + c.getCourseworkOverview() + "\n\n";
             }
             else {
                 int courseID = allCourses.toCourseID(crse);

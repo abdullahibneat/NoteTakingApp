@@ -116,4 +116,13 @@ public class AllCourses extends CommonCode {
         
         return -1;
     }
+    
+    public String toCourseName(int n) {
+        for(Course c: allCourses) {
+            if(c.getCourseID() == n) {
+                return c.getCourseName();
+            }
+        }
+        return "Course not found.";
+    }
 }

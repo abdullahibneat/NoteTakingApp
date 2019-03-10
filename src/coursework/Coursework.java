@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -58,6 +59,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private JDialog courseworkInputDialog;
     private JTextArea courseworkOverviewInput;
     private JTextField courseworkNameInput;
+    // Toolbar
+    JToolBar toolBar = new JToolBar();
+    JCheckBoxMenuItem toggleToolbar = new JCheckBoxMenuItem("Show toolbar", true);
 
     /**
      * Main class
@@ -214,6 +218,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         editMenu.setFont(fnt);
         JMenu advancedMenu = new JMenu("Advanced");
         advancedMenu.setFont(fnt);
+        JMenu viewMenu = new JMenu("View");
+        viewMenu.setFont(fnt);
         JMenu helpMenu = new JMenu("Help");
         helpMenu.setFont(fnt);
         
@@ -226,9 +232,14 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         advancedMenu.add(cc.makeMenuItem("Delete all courses", "DeleteAllCourses", "Delete all the courses", fnt));
         advancedMenu.add(cc.makeMenuItem("Reset notes and courses", "DeleteAll", "Deletes all notes and courses", fnt));
         editMenu.add(advancedMenu);
+        toggleToolbar.setFont(fnt);
+        toggleToolbar.addActionListener(this);
+        toggleToolbar.setActionCommand("ToggleToolbar");
+        viewMenu.add(toggleToolbar);
         helpMenu.add(cc.makeMenuItem("About", "About", "About this program", fnt));
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
+        menuBar.add(viewMenu);
         menuBar.add(helpMenu);
         
         // Combobox for list of courses
@@ -246,8 +257,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      * Tool bar
      */
     private void toolBar() {
-        JToolBar toolBar = new JToolBar();
-
         JButton button = null;
         // makeButton(imgName, actionCommand, toolTipText, altText)
         button = cc.makeNavigationButton("Create", "NewNote", "New Note", "New");
@@ -518,6 +527,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         }
         if ("CloseDialog".equals(e.getActionCommand())) {
             courseworkInputDialog.dispose();
+        }
+        if ("ToggleToolbar".equals(e.getActionCommand())) {
+            toolBar.setVisible(toggleToolbar.isSelected());
         }
     }
 

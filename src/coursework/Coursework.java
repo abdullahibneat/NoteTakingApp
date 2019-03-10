@@ -24,6 +24,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -288,13 +289,19 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         splitPane.setResizeWeight(0.6);
         
         txtDisplaynotes.setFont(fnt);
-        splitPane.setTopComponent(txtDisplaynotes);
+        // Wrap text
+        txtDisplaynotes.setLineWrap(true);
+        // Show vertical scroll when required
+        JScrollPane scrollPane = new JScrollPane(txtDisplaynotes, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        splitPane.setTopComponent(scrollPane);
         
+        scrollPane = new JScrollPane(txtNewNote, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         txtNewNote.setFont(fnt);
+        txtNewNote.setLineWrap(true);
         txtNewNote.setForeground(Color.GRAY);
         txtNewNote.setText("Write a new note here...");
         txtNewNote.addFocusListener(this);
-        splitPane.setBottomComponent(txtNewNote);
+        splitPane.setBottomComponent(scrollPane);
         
         cen.add(splitPane);
 
@@ -314,7 +321,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         pnlEast.setLayout(new BoxLayout(pnlEast, BoxLayout.Y_AXIS));
         
         sideBar.setFont(fnt);
-        pnlEast.add(sideBar);
+        sideBar.setLineWrap(true);
+        JScrollPane scrollPane = new JScrollPane(sideBar, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        pnlEast.add(scrollPane);
         
         return pnlEast;
     }
@@ -479,9 +488,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
 
                 JLabel courseworkOverviewLabel = new JLabel("Coursework details");
                 courseworkOverviewInput = new JTextArea();
+                JScrollPane scrollPane = new JScrollPane(courseworkOverviewInput, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
                 c.add(courseworkOverviewLabel);
                 c.add(Box.createRigidArea(new Dimension(10, 0)));
-                c.add(courseworkOverviewInput);
+                c.add(scrollPane);
 
                 courseworkInputDialogPanel.add(c, BorderLayout.CENTER);
 

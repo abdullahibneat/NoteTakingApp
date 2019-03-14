@@ -9,18 +9,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- *
- * @author Abdullah
+ * @author Abdullah Ibne Atiq
  */
 public class AllCoursework extends CommonCode {
     private final ArrayList<CourseworkItem> allCourseworkItems = new ArrayList<>();
     // Unique identifier: store ID the courseworkItem after will hold
     private int nextCourseworkID = 0;
     
+    /**
+     * Constructor
+     */
     public AllCoursework() {
         readAllCourseworkItems();
     }
     
+    /**
+     * Method to read all coursework items from file
+     */
     private void readAllCourseworkItems() {
         ArrayList<String> readCoursework = new ArrayList<>();
         
@@ -48,6 +53,13 @@ public class AllCoursework extends CommonCode {
         }
     }
     
+    /**
+     * Method to add a new coursework item
+     * 
+     * @param courseID Course ID
+     * @param name Course name
+     * @param overview Course description
+     */
     public void addNewCoursework(int courseID, String name, String overview) {
         CourseworkItem c = new CourseworkItem();
         c.setCourseID(courseID);
@@ -60,6 +72,9 @@ public class AllCoursework extends CommonCode {
         writeAllCoursework();
     }
     
+    /**
+     * Method to write all coursework item to file
+     */
     private void writeAllCoursework() {
         String path = appDir + "\\Coursework.txt";
         ArrayList<String> writeCoursework = new ArrayList<>();
@@ -78,6 +93,11 @@ public class AllCoursework extends CommonCode {
         }
     }
     
+    /**
+     * Method to retrieve all coursework items
+     * 
+     * @return Coursework items
+     */
     public ArrayList<CourseworkItem> getAll() {
         return allCourseworkItems;
     }

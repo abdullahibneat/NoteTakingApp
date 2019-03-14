@@ -106,6 +106,12 @@ public class AllCourses extends CommonCode {
         }
     }
     
+    /**
+     * Method to convert a course name to course ID
+     * 
+     * @param courseName Name of course
+     * @return Course ID
+     */
     public int toCourseID(String courseName) {
         for(Course c: allCourses) {
             if(c.getCourseName().equalsIgnoreCase(courseName)) {
@@ -117,6 +123,12 @@ public class AllCourses extends CommonCode {
         return -1;
     }
     
+    /**
+     * Method to convert course name into course ID
+     * 
+     * @param n Course ID
+     * @return Name of course
+     */
     public String toCourseName(int n) {
         for(Course c: allCourses) {
             if(c.getCourseID() == n) {

@@ -371,6 +371,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         addAllCoursework();
     }
     
+    /**
+     * Load all courses into the JComboBox.
+     */
     private void addAllCourses() {
         courseList.removeAllItems();
         // Add courses to combobox
@@ -407,6 +410,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         txtDisplaynotes.setText(txtNotes);
     }
     
+    /**
+     * Load all coursework item into the text area.
+     */
     private void addAllCoursework() {
         String txtCoursework = "";
         for(CourseworkItem c: allCoursework.getAll()) {

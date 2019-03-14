@@ -21,7 +21,7 @@ import javax.swing.JMenuItem;
 /**
  * Collection of commonly used methods.
  * 
- * @author Abdullah Ibne Atiq
+ * @author Andy Wicks
  */
 public class CommonCode {
     public static final String UK_DATE_TIME_FORMAT_NOW = "dd-MM-yyyy HH:mm:ss";

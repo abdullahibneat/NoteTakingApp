@@ -104,6 +104,12 @@ public class AllNotes extends CommonCode {
         }
     }
     
+    /**
+     * Search method to find a note containing a keyword.
+     * 
+     * @param s Search keyword
+     * @return Full notes containing search keyword
+     */
     public String searchNoteByKeyword(String s) {
         String searchOutput = "";
         for(Note n: allNotes) {

@@ -125,4 +125,19 @@ public class AllCourses extends CommonCode {
         }
         return "Course not found.";
     }
+    
+    /**
+     * Method to change the name of a course.
+     * 
+     * @param id ID of course to be changed
+     * @param s New course name
+     */
+    public void editCourseName(int id, String s) {
+        for(Course c: allCourses) {
+            if(c.getCourseID() == id) {
+                c.setCourseName(s);
+                writeAllCourses();
+            }
+        }
+    }
 }

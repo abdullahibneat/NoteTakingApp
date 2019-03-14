@@ -290,6 +290,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         toolBar.add(button);
         button = cc.makeNavigationButton("Bookmark", "AddCoursework", "Add a new coursework", "Add coursework");
         toolBar.add(button);
+        button = cc.makeNavigationButton("Create", "EditCourseName", "Change name of course", "Edit course");
+        toolBar.add(button);
         // Search field
         toolBar.add(Box.createHorizontalGlue());
         searchField.setMinimumSize(new Dimension(5000, 30));
@@ -576,6 +578,17 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         }
         if ("SearchField".equals(e.getActionCommand())) {
             JOptionPane.showMessageDialog(null, allNotes.searchNoteByKeyword(searchField.getText()));
+        }
+        if ("EditCourseName".equals(e.getActionCommand())) {
+            // Ask for new name
+            String newCourseName = JOptionPane.showInputDialog("New course name:");
+            // Retrieve course ID
+            int currentCourseID = allCourses.toCourseID(crse);
+            // Apply change
+            allCourses.editCourseName(currentCourseID, newCourseName);
+            crse = newCourseName;
+            addAllCourses();
+            courseList.setSelectedItem(newCourseName);
         }
     }
 

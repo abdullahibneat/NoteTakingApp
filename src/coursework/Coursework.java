@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
@@ -24,6 +25,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
@@ -41,7 +43,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     // Note input
     private final JTextArea txtNewNote = new JTextArea();
     // Note output
-    private final JTextArea txtDisplaynotes = new JTextArea();
+    private final JPanel pnlDisplayNotes = new JPanel();
+    private ButtonGroup notesRadioGroup = new ButtonGroup();    
     // Add <String> to fix raw type warning
     private final JComboBox<String> courseList = new JComboBox<>();
     private String crse = "";
@@ -323,11 +326,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         splitPane.setOneTouchExpandable(true);
         splitPane.setResizeWeight(0.6);
         
-        txtDisplaynotes.setFont(fnt);
-        // Wrap text
-        txtDisplaynotes.setLineWrap(true);
-        // Show vertical scroll when required
-        JScrollPane scrollPane = new JScrollPane(txtDisplaynotes, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        // Display notes as radio buttons
+        pnlDisplayNotes.setLayout(new BoxLayout(pnlDisplayNotes, BoxLayout.Y_AXIS));
+        pnlDisplayNotes.setPreferredSize(new Dimension(100, pnlDisplayNotes.getPreferredSize().height));
+        // Make panel scrollable vertically
+        JScrollPane scrollPane = new JScrollPane(pnlDisplayNotes, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         splitPane.setTopComponent(scrollPane);
         
         // Panel with new note textarea and add button
@@ -403,23 +406,37 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      *
      */
     private void addAllNotes() {
-        String txtNotes = "";
-
+        pnlDisplayNotes.removeAll();
+        notesRadioGroup = new ButtonGroup();
+        JRadioButton radioButton;
         for (Note n : allNotes.getAllNotes()) {
             // If user selects "All Courses" from dropdown, show all the notes
             if(crse.equals("All Courses")){
-                txtNotes += n.getNote() + "\n";
+                radioButton = new JRadioButton("<html>" + n.getNote() + "</html>");
+                // Use the name field as the NoteID
+                radioButton.setName(Integer.toString(n.getNoteID()));
+                radioButton.addActionListener(this);
+                radioButton.setActionCommand("SelectNote");
+                radioButton.setFont(fnt);
+                notesRadioGroup.add(radioButton);
+                pnlDisplayNotes.add(radioButton);
             }
             else {
                 // If user selects a specific course, show its notes
                 int courseID = allCourses.toCourseID(crse);
                 if(n.getCourseID() == courseID){
-                    txtNotes += n.getNote() + "\n";
+                    radioButton = new JRadioButton("<html>" + n.getNote() + "</html>");
+                    radioButton.setName(Integer.toString(n.getNoteID()));
+                    radioButton.addActionListener(this);
+                    radioButton.setActionCommand("SelectNote");
+                    radioButton.setFont(fnt);
+                    notesRadioGroup.add(radioButton);
+                    pnlDisplayNotes.add(radioButton);
                 }
             }
         }
-
-        txtDisplaynotes.setText(txtNotes);
+        pnlDisplayNotes.revalidate();
+        pnlDisplayNotes.repaint();
     }
     
     /**
@@ -520,7 +537,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         // Search button
         if ("SearchMenu".equals(e.getActionCommand())) {
             String searchWord = JOptionPane.showInputDialog("Find current notes");
-            String[] currentCourseNotes = txtDisplaynotes.getText().split(" ");
+            // Convert allNotes ArrayList to String[]
+            String[] currentCourseNotes = allNotes.getAllNotes().toArray(new String[0]);
             String output = search.search(currentCourseNotes, searchWord);
             JOptionPane.showMessageDialog(null, output);
         }

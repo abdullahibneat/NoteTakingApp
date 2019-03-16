@@ -12,6 +12,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -63,6 +65,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private JDialog courseworkInputDialog;
     private JTextArea courseworkOverviewInput;
     private JTextField courseworkNameInput;
+    // Edit note dialog
+    private int selectedNote = 0;
+    private final JDialog editNoteDialog = new JDialog(this, "Edit note");
+    private JTextArea editNoteTxt = new JTextArea();
+    private final JButton applyButton = new JButton("Apply");
     // Toolbar
     JToolBar toolBar = new JToolBar();
     JCheckBoxMenuItem toggleToolbar = new JCheckBoxMenuItem("Show toolbar", true);
@@ -256,6 +263,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         fileMenu.add(cc.makeMenuItem("Exit", "Exit", "Exit from this program", fnt));
         editMenu.add(cc.makeMenuItem("Find...", "SearchMenu", "Find in notes", fnt));
         amendMenu.add(cc.makeMenuItem("Course name", "EditCourseName", "Change name of current course", fnt));
+        amendMenu.add(cc.makeMenuItem("Selected Note", "EditSelectedNote", "Change the contents of the currently selected note", fnt));
         editMenu.add(amendMenu);
         advancedMenu.add(cc.makeMenuItem("Delete all notes", "DeleteAllNotes", "Delete all your notes", fnt));
         advancedMenu.add(cc.makeMenuItem("Delete all courses", "DeleteAllCourses", "Delete all the courses", fnt));
@@ -645,6 +653,49 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                     courseList.setSelectedItem(newCourseName);
                 }
             }
+        }
+        if("SelectNote".equals(e.getActionCommand())) {
+            // Create ArrayList of all radio buttons
+            ArrayList<AbstractButton> listRadioButton = Collections.list(notesRadioGroup.getElements());
+            for(AbstractButton button : listRadioButton) {
+                // If selected button is found
+                if(button.isSelected()) {
+                    // The name was set to be Note ID
+                    selectedNote = Integer.parseInt(button.getName());
+                }
+            }
+        }
+        if("EditSelectedNote".equals(e.getActionCommand())) {
+            System.out.println("Selected note: " + selectedNote);
+            // Dialog minimum size
+            editNoteDialog.setMinimumSize(new Dimension(500, 300));
+            JPanel editNotePnl = new JPanel();
+            editNotePnl.setLayout(new BoxLayout(editNotePnl, BoxLayout.Y_AXIS));
+            editNoteTxt.setFont(fnt);
+            // Retrieve note's content
+            for(Note n: allNotes.getAllNotes()) {
+                if(n.getNoteID() == selectedNote) {
+                    editNoteTxt.setText(n.getNote());
+                    break;
+                }
+            }
+            // Button to apply changes
+            applyButton.setFont(fnt);
+            applyButton.addActionListener(this);
+            applyButton.setActionCommand("EditNote");
+            editNotePnl.add(editNoteTxt);
+            editNotePnl.add(applyButton);
+            editNoteDialog.add(editNotePnl);
+            // Show JDialog
+            editNoteDialog.setVisible(true);
+        }
+        if("EditNote".equals(e.getActionCommand())) {
+            // Submit changes to editNote method
+            allNotes.editNote(selectedNote, editNoteTxt.getText());
+            // Hide the JDialog
+            editNoteDialog.setVisible(false);
+            // Add all notes to JPanel
+            addAllNotes();
         }
     }
 

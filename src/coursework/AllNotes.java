@@ -122,4 +122,20 @@ public class AllNotes extends CommonCode {
         }
         return searchOutput;
     }
+    
+    /**
+     * Method to edit the contents of a note given it's ID.
+     * 
+     * @param id Note ID
+     * @param s New note text
+     */
+    public void editNote(int id, String s) {
+        for(Note n: allNotes) {
+            if(n.getNoteID() == id) {
+                n.setNote(s);
+                writeAllNotes();
+                break;
+            }
+        }
+    }
 }

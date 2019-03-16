@@ -590,7 +590,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             String newCourseName = JOptionPane.showInputDialog("New course name:");
             
             if(newCourseName == null) {
-                JOptionPane.showMessageDialog(null, "Nothing!");
                 return;
             }
             
@@ -598,13 +597,18 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 JOptionPane.showMessageDialog(null, "No name entered...");
             }
             else {
-                // Retrieve course ID
-                int currentCourseID = allCourses.toCourseID(crse);
-                // Apply change
-                allCourses.editCourseName(currentCourseID, newCourseName);
-                crse = newCourseName;
-                addAllCourses();
-                courseList.setSelectedItem(newCourseName);
+                if(allCourses.exists(newCourseName)) {
+                    JOptionPane.showMessageDialog(null, "Already exists");
+                }
+                else {
+                    // Retrieve course ID
+                    int currentCourseID = allCourses.toCourseID(crse);
+                    // Apply change
+                    allCourses.editCourseName(currentCourseID, newCourseName);
+                    crse = newCourseName;
+                    addAllCourses();
+                    courseList.setSelectedItem(newCourseName);
+                }
             }
         }
     }

@@ -152,4 +152,20 @@ public class AllCourses extends CommonCode {
             }
         }
     }
+    
+    /**
+     * Method to check if a course name already exists
+     * 
+     * @param s Course name
+     * 
+     * @return true/false
+     */
+    public boolean exists(String s) {
+        for(Course c: allCourses) {
+            if(c.getCourseName().equalsIgnoreCase(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

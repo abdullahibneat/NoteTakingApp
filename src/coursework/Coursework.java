@@ -239,6 +239,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         editMenu.setFont(fnt);
         JMenu advancedMenu = new JMenu("Advanced");
         advancedMenu.setFont(fnt);
+        JMenu amendMenu = new JMenu("Amend");
+        amendMenu.setFont(fnt);
         JMenu viewMenu = new JMenu("View");
         viewMenu.setFont(fnt);
         JMenu helpMenu = new JMenu("Help");
@@ -250,6 +252,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         fileMenu.add(newMenu);
         fileMenu.add(cc.makeMenuItem("Exit", "Exit", "Exit from this program", fnt));
         editMenu.add(cc.makeMenuItem("Find...", "SearchMenu", "Find in notes", fnt));
+        amendMenu.add(cc.makeMenuItem("Course name", "EditCourseName", "Change name of current course", fnt));
+        editMenu.add(amendMenu);
         advancedMenu.add(cc.makeMenuItem("Delete all notes", "DeleteAllNotes", "Delete all your notes", fnt));
         advancedMenu.add(cc.makeMenuItem("Delete all courses", "DeleteAllCourses", "Delete all the courses", fnt));
         advancedMenu.add(cc.makeMenuItem("Reset notes and courses", "DeleteAll", "Deletes all notes and courses", fnt));
@@ -289,8 +293,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         button = cc.makeNavigationButton("book", "AddCourse", "Add a new course", "Add course");
         toolBar.add(button);
         button = cc.makeNavigationButton("Bookmark", "AddCoursework", "Add a new coursework", "Add coursework");
-        toolBar.add(button);
-        button = cc.makeNavigationButton("Create", "EditCourseName", "Change name of course", "Edit course");
         toolBar.add(button);
         // Search field
         toolBar.add(Box.createHorizontalGlue());

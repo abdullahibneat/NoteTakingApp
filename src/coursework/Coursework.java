@@ -588,13 +588,24 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         if ("EditCourseName".equals(e.getActionCommand())) {
             // Ask for new name
             String newCourseName = JOptionPane.showInputDialog("New course name:");
-            // Retrieve course ID
-            int currentCourseID = allCourses.toCourseID(crse);
-            // Apply change
-            allCourses.editCourseName(currentCourseID, newCourseName);
-            crse = newCourseName;
-            addAllCourses();
-            courseList.setSelectedItem(newCourseName);
+            
+            if(newCourseName == null) {
+                JOptionPane.showMessageDialog(null, "Nothing!");
+                return;
+            }
+            
+            if(newCourseName.equals("")) {
+                JOptionPane.showMessageDialog(null, "No name entered...");
+            }
+            else {
+                // Retrieve course ID
+                int currentCourseID = allCourses.toCourseID(crse);
+                // Apply change
+                allCourses.editCourseName(currentCourseID, newCourseName);
+                crse = newCourseName;
+                addAllCourses();
+                courseList.setSelectedItem(newCourseName);
+            }
         }
     }
 

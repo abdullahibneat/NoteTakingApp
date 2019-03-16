@@ -493,10 +493,15 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 JOptionPane.showMessageDialog(null, "No course name entered");
             }
             else {
-                // Create new course
-                allCourses.addCourse(newCourse);
-                addAllCourses();
-                courseList.setSelectedItem(newCourse);
+                if(allCourses.exists(newCourse)) {
+                    JOptionPane.showMessageDialog(null, "Course exists already");
+                }
+                else {
+                    // Create new course
+                    allCourses.addCourse(newCourse);
+                    addAllCourses();
+                    courseList.setSelectedItem(newCourse);
+                }
             }
         }
         

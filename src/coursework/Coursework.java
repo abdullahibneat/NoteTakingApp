@@ -330,13 +330,23 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         JScrollPane scrollPane = new JScrollPane(txtDisplaynotes, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         splitPane.setTopComponent(scrollPane);
         
+        // Panel with new note textarea and add button
+        JPanel noteInputPanel = new JPanel();
+        noteInputPanel.setLayout(new BoxLayout(noteInputPanel, BoxLayout.X_AXIS));
         scrollPane = new JScrollPane(txtNewNote, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         txtNewNote.setFont(fnt);
         txtNewNote.setLineWrap(true);
         txtNewNote.setForeground(Color.GRAY);
         txtNewNote.setText("Write a new note here...");
         txtNewNote.addFocusListener(this);
-        splitPane.setBottomComponent(scrollPane);
+        // New note button
+        JButton addNote = new JButton("Add note");
+        addNote.setFont(fnt);
+        addNote.addActionListener(this);
+        addNote.setActionCommand("NewNote");
+        noteInputPanel.add(scrollPane);
+        noteInputPanel.add(addNote);
+        splitPane.setBottomComponent(noteInputPanel);
         
         cen.add(splitPane);
 

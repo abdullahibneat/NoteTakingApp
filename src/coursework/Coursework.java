@@ -481,11 +481,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         if ("NewNote".equals(e.getActionCommand())) {
             String newNote = txtNewNote.getText();
             if(newNote.equalsIgnoreCase("Write a new note here...") || newNote.equals("")) {
-                JOptionPane.showMessageDialog(null, "Write a note first!");
+                JOptionPane.showMessageDialog(this, "Write a note first!");
             }
             else {
                 if(crse.equals("All Courses")) {
-                    JOptionPane.showMessageDialog(null, "Select a course first!");
+                    JOptionPane.showMessageDialog(this, "Select a course first!");
                 }
                 else {
                         allNotes.addNote(allCourses.toCourseID(crse), newNote);
@@ -527,11 +527,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 return;
             }
             if(newCourse.equalsIgnoreCase("")) {
-                JOptionPane.showMessageDialog(null, "No course name entered");
+                JOptionPane.showMessageDialog(this, "No course name entered");
             }
             else {
                 if(allCourses.exists(newCourse)) {
-                    JOptionPane.showMessageDialog(null, "Course exists already");
+                    JOptionPane.showMessageDialog(this, "Course exists already");
                 }
                 else {
                     // Create new course
@@ -548,12 +548,12 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             // Convert allNotes ArrayList to String[]
             String[] currentCourseNotes = allNotes.getAllNotes().toArray(new String[0]);
             String output = search.search(currentCourseNotes, searchWord);
-            JOptionPane.showMessageDialog(null, output);
+            JOptionPane.showMessageDialog(this, output);
         }
         if ("AddCoursework".equals(e.getActionCommand())) {
             crse = courseList.getSelectedItem().toString();
             if(crse.equalsIgnoreCase("All Courses")) {
-                JOptionPane.showMessageDialog(null, "Select a course first!");
+                JOptionPane.showMessageDialog(this, "Select a course first!");
             }
             else {
                 courseworkInputDialog = new JDialog(this, "Add a new coursework item");
@@ -608,10 +608,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             String courseworkOverview = courseworkOverviewInput.getText();
             int courseID = allCourses.toCourseID(crse);
             if(courseworkName.equals("")) {
-                JOptionPane.showMessageDialog(null, "Name cannot be empty");
+                JOptionPane.showMessageDialog(this, "Name cannot be empty");
             }
             else if (courseworkOverview.equals("")) {
-                JOptionPane.showMessageDialog(null, "Overview cannot be empty");
+                JOptionPane.showMessageDialog(this, "Overview cannot be empty");
             }
             else {
                 allCoursework.addNewCoursework(courseID, courseworkName, courseworkOverview);
@@ -626,7 +626,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             toolBar.setVisible(toggleToolbar.isSelected());
         }
         if ("SearchField".equals(e.getActionCommand())) {
-            JOptionPane.showMessageDialog(null, allNotes.searchNoteByKeyword(searchField.getText()));
+            JOptionPane.showMessageDialog(this, allNotes.searchNoteByKeyword(searchField.getText()));
         }
         if ("EditCourseName".equals(e.getActionCommand())) {
             // Ask for new name
@@ -637,11 +637,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             }
             
             if(newCourseName.equals("")) {
-                JOptionPane.showMessageDialog(null, "No name entered...");
+                JOptionPane.showMessageDialog(this, "No name entered...");
             }
             else {
                 if(allCourses.exists(newCourseName)) {
-                    JOptionPane.showMessageDialog(null, "Already exists");
+                    JOptionPane.showMessageDialog(this, "Already exists");
                 }
                 else {
                     // Retrieve course ID
@@ -692,7 +692,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         if("EditNote".equals(e.getActionCommand())) {
             if(editNoteTxt.getText().equals("")) {
                 // User cleared text area
-                JOptionPane.showMessageDialog(null, "Cannot be empty");
+                JOptionPane.showMessageDialog(this, "Cannot be empty");
                 editNoteDialog.setVisible(false);
             }
             else {

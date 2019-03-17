@@ -104,6 +104,12 @@ public class AllNotes extends CommonCode {
         }
     }
     
+    /**
+     * Search method to find a note containing a keyword.
+     * 
+     * @param s Search keyword
+     * @return Full notes containing search keyword
+     */
     public String searchNoteByKeyword(String s) {
         String searchOutput = "";
         for(Note n: allNotes) {
@@ -115,5 +121,21 @@ public class AllNotes extends CommonCode {
             searchOutput = "\"" + s + "\" not found";
         }
         return searchOutput;
+    }
+    
+    /**
+     * Method to edit the contents of a note given it's ID.
+     * 
+     * @param id Note ID
+     * @param s New note text
+     */
+    public void editNote(int id, String s) {
+        for(Note n: allNotes) {
+            if(n.getNoteID() == id) {
+                n.setNote(s);
+                writeAllNotes();
+                break;
+            }
+        }
     }
 }

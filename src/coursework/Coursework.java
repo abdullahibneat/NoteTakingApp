@@ -12,8 +12,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
@@ -24,6 +27,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
@@ -41,7 +45,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     // Note input
     private final JTextArea txtNewNote = new JTextArea();
     // Note output
-    private final JTextArea txtDisplaynotes = new JTextArea();
+    private final JPanel pnlDisplayNotes = new JPanel();
+    private ButtonGroup notesRadioGroup = new ButtonGroup();    
     // Add <String> to fix raw type warning
     private final JComboBox<String> courseList = new JComboBox<>();
     private String crse = "";
@@ -60,6 +65,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private JDialog courseworkInputDialog;
     private JTextArea courseworkOverviewInput;
     private JTextField courseworkNameInput;
+    // Edit note dialog
+    private int selectedNote = 0;
+    private final JDialog editNoteDialog = new JDialog(this, "Edit note");
+    private JTextArea editNoteTxt = new JTextArea();
+    private final JButton applyButton = new JButton("Apply");
     // Toolbar
     JToolBar toolBar = new JToolBar();
     JCheckBoxMenuItem toggleToolbar = new JCheckBoxMenuItem("Show toolbar", true);
@@ -239,6 +249,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         editMenu.setFont(fnt);
         JMenu advancedMenu = new JMenu("Advanced");
         advancedMenu.setFont(fnt);
+        JMenu amendMenu = new JMenu("Amend");
+        amendMenu.setFont(fnt);
         JMenu viewMenu = new JMenu("View");
         viewMenu.setFont(fnt);
         JMenu helpMenu = new JMenu("Help");
@@ -250,6 +262,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         fileMenu.add(newMenu);
         fileMenu.add(cc.makeMenuItem("Exit", "Exit", "Exit from this program", fnt));
         editMenu.add(cc.makeMenuItem("Find...", "SearchMenu", "Find in notes", fnt));
+        amendMenu.add(cc.makeMenuItem("Course name", "EditCourseName", "Change name of current course", fnt));
+        amendMenu.add(cc.makeMenuItem("Selected Note", "EditSelectedNote", "Change the contents of the currently selected note", fnt));
+        editMenu.add(amendMenu);
         advancedMenu.add(cc.makeMenuItem("Delete all notes", "DeleteAllNotes", "Delete all your notes", fnt));
         advancedMenu.add(cc.makeMenuItem("Delete all courses", "DeleteAllCourses", "Delete all the courses", fnt));
         advancedMenu.add(cc.makeMenuItem("Reset notes and courses", "DeleteAll", "Deletes all notes and courses", fnt));
@@ -319,20 +334,30 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         splitPane.setOneTouchExpandable(true);
         splitPane.setResizeWeight(0.6);
         
-        txtDisplaynotes.setFont(fnt);
-        // Wrap text
-        txtDisplaynotes.setLineWrap(true);
-        // Show vertical scroll when required
-        JScrollPane scrollPane = new JScrollPane(txtDisplaynotes, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        // Display notes as radio buttons
+        pnlDisplayNotes.setLayout(new BoxLayout(pnlDisplayNotes, BoxLayout.Y_AXIS));
+        pnlDisplayNotes.setPreferredSize(new Dimension(100, pnlDisplayNotes.getPreferredSize().height));
+        // Make panel scrollable vertically
+        JScrollPane scrollPane = new JScrollPane(pnlDisplayNotes, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         splitPane.setTopComponent(scrollPane);
         
+        // Panel with new note textarea and add button
+        JPanel noteInputPanel = new JPanel();
+        noteInputPanel.setLayout(new BoxLayout(noteInputPanel, BoxLayout.X_AXIS));
         scrollPane = new JScrollPane(txtNewNote, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         txtNewNote.setFont(fnt);
         txtNewNote.setLineWrap(true);
         txtNewNote.setForeground(Color.GRAY);
         txtNewNote.setText("Write a new note here...");
         txtNewNote.addFocusListener(this);
-        splitPane.setBottomComponent(scrollPane);
+        // New note button
+        JButton addNote = new JButton("Add note");
+        addNote.setFont(fnt);
+        addNote.addActionListener(this);
+        addNote.setActionCommand("NewNote");
+        noteInputPanel.add(scrollPane);
+        noteInputPanel.add(addNote);
+        splitPane.setBottomComponent(noteInputPanel);
         
         cen.add(splitPane);
 
@@ -369,6 +394,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         addAllCoursework();
     }
     
+    /**
+     * Load all courses into the JComboBox.
+     */
     private void addAllCourses() {
         courseList.removeAllItems();
         // Add courses to combobox
@@ -386,25 +414,42 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      *
      */
     private void addAllNotes() {
-        String txtNotes = "";
-
+        pnlDisplayNotes.removeAll();
+        notesRadioGroup = new ButtonGroup();
+        JRadioButton radioButton;
         for (Note n : allNotes.getAllNotes()) {
             // If user selects "All Courses" from dropdown, show all the notes
             if(crse.equals("All Courses")){
-                txtNotes += n.getNote() + "\n";
+                radioButton = new JRadioButton("<html>" + n.getNote() + "</html>");
+                // Use the name field as the NoteID
+                radioButton.setName(Integer.toString(n.getNoteID()));
+                radioButton.addActionListener(this);
+                radioButton.setActionCommand("SelectNote");
+                radioButton.setFont(fnt);
+                notesRadioGroup.add(radioButton);
+                pnlDisplayNotes.add(radioButton);
             }
             else {
                 // If user selects a specific course, show its notes
                 int courseID = allCourses.toCourseID(crse);
                 if(n.getCourseID() == courseID){
-                    txtNotes += n.getNote() + "\n";
+                    radioButton = new JRadioButton("<html>" + n.getNote() + "</html>");
+                    radioButton.setName(Integer.toString(n.getNoteID()));
+                    radioButton.addActionListener(this);
+                    radioButton.setActionCommand("SelectNote");
+                    radioButton.setFont(fnt);
+                    notesRadioGroup.add(radioButton);
+                    pnlDisplayNotes.add(radioButton);
                 }
             }
         }
-
-        txtDisplaynotes.setText(txtNotes);
+        pnlDisplayNotes.revalidate();
+        pnlDisplayNotes.repaint();
     }
     
+    /**
+     * Load all coursework item into the text area.
+     */
     private void addAllCoursework() {
         String txtCoursework = "";
         for(CourseworkItem c: allCoursework.getAll()) {
@@ -436,11 +481,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         if ("NewNote".equals(e.getActionCommand())) {
             String newNote = txtNewNote.getText();
             if(newNote.equalsIgnoreCase("Write a new note here...") || newNote.equals("")) {
-                JOptionPane.showMessageDialog(null, "Write a note first!");
+                JOptionPane.showMessageDialog(this, "Write a note first!");
             }
             else {
                 if(crse.equals("All Courses")) {
-                    JOptionPane.showMessageDialog(null, "Select a course first!");
+                    JOptionPane.showMessageDialog(this, "Select a course first!");
                 }
                 else {
                         allNotes.addNote(allCourses.toCourseID(crse), newNote);
@@ -482,27 +527,33 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 return;
             }
             if(newCourse.equalsIgnoreCase("")) {
-                JOptionPane.showMessageDialog(null, "No course name entered");
+                JOptionPane.showMessageDialog(this, "No course name entered");
             }
             else {
-                // Create new course
-                allCourses.addCourse(newCourse);
-                addAllCourses();
-                courseList.setSelectedItem(newCourse);
+                if(allCourses.exists(newCourse)) {
+                    JOptionPane.showMessageDialog(this, "Course exists already");
+                }
+                else {
+                    // Create new course
+                    allCourses.addCourse(newCourse);
+                    addAllCourses();
+                    courseList.setSelectedItem(newCourse);
+                }
             }
         }
         
         // Search button
         if ("SearchMenu".equals(e.getActionCommand())) {
             String searchWord = JOptionPane.showInputDialog("Find current notes");
-            String[] currentCourseNotes = txtDisplaynotes.getText().split(" ");
+            // Convert allNotes ArrayList to String[]
+            String[] currentCourseNotes = allNotes.getAllNotes().toArray(new String[0]);
             String output = search.search(currentCourseNotes, searchWord);
-            JOptionPane.showMessageDialog(null, output);
+            JOptionPane.showMessageDialog(this, output);
         }
         if ("AddCoursework".equals(e.getActionCommand())) {
             crse = courseList.getSelectedItem().toString();
             if(crse.equalsIgnoreCase("All Courses")) {
-                JOptionPane.showMessageDialog(null, "Select a course first!");
+                JOptionPane.showMessageDialog(this, "Select a course first!");
             }
             else {
                 courseworkInputDialog = new JDialog(this, "Add a new coursework item");
@@ -557,10 +608,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             String courseworkOverview = courseworkOverviewInput.getText();
             int courseID = allCourses.toCourseID(crse);
             if(courseworkName.equals("")) {
-                JOptionPane.showMessageDialog(null, "Name cannot be empty");
+                JOptionPane.showMessageDialog(this, "Name cannot be empty");
             }
             else if (courseworkOverview.equals("")) {
-                JOptionPane.showMessageDialog(null, "Overview cannot be empty");
+                JOptionPane.showMessageDialog(this, "Overview cannot be empty");
             }
             else {
                 allCoursework.addNewCoursework(courseID, courseworkName, courseworkOverview);
@@ -575,7 +626,83 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             toolBar.setVisible(toggleToolbar.isSelected());
         }
         if ("SearchField".equals(e.getActionCommand())) {
-            JOptionPane.showMessageDialog(null, allNotes.searchNoteByKeyword(searchField.getText()));
+            JOptionPane.showMessageDialog(this, allNotes.searchNoteByKeyword(searchField.getText()));
+        }
+        if ("EditCourseName".equals(e.getActionCommand())) {
+            // Ask for new name
+            String newCourseName = JOptionPane.showInputDialog("New course name:");
+            
+            if(newCourseName == null) {
+                return;
+            }
+            
+            if(newCourseName.equals("")) {
+                JOptionPane.showMessageDialog(this, "No name entered...");
+            }
+            else {
+                if(allCourses.exists(newCourseName)) {
+                    JOptionPane.showMessageDialog(this, "Already exists");
+                }
+                else {
+                    // Retrieve course ID
+                    int currentCourseID = allCourses.toCourseID(crse);
+                    // Apply change
+                    allCourses.editCourseName(currentCourseID, newCourseName);
+                    crse = newCourseName;
+                    addAllCourses();
+                    courseList.setSelectedItem(newCourseName);
+                }
+            }
+        }
+        if("SelectNote".equals(e.getActionCommand())) {
+            // Create ArrayList of all radio buttons
+            ArrayList<AbstractButton> listRadioButton = Collections.list(notesRadioGroup.getElements());
+            for(AbstractButton button : listRadioButton) {
+                // If selected button is found
+                if(button.isSelected()) {
+                    // The name was set to be Note ID
+                    selectedNote = Integer.parseInt(button.getName());
+                }
+            }
+        }
+        if("EditSelectedNote".equals(e.getActionCommand())) {
+            System.out.println("Selected note: " + selectedNote);
+            // Dialog minimum size
+            editNoteDialog.setMinimumSize(new Dimension(500, 300));
+            JPanel editNotePnl = new JPanel();
+            editNotePnl.setLayout(new BoxLayout(editNotePnl, BoxLayout.Y_AXIS));
+            editNoteTxt.setFont(fnt);
+            // Retrieve note's content
+            for(Note n: allNotes.getAllNotes()) {
+                if(n.getNoteID() == selectedNote) {
+                    editNoteTxt.setText(n.getNote());
+                    break;
+                }
+            }
+            // Button to apply changes
+            applyButton.setFont(fnt);
+            applyButton.addActionListener(this);
+            applyButton.setActionCommand("EditNote");
+            editNotePnl.add(editNoteTxt);
+            editNotePnl.add(applyButton);
+            editNoteDialog.add(editNotePnl);
+            // Show JDialog
+            editNoteDialog.setVisible(true);
+        }
+        if("EditNote".equals(e.getActionCommand())) {
+            if(editNoteTxt.getText().equals("")) {
+                // User cleared text area
+                JOptionPane.showMessageDialog(this, "Cannot be empty");
+                editNoteDialog.setVisible(false);
+            }
+            else {
+                // Submit changes to editNote method
+                allNotes.editNote(selectedNote, editNoteTxt.getText());
+                // Hide the JDialog
+                editNoteDialog.setVisible(false);
+                // Add all notes to JPanel
+                addAllNotes();
+            }
         }
     }
 

@@ -106,6 +106,12 @@ public class AllCourses extends CommonCode {
         }
     }
     
+    /**
+     * Method to convert a course name to course ID
+     * 
+     * @param courseName Name of course
+     * @return Course ID
+     */
     public int toCourseID(String courseName) {
         for(Course c: allCourses) {
             if(c.getCourseName().equalsIgnoreCase(courseName)) {
@@ -117,6 +123,12 @@ public class AllCourses extends CommonCode {
         return -1;
     }
     
+    /**
+     * Method to convert course name into course ID
+     * 
+     * @param n Course ID
+     * @return Name of course
+     */
     public String toCourseName(int n) {
         for(Course c: allCourses) {
             if(c.getCourseID() == n) {
@@ -124,5 +136,36 @@ public class AllCourses extends CommonCode {
             }
         }
         return "Course not found.";
+    }
+    
+    /**
+     * Method to change the name of a course.
+     * 
+     * @param id ID of course to be changed
+     * @param s New course name
+     */
+    public void editCourseName(int id, String s) {
+        for(Course c: allCourses) {
+            if(c.getCourseID() == id) {
+                c.setCourseName(s);
+                writeAllCourses();
+            }
+        }
+    }
+    
+    /**
+     * Method to check if a course name already exists
+     * 
+     * @param s Course name
+     * 
+     * @return true/false
+     */
+    public boolean exists(String s) {
+        for(Course c: allCourses) {
+            if(c.getCourseName().equalsIgnoreCase(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

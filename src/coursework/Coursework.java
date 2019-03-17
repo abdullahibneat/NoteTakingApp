@@ -690,12 +690,19 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             editNoteDialog.setVisible(true);
         }
         if("EditNote".equals(e.getActionCommand())) {
-            // Submit changes to editNote method
-            allNotes.editNote(selectedNote, editNoteTxt.getText());
-            // Hide the JDialog
-            editNoteDialog.setVisible(false);
-            // Add all notes to JPanel
-            addAllNotes();
+            if(editNoteTxt.getText().equals("")) {
+                // User cleared text area
+                JOptionPane.showMessageDialog(null, "Cannot be empty");
+                editNoteDialog.setVisible(false);
+            }
+            else {
+                // Submit changes to editNote method
+                allNotes.editNote(selectedNote, editNoteTxt.getText());
+                // Hide the JDialog
+                editNoteDialog.setVisible(false);
+                // Add all notes to JPanel
+                addAllNotes();
+            }
         }
     }
 

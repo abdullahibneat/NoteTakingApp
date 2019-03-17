@@ -534,9 +534,13 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private JDialog editNoteDialog() {
         // Dialog minimum size
         editNoteDialog.setMinimumSize(new Dimension(500, 300));
-        JPanel editNotePnl = new JPanel();
-        editNotePnl.setLayout(new BoxLayout(editNotePnl, BoxLayout.Y_AXIS));
+        JPanel editNotePnl = new JPanel(new BorderLayout());
+        
+        JPanel cen = new JPanel();
+        cen.setLayout(new BoxLayout(cen, BoxLayout.Y_AXIS));
         editNoteTxt.setFont(fnt);
+        editNoteTxt.setLineWrap(true);
+        editNoteTxt.setWrapStyleWord(true);
         // Retrieve note's content
         for(Note n: allNotes.getAllNotes()) {
             if(n.getNoteID() == selectedNote) {
@@ -544,12 +548,17 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 break;
             }
         }
+        cen.add(editNoteTxt);
+        
+        JPanel spnl = new JPanel();
         // Button to apply changes
         applyButton.setFont(fnt);
         applyButton.addActionListener(this);
         applyButton.setActionCommand("EditNote");
-        editNotePnl.add(editNoteTxt);
-        editNotePnl.add(applyButton);
+        spnl.add(applyButton);
+        
+        editNotePnl.add(cen, BorderLayout.CENTER);
+        editNotePnl.add(spnl, BorderLayout.SOUTH);
         editNoteDialog.add(editNotePnl);
         // Show JDialog
         editNoteDialog.setVisible(false);

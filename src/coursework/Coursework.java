@@ -233,6 +233,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
 
         // Show JFrame
         setVisible(true);
+        
+        // Other dialogs (all hidden)
+        addCourseworkDialog();
+        editNoteDialog();
     }
     
     /**
@@ -470,6 +474,87 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         }
         sideBar.setText(txtCoursework);
     }
+    
+    /**
+     * Dialog to create a new coursework item
+     */
+    private JDialog addCourseworkDialog() {
+        courseworkInputDialog = new JDialog(this, "Add a new coursework item");
+        courseworkInputDialog.setMinimumSize(new Dimension(500, 300));
+        JPanel courseworkInputDialogPanel = new JPanel(new BorderLayout());
+
+        // North panel
+        JPanel n = new JPanel();
+        n.setLayout(new BoxLayout(n, BoxLayout.X_AXIS));
+        JLabel courseworkNameLabel = new JLabel("Coursework name");
+        courseworkNameInput = new JTextField();
+        n.add(courseworkNameLabel);
+        n.add(courseworkNameInput);
+
+        courseworkInputDialogPanel.add(n, BorderLayout.NORTH);
+
+        // Center panel
+        JPanel c = new JPanel();
+        c.setLayout(new BoxLayout(c, BoxLayout.X_AXIS));
+
+        JLabel courseworkOverviewLabel = new JLabel("Coursework details");
+        courseworkOverviewInput = new JTextArea();
+        JScrollPane scrollPane = new JScrollPane(courseworkOverviewInput, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        c.add(courseworkOverviewLabel);
+        c.add(Box.createRigidArea(new Dimension(10, 0)));
+        c.add(scrollPane);
+
+        courseworkInputDialogPanel.add(c, BorderLayout.CENTER);
+
+        // South panel
+        JPanel s = new JPanel();
+        s.setLayout(new BoxLayout(s, BoxLayout.X_AXIS));
+        JButton ok = new JButton("Ok");
+        ok.addActionListener(this);
+        ok.setActionCommand("AddCourseworkItem");
+        JButton cancel = new JButton("Cancel");
+        cancel.addActionListener(this);
+        cancel.setActionCommand("CloseDialog");
+        s.add(Box.createGlue());
+        s.add(ok);
+        s.add(cancel);
+
+        courseworkInputDialogPanel.add(s, BorderLayout.SOUTH);
+
+        courseworkInputDialog.add(courseworkInputDialogPanel);
+
+        courseworkInputDialog.setVisible(false);
+                
+        return courseworkInputDialog;
+    }
+    
+    /**
+     * Dialog to edit a note
+     */
+    private JDialog editNoteDialog() {
+        // Dialog minimum size
+        editNoteDialog.setMinimumSize(new Dimension(500, 300));
+        JPanel editNotePnl = new JPanel();
+        editNotePnl.setLayout(new BoxLayout(editNotePnl, BoxLayout.Y_AXIS));
+        editNoteTxt.setFont(fnt);
+        // Retrieve note's content
+        for(Note n: allNotes.getAllNotes()) {
+            if(n.getNoteID() == selectedNote) {
+                editNoteTxt.setText(n.getNote());
+                break;
+            }
+        }
+        // Button to apply changes
+        applyButton.setFont(fnt);
+        applyButton.addActionListener(this);
+        applyButton.setActionCommand("EditNote");
+        editNotePnl.add(editNoteTxt);
+        editNotePnl.add(applyButton);
+        editNoteDialog.add(editNotePnl);
+        // Show JDialog
+        editNoteDialog.setVisible(false);
+        return editNoteDialog;
+    }
 
     @Override
     /**
@@ -556,50 +641,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 JOptionPane.showMessageDialog(this, "Select a course first!");
             }
             else {
-                courseworkInputDialog = new JDialog(this, "Add a new coursework item");
-                courseworkInputDialog.setMinimumSize(new Dimension(500, 300));
-                JPanel courseworkInputDialogPanel = new JPanel(new BorderLayout());
-
-                // North panel
-                JPanel n = new JPanel();
-                n.setLayout(new BoxLayout(n, BoxLayout.X_AXIS));
-                JLabel courseworkNameLabel = new JLabel("Coursework name");
-                courseworkNameInput = new JTextField();
-                n.add(courseworkNameLabel);
-                n.add(courseworkNameInput);
-
-                courseworkInputDialogPanel.add(n, BorderLayout.NORTH);
-
-                // Center panel
-                JPanel c = new JPanel();
-                c.setLayout(new BoxLayout(c, BoxLayout.X_AXIS));
-
-                JLabel courseworkOverviewLabel = new JLabel("Coursework details");
-                courseworkOverviewInput = new JTextArea();
-                JScrollPane scrollPane = new JScrollPane(courseworkOverviewInput, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-                c.add(courseworkOverviewLabel);
-                c.add(Box.createRigidArea(new Dimension(10, 0)));
-                c.add(scrollPane);
-
-                courseworkInputDialogPanel.add(c, BorderLayout.CENTER);
-
-                // South panel
-                JPanel s = new JPanel();
-                s.setLayout(new BoxLayout(s, BoxLayout.X_AXIS));
-                JButton ok = new JButton("Ok");
-                ok.addActionListener(this);
-                ok.setActionCommand("AddCourseworkItem");
-                JButton cancel = new JButton("Cancel");
-                cancel.addActionListener(this);
-                cancel.setActionCommand("CloseDialog");
-                s.add(Box.createGlue());
-                s.add(ok);
-                s.add(cancel);
-
-                courseworkInputDialogPanel.add(s, BorderLayout.SOUTH);
-
-                courseworkInputDialog.add(courseworkInputDialogPanel);
-
+                // Clear fields
+                courseworkNameInput.setText("");
+                courseworkOverviewInput.setText("");
+                // Show dialog
                 courseworkInputDialog.setVisible(true);
             }
         }
@@ -667,26 +712,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         }
         if("EditSelectedNote".equals(e.getActionCommand())) {
             System.out.println("Selected note: " + selectedNote);
-            // Dialog minimum size
-            editNoteDialog.setMinimumSize(new Dimension(500, 300));
-            JPanel editNotePnl = new JPanel();
-            editNotePnl.setLayout(new BoxLayout(editNotePnl, BoxLayout.Y_AXIS));
-            editNoteTxt.setFont(fnt);
-            // Retrieve note's content
-            for(Note n: allNotes.getAllNotes()) {
-                if(n.getNoteID() == selectedNote) {
-                    editNoteTxt.setText(n.getNote());
-                    break;
-                }
-            }
-            // Button to apply changes
-            applyButton.setFont(fnt);
-            applyButton.addActionListener(this);
-            applyButton.setActionCommand("EditNote");
-            editNotePnl.add(editNoteTxt);
-            editNotePnl.add(applyButton);
-            editNoteDialog.add(editNotePnl);
-            // Show JDialog
             editNoteDialog.setVisible(true);
         }
         if("EditNote".equals(e.getActionCommand())) {

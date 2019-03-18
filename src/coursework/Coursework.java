@@ -266,6 +266,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         fileMenu.add(newMenu);
         fileMenu.add(cc.makeMenuItem("Exit", "Exit", "Exit from this program", fnt));
         editMenu.add(cc.makeMenuItem("Find...", "SearchMenu", "Find in notes", fnt));
+        editMenu.add(cc.makeMenuItem("Delete selected note", "DeleteNote", "Delete the currently selected note", fnt));
         amendMenu.add(cc.makeMenuItem("Course name", "EditCourseName", "Change name of current course", fnt));
         amendMenu.add(cc.makeMenuItem("Selected Note", "EditSelectedNote", "Change the contents of the currently selected note", fnt));
         editMenu.add(amendMenu);
@@ -746,6 +747,13 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 model();
                 controller();
                 this.setVisible(true);
+            }
+        }
+        if("DeleteNote".equals(e.getActionCommand())) {
+            int confirmDialog = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this note?");
+            if(confirmDialog == JOptionPane.YES_OPTION) {
+                allNotes.deleteNote(selectedNote);
+                addAllNotes();
             }
         }
     }

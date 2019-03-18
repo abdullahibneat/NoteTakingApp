@@ -3,6 +3,7 @@ package coursework;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  * AllNotes class
@@ -148,5 +149,17 @@ public class AllNotes extends CommonCode {
         coursesFile.delete();
         allNotes.clear();
         nextNoteID = 0;
+    }
+    
+    /**
+     * Method to delete a specific note
+     */
+    public void deleteNote(int id) {
+        for (int i = 0; i < allNotes.size(); i++) {
+            if(allNotes.get(i).getNoteID() == id) {
+                allNotes.remove(i);
+                writeAllNotes();
+            }
+        }
     }
 }

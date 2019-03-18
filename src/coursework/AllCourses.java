@@ -1,5 +1,6 @@
 package coursework;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -167,5 +168,15 @@ public class AllCourses extends CommonCode {
             }
         }
         return false;
+    }
+    
+    /**
+     * Method to delete ALL courses
+     */
+    public void deleteAllCourses() {
+        File coursesFile = new File(appDir + "\\Courses.txt");
+        coursesFile.delete();
+        allCourses.clear();
+        nextCourseID = 0;
     }
 }

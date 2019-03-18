@@ -5,6 +5,7 @@
  */
 package coursework;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -100,5 +101,15 @@ public class AllCoursework extends CommonCode {
      */
     public ArrayList<CourseworkItem> getAll() {
         return allCourseworkItems;
+    }
+    
+    /**
+     * Method to delete ALL coursework
+     */
+    public void deleteAllCoursework() {
+        File coursesFile = new File(appDir + "\\Coursework.txt");
+        coursesFile.delete();
+        allCourseworkItems.clear();
+        nextCourseworkID = 0;
     }
 }

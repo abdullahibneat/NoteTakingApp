@@ -269,8 +269,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         amendMenu.add(cc.makeMenuItem("Course name", "EditCourseName", "Change name of current course", fnt));
         amendMenu.add(cc.makeMenuItem("Selected Note", "EditSelectedNote", "Change the contents of the currently selected note", fnt));
         editMenu.add(amendMenu);
-        advancedMenu.add(cc.makeMenuItem("Delete all notes", "DeleteAllNotes", "Delete all your notes", fnt));
-        advancedMenu.add(cc.makeMenuItem("Delete all courses", "DeleteAllCourses", "Delete all the courses", fnt));
         advancedMenu.add(cc.makeMenuItem("Reset notes and courses", "DeleteAll", "Deletes all notes and courses", fnt));
         editMenu.add(advancedMenu);
         toggleToolbar.setFont(fnt);
@@ -736,6 +734,18 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 editNoteDialog.setVisible(false);
                 // Add all notes to JPanel
                 addAllNotes();
+            }
+        }
+        if("DeleteAll".equals(e.getActionCommand())) {
+            Integer confirmDialog = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete ALL notes, coursework AND courses? This operation cannot be undone.");
+            if(confirmDialog == JOptionPane.YES_OPTION) {
+                allCoursework.deleteAllCoursework();
+                allNotes.deleteAllNotes();
+                allCourses.deleteAllCourses();
+                this.setVisible(false);
+                model();
+                controller();
+                this.setVisible(true);
             }
         }
     }

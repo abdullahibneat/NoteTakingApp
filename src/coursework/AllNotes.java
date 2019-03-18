@@ -1,5 +1,6 @@
 package coursework;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -137,5 +138,15 @@ public class AllNotes extends CommonCode {
                 break;
             }
         }
+    }
+    
+    /**
+     * Method to delete ALL notes
+     */
+    public void deleteAllNotes() {
+        File coursesFile = new File(appDir + "\\Notes.txt");
+        coursesFile.delete();
+        allNotes.clear();
+        nextNoteID = 0;
     }
 }

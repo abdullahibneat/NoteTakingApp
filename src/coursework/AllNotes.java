@@ -3,6 +3,9 @@ package coursework;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JOptionPane;
 
 /**
@@ -189,5 +192,54 @@ public class AllNotes extends CommonCode {
         // -1 because, for example, in string "ABCBD", splitting at "B" produces: "A", "C", "D", 1 more than the actual occurrences.
         count += allNotes.get(i).getNote().split(s).length -1;
         return wordOccurrence(s, count, i+1);
+    }
+    
+    /**
+     * Method to find the course(s) with most notes.
+     * 
+     * @return ArrayList of String as follows: [Course ID(s), count]
+     * (if multiple courseIDs have the most notes, they will be separated by commas)
+     */
+    public ArrayList<String> courseWithMostNotes() {
+        return courseWithMostNotes("", 0);
+    }
+    
+    /**
+     * Method to find the course(s) with the most notes
+     * 
+     * @param allCourses String containing all courses found in notes
+     * @param i Index of note to start searching from
+     * @return ArrayList of String as follows: [Course ID(s), count]
+     * (if multiple courseIDs have the most notes, they will be separated by commas)
+     */
+    private ArrayList<String> courseWithMostNotes(String allCourses, int i) {
+        if(i >= allNotes.size()) {
+            String[] tmp = allCourses.split(" ");
+            Set<String> courseSet = new HashSet<>(Arrays.asList(tmp));
+            int highestCount = 0;
+            String highestCourseID = tmp[0];
+            
+            for(String course: courseSet) {
+                int count = 0;
+                for(String tmpCourse: tmp) {
+                    if(tmpCourse.equals(course)) {
+                        count++;
+                    }
+                }
+                if (count == highestCount) {
+                    highestCourseID += "," + course;
+                }
+                else if(count > highestCount) {
+                    highestCount = count;
+                    highestCourseID = course;
+                }
+            }
+            ArrayList<String> output = new ArrayList<>();
+            output.add(highestCourseID);
+            output.add(Integer.toString(highestCount));
+            return output;
+        }
+        allCourses += allNotes.get(i).getCourseID() + " ";
+        return courseWithMostNotes(allCourses, i+1);
     }
 }

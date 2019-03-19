@@ -268,19 +268,19 @@ public class AllNotes extends CommonCode {
             int highestCount = 0;
             String highestDate = tmp[0];
             
-            for(String course: datesSet) {
+            for(String date: datesSet) {
                 int count = 0;
-                for(String tmpCourse: tmp) {
-                    if(tmpCourse.equals(course)) {
+                for(String tmpDate: tmp) {
+                    if(tmpDate.equals(date)) {
                         count++;
                     }
                 }
                 if (count == highestCount) {
-                    highestDate += "," + course;
+                    highestDate += "," + date;
                 }
                 else if(count > highestCount) {
                     highestCount = count;
-                    highestDate = course;
+                    highestDate = date;
                 }
             }
             ArrayList<String> output = new ArrayList<>();

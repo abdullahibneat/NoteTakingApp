@@ -242,4 +242,53 @@ public class AllNotes extends CommonCode {
         allCourses += allNotes.get(i).getCourseID() + " ";
         return courseWithMostNotes(allCourses, i+1);
     }
+    
+    /**
+     * Method to find the date in which the most notes were written
+     * 
+     * @return ArrayList of String as follows: [Date(s), count]
+     * (if multiple dates have the most notes, they will be separated by commas)
+     */
+    public ArrayList<String> dateMostNotesWereWritten() {
+        return dateMostNotesWereWritten("", 0);
+    }
+    
+    /**
+     * Method to find the date in which the most notes were written
+     * 
+     * @param allDates String containing all dates found in notes
+     * @param i Index of note to start searching from
+     * @return ArrayList of String as follows: [Date(s), count]
+     * (if multiple dates have the most notes, they will be separated by commas)
+     */
+    private ArrayList<String> dateMostNotesWereWritten(String allDates, int i) {
+        if(i >= allNotes.size()) {
+            String[] tmp = allDates.split(" ");
+            Set<String> datesSet = new HashSet<>(Arrays.asList(tmp));
+            int highestCount = 0;
+            String highestDate = tmp[0];
+            
+            for(String course: datesSet) {
+                int count = 0;
+                for(String tmpCourse: tmp) {
+                    if(tmpCourse.equals(course)) {
+                        count++;
+                    }
+                }
+                if (count == highestCount) {
+                    highestDate += "," + course;
+                }
+                else if(count > highestCount) {
+                    highestCount = count;
+                    highestDate = course;
+                }
+            }
+            ArrayList<String> output = new ArrayList<>();
+            output.add(highestDate);
+            output.add(Integer.toString(highestCount));
+            return output;
+        }
+        allDates += allNotes.get(i).getDayte().split(" ")[0] + " ";
+        return dateMostNotesWereWritten(allDates, i+1);
+    }
 }

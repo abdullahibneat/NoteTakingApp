@@ -162,4 +162,32 @@ public class AllNotes extends CommonCode {
             }
         }
     }
+    
+    /**
+     * Method to find occurrences of word in a note.
+     * 
+     * @param s Word to be searched
+     * @return Number of occurrences
+     */
+    public Integer wordOccurrence(String s) {
+        return wordOccurrence(s, 0, 0);
+    }
+    
+    /**
+     * Method to find the number of occurrences of a word in note using recursion
+     * 
+     * @param s Word to be searched
+     * @param count Number of occurrences
+     * @param i Index of note to start searching from
+     * @return Number of occurrences
+     */
+    private Integer wordOccurrence(String s, int count, int i) {
+        if(i >= allNotes.size()) {
+            return count;
+        }
+        // Split the string when search word is found.
+        // -1 because, for example, in string "ABCBD", splitting at "B" produces: "A", "C", "D", 1 more than the actual occurrences.
+        count += allNotes.get(i).getNote().split(s).length -1;
+        return wordOccurrence(s, count, i+1);
+    }
 }

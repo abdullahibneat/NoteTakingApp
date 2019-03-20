@@ -53,8 +53,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private final AllNotes allNotes = new AllNotes();
     private final CommonCode cc = new CommonCode(this);
     private final AllCourses allCourses = new AllCourses();
-    // Search
-    private final Search search = new Search();
     // Search toolbar textfield
     JTextField searchField = new JTextField();
     // Coursework items
@@ -638,10 +636,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         // Search button
         if ("SearchMenu".equals(e.getActionCommand())) {
             String searchWord = JOptionPane.showInputDialog("Find current notes");
-            // Convert allNotes ArrayList to String[]
-            String[] currentCourseNotes = allNotes.getAllNotes().toArray(new String[0]);
-            String output = search.search(currentCourseNotes, searchWord);
-            JOptionPane.showMessageDialog(this, output);
+            JOptionPane.showMessageDialog(this, allNotes.searchNoteByKeyword(searchWord));
         }
         if ("AddCoursework".equals(e.getActionCommand())) {
             crse = courseList.getSelectedItem().toString();

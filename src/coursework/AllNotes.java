@@ -17,6 +17,8 @@ public class AllNotes extends CommonCode {
     private final ArrayList<Note> allNotes = new ArrayList<>();
     // Unique identifier: store ID the note after will hold
     private int nextNoteID = 0;
+    // Path to file
+    public final String path = appDir + fileSeparator + "Notes.txt";
     
     /**
      * Constructor
@@ -29,7 +31,7 @@ public class AllNotes extends CommonCode {
      * Function to read all the notes from the "Notes.txt" file.
      */
     private void readAllNotes() {
-        ArrayList<String> readNotes = readTextFile(appDir + "\\Notes.txt");
+        ArrayList<String> readNotes = readTextFile(path);
         
         if("File not found".equals(readNotes.get(0))) {
         } else {
@@ -91,7 +93,6 @@ public class AllNotes extends CommonCode {
      * 
      */
     private void writeAllNotes() {
-        String path = appDir + "\\Notes.txt";
         ArrayList<String> writeNote = new ArrayList<>();
         
         for(Note n: allNotes) {
@@ -146,7 +147,7 @@ public class AllNotes extends CommonCode {
      * Method to delete ALL notes
      */
     public void deleteAllNotes() {
-        File coursesFile = new File(appDir + "\\Notes.txt");
+        File coursesFile = new File(path);
         // Delete file
         coursesFile.delete();
         // Clear ArrayList

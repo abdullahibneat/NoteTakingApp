@@ -14,6 +14,8 @@ public class AllCourses extends CommonCode {
     private final ArrayList<Course> allCourses = new ArrayList<>();
     // Unique identifier: store the ID the course after will hold
     private int nextCourseID = 0;
+    // Path to file
+    public final String path = appDir + fileSeparator + "Courses.txt";
     
     /**
      * Constructor
@@ -26,7 +28,7 @@ public class AllCourses extends CommonCode {
      * Function to read all the courses from the "Course.txt" file.
      */
     private void readAllCourses() {
-        ArrayList<String> readCourses = readTextFile(appDir + "\\Courses.txt");
+        ArrayList<String> readCourses = readTextFile(path);
 
         if("File not found".equals(readCourses.get(0))){
         } else {
@@ -96,7 +98,6 @@ public class AllCourses extends CommonCode {
      * Function to write courses to disk.
      */
     private void writeAllCourses() {
-        String path = appDir + "\\Courses.txt";
         ArrayList<String> writeCourse = new ArrayList<>();
         
         for(Course c: allCourses) {
@@ -178,7 +179,7 @@ public class AllCourses extends CommonCode {
      * Method to delete ALL courses
      */
     public void deleteAllCourses() {
-        File coursesFile = new File(appDir + "\\Courses.txt");
+        File coursesFile = new File(path);
         // Delete Courses.txt
         coursesFile.delete();
         // Clear ArrayList

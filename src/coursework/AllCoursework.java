@@ -14,6 +14,8 @@ public class AllCoursework extends CommonCode {
     private final ArrayList<CourseworkItem> allCourseworkItems = new ArrayList<>();
     // Unique identifier: store ID the courseworkItem after will hold
     private int nextCourseworkID = 0;
+    // Path to file
+    public final String path = appDir + fileSeparator + "Coursework.txt";
     
     /**
      * Constructor
@@ -26,7 +28,7 @@ public class AllCoursework extends CommonCode {
      * Method to read all coursework items from file
      */
     private void readAllCourseworkItems() {
-        ArrayList<String> readCoursework = readTextFile(appDir + "\\Coursework.txt");
+        ArrayList<String> readCoursework = readTextFile(path);
         
         if("File not found".equals(readCoursework.get(0))) {
         } else {
@@ -78,7 +80,6 @@ public class AllCoursework extends CommonCode {
      * Method to write all coursework item to file
      */
     private void writeAllCoursework() {
-        String path = appDir + "\\Coursework.txt";
         ArrayList<String> writeCoursework = new ArrayList<>();
         
         for(CourseworkItem c: allCourseworkItems) {
@@ -106,7 +107,7 @@ public class AllCoursework extends CommonCode {
      * Method to delete ALL coursework
      */
     public void deleteAllCoursework() {
-        File coursesFile = new File(appDir + "\\Coursework.txt");
+        File coursesFile = new File(path);
         // Delete Coursework.txt
         coursesFile.delete();
         // Clear ArrayList

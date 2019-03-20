@@ -108,9 +108,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      * contents (2 courses with 1 note each).
      */
     private void model() {        
-        File notesFile = new File(cc.appDir + "\\Notes.txt");
-        File coursesFile = new File(cc.appDir + "\\Courses.txt");
-        File courseworkFile = new File(cc.appDir + "\\Coursework.txt");
+        File notesFile = new File(allNotes.path);
+        File coursesFile = new File(allCourses.path);
+        File courseworkFile = new File(allCoursework.path);
         
         // If Courses.txt doesn't exist
         if(!coursesFile.exists()) {

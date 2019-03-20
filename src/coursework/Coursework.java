@@ -544,7 +544,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 break;
             }
         }
-        cen.add(editNoteTxt);
+        JScrollPane edtiNoteTxtScroll = new JScrollPane(editNoteTxt, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        cen.add(edtiNoteTxtScroll);
         
         JPanel spnl = new JPanel();
         // Button to apply changes

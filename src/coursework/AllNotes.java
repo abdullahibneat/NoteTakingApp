@@ -1,7 +1,6 @@
 package coursework;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -12,7 +11,7 @@ import javax.swing.JOptionPane;
  * AllNotes class
  * It holds all the Note objects within an array.
  *
- * @author Abdullah Ibne Atiq
+ * @author Abdullah Ibne Atiq, Ed Bencito, Harvind Sokhal
  */
 public class AllNotes extends CommonCode {
     private final ArrayList<Note> allNotes = new ArrayList<>();
@@ -21,7 +20,6 @@ public class AllNotes extends CommonCode {
     
     /**
      * Constructor
-     * 
      */
     public AllNotes() {
         readAllNotes();
@@ -29,25 +27,26 @@ public class AllNotes extends CommonCode {
 
     /**
      * Function to read all the notes from the "Notes.txt" file.
-     * 
      */
     private void readAllNotes() {
-        ArrayList<String> readNotes = new ArrayList<>();
-        
-        readNotes = readTextFile(appDir + "\\Notes.txt");
-        System.out.println(readNotes.get(0));
+        ArrayList<String> readNotes = readTextFile(appDir + "\\Notes.txt");
         
         if("File not found".equals(readNotes.get(0))) {
         } else {
             for(String str: readNotes) {
+                // tmp should look like {Integer noteID, Integer courseID, String date, String note}
                 String[] tmp = str.split("\t");
-                
                 Note n = new Note();
-                n.setNoteID(Integer.parseInt(tmp[0]));
-                n.setCourseID(Integer.parseInt(tmp[1]));
-                n.setDayte(tmp[2]);
-                n.setNote(tmp[3]);
-                
+                try {
+                    n.setNoteID(Integer.parseInt(tmp[0]));
+                    n.setCourseID(Integer.parseInt(tmp[1]));
+                    n.setDayte(tmp[2]);
+                    n.setNote(tmp[3]);
+                } catch(Exception e) {
+                    // If any error occurs (e.g. NumberFormatException, IndexOutOfBounds)
+                    JOptionPane.showMessageDialog(null, "Error while parsing Notes.txt file.");
+                    return;
+                }
                 allNotes.add(n);
                 
                 if(nextNoteID <= n.getNoteID()) {
@@ -96,16 +95,15 @@ public class AllNotes extends CommonCode {
         ArrayList<String> writeNote = new ArrayList<>();
         
         for(Note n: allNotes) {
-            String tmp = n.getNoteID() + "\t";
-            tmp += n.getCourseID() + "\t";
-            tmp += n.getDayte() + "\t";
-            tmp += n.getNote();
+            // Format to write: noteID(tab)courseID(tab)date(tab)note
+            String tmp = n.getNoteID() + "\t" + n.getCourseID() + "\t" + n.getDayte() + "\t" + n.getNote();
             writeNote.add(tmp);
         }
         try {
             writeTextFile(path, writeNote);
-        } catch (IOException ex) {
-            System.out.println("Problem! " + path);
+        } catch (Exception e) {
+            // Error writing to disk
+            JOptionPane.showMessageDialog(null, "Error while writing to file Course.txt.");
         }
     }
     
@@ -113,19 +111,19 @@ public class AllNotes extends CommonCode {
      * Search method to find a note containing a keyword.
      * 
      * @param s Search keyword
-     * @return Full notes containing search keyword
+     * @return ArrayList of String of all notes containing search keyword.
      */
-    public String searchNoteByKeyword(String s) {
-        String searchOutput = "";
+    public ArrayList<String> searchNoteByKeyword(String s) {
+        ArrayList<String> output = new ArrayList<>();
         for(Note n: allNotes) {
             if(n.getNote().toLowerCase().contains(s.toLowerCase())) {
-                searchOutput += n.getNote() + "\n";
+                output.add(n.getNote());
             }
         }
-        if(searchOutput.equals("")) {
-            searchOutput = "\"" + s + "\" not found";
+        if(output.isEmpty()) {
+            output.add(s + " not found.");
         }
-        return searchOutput;
+        return output;
     }
     
     /**
@@ -139,7 +137,7 @@ public class AllNotes extends CommonCode {
             if(n.getNoteID() == id) {
                 n.setNote(s);
                 writeAllNotes();
-                break;
+                return;
             }
         }
     }
@@ -149,19 +147,25 @@ public class AllNotes extends CommonCode {
      */
     public void deleteAllNotes() {
         File coursesFile = new File(appDir + "\\Notes.txt");
+        // Delete file
         coursesFile.delete();
+        // Clear ArrayList
         allNotes.clear();
+        // Reset nextNoteID
         nextNoteID = 0;
     }
     
     /**
      * Method to delete a specific note
+     * 
+     * @param id NoteID to delete
      */
     public void deleteNote(int id) {
         for (int i = 0; i < allNotes.size(); i++) {
             if(allNotes.get(i).getNoteID() == id) {
                 allNotes.remove(i);
                 writeAllNotes();
+                return;
             }
         }
     }
@@ -209,36 +213,49 @@ public class AllNotes extends CommonCode {
      * 
      * @param allCourses String containing all courses found in notes
      * @param i Index of note to start searching from
-     * @return ArrayList of String as follows: [Course ID(s), count]
+     * @return ArrayList of String as follows: {Course ID(s), count}
      * (if multiple courseIDs have the most notes, they will be separated by commas)
      */
     private ArrayList<String> courseWithMostNotes(String allCourses, int i) {
         if(i >= allNotes.size()) {
+            // Array of all courses found so far
             String[] tmp = allCourses.split(" ");
+            // Set, removes duplicate courses
             Set<String> courseSet = new HashSet<>(Arrays.asList(tmp));
+            
+            // Store current maximum note count and corresponding courseID
             int highestCount = 0;
             String highestCourseID = tmp[0];
             
+            // For each course in set
             for(String course: courseSet) {
                 int count = 0;
+                // For each course found in all notes
                 for(String tmpCourse: tmp) {
+                    // Increase count if courseID matches
                     if(tmpCourse.equals(course)) {
                         count++;
                     }
                 }
+                // If count is same as previous count, both courseIDs have same number of notes
                 if (count == highestCount) {
                     highestCourseID += "," + course;
                 }
+                // If this courseID's count is higher than before, set highest as this course
                 else if(count > highestCount) {
                     highestCount = count;
                     highestCourseID = course;
                 }
             }
+            
+            // Create ArrayList for output, format {courseID(s), count}, return output
             ArrayList<String> output = new ArrayList<>();
             output.add(highestCourseID);
             output.add(Integer.toString(highestCount));
             return output;
         }
+        
+        // Get the courseID for this note
         allCourses += allNotes.get(i).getCourseID() + " ";
         return courseWithMostNotes(allCourses, i+1);
     }
@@ -263,26 +280,37 @@ public class AllNotes extends CommonCode {
      */
     private ArrayList<String> dateMostNotesWereWritten(String allDates, int i) {
         if(i >= allNotes.size()) {
+            // Array of all dates found so far
             String[] tmp = allDates.split(" ");
+            // Set, removes duplicate dates
             Set<String> datesSet = new HashSet<>(Arrays.asList(tmp));
+            
+            // Store current maximum date count and corresponding date
             int highestCount = 0;
             String highestDate = tmp[0];
             
+            // For each date in set
             for(String date: datesSet) {
                 int count = 0;
+                // For each date found in all notes
                 for(String tmpDate: tmp) {
+                    // Increase count if date matches
                     if(tmpDate.equals(date)) {
                         count++;
                     }
                 }
+                // If count is same as previous count, both dates have same number of notes written
                 if (count == highestCount) {
                     highestDate += "," + date;
                 }
+                // If this date's count is higher than before, set highest as this date
                 else if(count > highestCount) {
                     highestCount = count;
                     highestDate = date;
                 }
             }
+            
+            // Create ArrayList for output, format {courseID(s), count}, return output
             ArrayList<String> output = new ArrayList<>();
             output.add(highestDate);
             output.add(Integer.toString(highestCount));

@@ -1,12 +1,10 @@
 package coursework;
 
-import java.util.ArrayList;
-
 /**
  * CourseworkItem class
  * It is used to create a requirement for a course module.
  *
- * @author Abdullah
+ * @author Abdullah Ibne Atiq, Ed Bencito, Harvind Sokhal
  */
 public class CourseworkItem {
     private int courseworkID = 0;

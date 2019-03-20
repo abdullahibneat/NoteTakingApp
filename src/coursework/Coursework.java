@@ -37,7 +37,7 @@ import javax.swing.JToolBar;
 /**
  * Main program
  *
- * @author Abdullah Ibne Atiq
+ * @author Abdullah Ibne Atiq, Ed Bencito, Harvind Sokhal
  */
 public class Coursework extends JFrame implements ActionListener, KeyListener, FocusListener {
 
@@ -58,7 +58,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     // Coursework items
     private final AllCoursework allCoursework = new AllCoursework();
     // Display coursework in sidebar
-    private JTextArea sideBar = new JTextArea("Coursework");
+    private final JTextArea sideBar = new JTextArea("Coursework");
     // Dialog
     private JDialog courseworkInputDialog;
     private JTextArea courseworkOverviewInput;
@@ -66,7 +66,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     // Edit note dialog
     private int selectedNote = 0;
     private final JDialog editNoteDialog = new JDialog(this, "Edit note");
-    private JTextArea editNoteTxt = new JTextArea();
+    private final JTextArea editNoteTxt = new JTextArea();
     private final JButton applyButton = new JButton("Apply");
     // Toolbar
     JToolBar toolBar = new JToolBar();
@@ -298,14 +298,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private void toolBar() {
         JButton button = null;
         // makeButton(imgName, actionCommand, toolTipText, altText)
-        button = cc.makeNavigationButton("Create", "NewNote", "New Note", "New");
-        toolBar.add(button);
-        button = cc.makeNavigationButton("No", "Close", "Close this note", "Close");
-        toolBar.add(button);
-        button = cc.makeNavigationButton("book", "AddCourse", "Add a new course", "Add course");
-        toolBar.add(button);
-        button = cc.makeNavigationButton("Bookmark", "AddCoursework", "Add a new coursework", "Add coursework");
-        toolBar.add(button);
+        toolBar.add(cc.makeNavigationButton("Create", "NewNote", "New Note", "New"));
+        toolBar.add(cc.makeNavigationButton("No", "Close", "Close this note", "Close"));
+        toolBar.add(cc.makeNavigationButton("book", "AddCourse", "Add a new course", "Add course"));
+        toolBar.add(cc.makeNavigationButton("Bookmark", "AddCoursework", "Add a new coursework", "Add coursework"));
         // Search field
         toolBar.add(Box.createHorizontalGlue());
         searchField.setMinimumSize(new Dimension(5000, 30));
@@ -313,8 +309,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         searchField.setFont(fnt);
         toolBar.add(searchField);
         toolBar.addSeparator();
-        button = cc.makeNavigationButton("Search", "SearchField", "Search for this text", "Search");
-        toolBar.add(button);
+        toolBar.add(cc.makeNavigationButton("Search", "SearchField", "Search for this text", "Search"));
 
         add(toolBar, BorderLayout.NORTH);    
     }
@@ -406,7 +401,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         }
         crse = courseList.getItemAt(0);
         
-        // Create an "All Courses" item
+        // Create an "All Courses" item to be displayed at the end
         courseList.addItem("All Courses");
     }
 
@@ -421,6 +416,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         for (Note n : allNotes.getAllNotes()) {
             // If user selects "All Courses" from dropdown, show all the notes
             if(crse.equals("All Courses")){
+                // HTML tag wraps text around.
                 radioButton = new JRadioButton("<html>" + n.getNote() + "</html>");
                 // Use the name field as the NoteID
                 radioButton.setName(Integer.toString(n.getNoteID()));
@@ -455,11 +451,13 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         String txtCoursework = "";
         for(CourseworkItem c: allCoursework.getAll()) {
             if(crse.equalsIgnoreCase("All Courses")) {
+                // If "All Courses" is selected, show ALL coursework items
                 int courseID = c.getCourseID();
                 String courseName = allCourses.toCourseName(courseID);
                 txtCoursework += c.getCourseworkName() + "\n" + "Course: " + courseName + "\n" + c.getCourseworkOverview() + "\n\n";
             }
             else {
+                // Otherwise, show relevant coursework items if available
                 int courseID = allCourses.toCourseID(crse);
                 if(c.getCourseID() == courseID) {
                     txtCoursework += c.getCourseworkName() + "\n" + c.getCourseworkOverview() + "\n\n";
@@ -467,6 +465,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             }
         }
         if(txtCoursework.equals("")) {
+            // If no coursework for this course, display this text
             txtCoursework = "No coursework added yet";
         }
         sideBar.setText(txtCoursework);
@@ -565,7 +564,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     @Override
     /**
      * actionPerformed
-     * Logic for user behaviour
+     * 
+     * Logic for UI behaviour
      */
     public void actionPerformed(ActionEvent e) {
         // "Add Note" button
@@ -579,9 +579,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                     JOptionPane.showMessageDialog(this, "Select a course first!");
                 }
                 else {
-                        allNotes.addNote(allCourses.toCourseID(crse), newNote);
-                        addAllNotes();
-                        txtNewNote.setText("");
+                    allNotes.addNote(allCourses.toCourseID(crse), newNote);
+                    addAllNotes();
+                    txtNewNote.setText("");
                 }
             }
         }
@@ -603,8 +603,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             try {
                 // Simple sorting: add relevant notes every time ComboBox value is changed
                 crse = courseList.getSelectedItem().toString();
+            } catch(NullPointerException err) {
+                // This can be safely ignored
             } catch(Exception err) {
-                System.out.println("Error: " + err);
+                JOptionPane.showMessageDialog(this, "An error occured while processing this course. If this error appears again, please restart the program.");
             }
             addAllNotes();
             addAllCoursework();
@@ -714,7 +716,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             }
         }
         if("EditSelectedNote".equals(e.getActionCommand())) {
-            System.out.println("Selected note: " + selectedNote);
             editNoteDialog.setVisible(true);
         }
         if("EditNote".equals(e.getActionCommand())) {

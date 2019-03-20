@@ -4,7 +4,7 @@ package coursework;
  * Course class
  * It is used to create a Course object with a course name.
  *
- * @author Abdullah Ibne Atiq
+ * @author Abdullah Ibne Atiq, Ed Bencito, Harvind Sokhal
  */
 public class Course {
     private String courseName;

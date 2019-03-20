@@ -4,7 +4,7 @@ package coursework;
  * Note class
  * It is used to create a Note object with an ID, course, date and name.
  *
- * @author Abdullah Ibne Atiq
+ * @author Abdullah Ibne Atiq, Ed Bencito, Harvind Sokhal
  */
 public class Note extends CommonCode {
     private int noteID = 0;
@@ -14,7 +14,6 @@ public class Note extends CommonCode {
     
     /**
      * Constructor
-     * 
      */
     public Note() {
         
@@ -50,6 +49,7 @@ public class Note extends CommonCode {
     
     /**
      * Return the course of this note.
+     * 
      * @return Course
      */
     public int getCourseID() {

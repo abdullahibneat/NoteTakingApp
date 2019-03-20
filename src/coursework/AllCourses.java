@@ -1,7 +1,6 @@
 package coursework;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -9,7 +8,7 @@ import javax.swing.JOptionPane;
  * AllCourses class
  * It holds all the Course objects within an array.
  *
- * @author Abdullah Ibne Atiq
+ * @author Abdullah Ibne Atiq, Ed Bencito, Harvind Sokhal
  */
 public class AllCourses extends CommonCode {    
     private final ArrayList<Course> allCourses = new ArrayList<>();
@@ -27,18 +26,22 @@ public class AllCourses extends CommonCode {
      * Function to read all the courses from the "Course.txt" file.
      */
     private void readAllCourses() {
-        ArrayList<String> readCourses = new ArrayList<>();
-        
-        readCourses = readTextFile(appDir + "\\Courses.txt");
-        System.out.println(readCourses.get(0));
+        ArrayList<String> readCourses = readTextFile(appDir + "\\Courses.txt");
 
         if("File not found".equals(readCourses.get(0))){
         } else {
             for(String str: readCourses){
+                // tmp should look like {Integer courseID, String courseName}
                 String[] tmp = str.split("\t");
                 Course c = new Course();
-                c.setCourseID(Integer.parseInt(tmp[0]));
-                c.setCourseName(tmp[1]);
+                try {
+                    c.setCourseID(Integer.parseInt(tmp[0]));
+                    c.setCourseName(tmp[1]);
+                } catch(Exception e) {
+                    // If any error occurs (e.g. NumberFormatException, IndexOutOfBounds)
+                    JOptionPane.showMessageDialog(null, "Error while parsing Courses.txt file.");
+                    return;
+                }
                 allCourses.add(c);
                 
                 if(nextCourseID <= c.getCourseID()) {
@@ -55,6 +58,7 @@ public class AllCourses extends CommonCode {
      * 
      * Function to add a new course to the ArrayList and store it permanently inside the "Courses.txt" file.
      *
+     * @param courseID ID of course
      * @param course
      */
     public void addCourse(int courseID, String course) {
@@ -96,14 +100,14 @@ public class AllCourses extends CommonCode {
         ArrayList<String> writeCourse = new ArrayList<>();
         
         for(Course c: allCourses) {
-            String tmp = c.getCourseID() + "\t";
-            tmp += c.getCourseName();
-            writeCourse.add(tmp);
+            // Format to write: courseID(tab)courseName
+            writeCourse.add(c.getCourseID() + "\t" + c.getCourseName());
         }
         try {
             writeTextFile(path, writeCourse);
-        } catch (IOException ex) {
-            System.out.println("Problem! " + path);
+        } catch (Exception e) {
+            // Error writing to disk
+            JOptionPane.showMessageDialog(null, "Error while writing to file Course.txt.");
         }
     }
     
@@ -119,8 +123,8 @@ public class AllCourses extends CommonCode {
                 return c.getCourseID();
             }
         }
-        JOptionPane.showMessageDialog(null, "Course " + courseName + " not found...");
-        
+        // Course name not found
+        JOptionPane.showMessageDialog(null, "Course " + courseName + " not found...");        
         return -1;
     }
     
@@ -136,6 +140,7 @@ public class AllCourses extends CommonCode {
                 return c.getCourseName();
             }
         }
+        // CourseID not found
         return "Course not found.";
     }
     
@@ -158,7 +163,6 @@ public class AllCourses extends CommonCode {
      * Method to check if a course name already exists
      * 
      * @param s Course name
-     * 
      * @return true/false
      */
     public boolean exists(String s) {
@@ -175,8 +179,11 @@ public class AllCourses extends CommonCode {
      */
     public void deleteAllCourses() {
         File coursesFile = new File(appDir + "\\Courses.txt");
+        // Delete Courses.txt
         coursesFile.delete();
+        // Clear ArrayList
         allCourses.clear();
+        // Reset nextCourseID
         nextCourseID = 0;
     }
 }

@@ -137,7 +137,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                     if(allCoursesID.contains(n.getCourseID())) {
                     }
                     else {
-                        allCoursesID.add(n.getNoteID());
+                        allCoursesID.add(n.getCourseID());
                         Course c = new Course();
                         c.setCourseID(n.getCourseID());
                         c.setCourseName("Course name for ID " + n.getCourseID() + " not found");

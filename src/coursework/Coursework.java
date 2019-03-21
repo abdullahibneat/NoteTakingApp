@@ -68,6 +68,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private final JDialog editNoteDialog = new JDialog(this, "Edit note");
     private final JTextArea editNoteTxt = new JTextArea();
     private final JButton applyButton = new JButton("Apply");
+    // Statistics dialog
+    private final JDialog statsDialog = new JDialog(this, "All time statistics");
+    private final JTextArea statsTxt = new JTextArea();
     // Toolbar
     JToolBar toolBar = new JToolBar();
     JCheckBoxMenuItem toggleToolbar = new JCheckBoxMenuItem("Show toolbar", true);
@@ -235,6 +238,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         // Other dialogs (all hidden)
         addCourseworkDialog();
         editNoteDialog();
+        showStatistics();
     }
     
     /**
@@ -274,6 +278,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         toggleToolbar.addActionListener(this);
         toggleToolbar.setActionCommand("ToggleToolbar");
         viewMenu.add(toggleToolbar);
+        viewMenu.add(cc.makeMenuItem("Statistics", "Stats", "View statistics", fnt));
         helpMenu.add(cc.makeMenuItem("About", "About", "About this program", fnt));
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
@@ -557,9 +562,23 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         editNotePnl.add(cen, BorderLayout.CENTER);
         editNotePnl.add(spnl, BorderLayout.SOUTH);
         editNoteDialog.add(editNotePnl);
-        // Show JDialog
+        // Dialog hidden at startup
         editNoteDialog.setVisible(false);
         return editNoteDialog;
+    }
+    
+    private JDialog showStatistics() {
+        // Dialog size
+        statsDialog.setMinimumSize(new Dimension(500, 300));
+        statsDialog.setMaximumSize(new Dimension(500, 300));
+        
+        JPanel pnl = new JPanel();
+        pnl.setLayout(new BoxLayout(pnl, BoxLayout.Y_AXIS));
+        pnl.add(statsTxt);
+        statsDialog.add(pnl);
+        // Dialog hidden at startup
+        statsDialog.setVisible(false);
+        return statsDialog;
     }
 
     @Override
@@ -752,6 +771,17 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 allNotes.deleteNote(selectedNote);
                 addAllNotes();
             }
+        }
+        if("Stats".equals(e.getActionCommand())) {
+            String stats = "";
+            stats += "Number of courses: " + allCourses.getAllCourses().size() + "\n";
+            stats += "Number of notes: " + allNotes.getAllNotes().size() + "\n";
+            stats += "Number of coursework: " + allCoursework.getAll().size() + "\n\n";
+            stats += "Course with most notes: " + allCourses.toCourseName(Integer.parseInt(allNotes.courseWithMostNotes().get(0))) + " with " +allNotes.courseWithMostNotes().get(1) + " notes\n";
+            stats += "Date most notes were written: " + allNotes.dateMostNotesWereWritten().get(0) + " with " + allNotes.dateMostNotesWereWritten().get(1) + " notes";
+            statsTxt.setText(stats);
+            // Show dialog
+            statsDialog.setVisible(true);
         }
     }
 

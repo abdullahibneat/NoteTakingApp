@@ -658,7 +658,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         // Search button
         if ("SearchMenu".equals(e.getActionCommand())) {
             String searchWord = JOptionPane.showInputDialog("Find current notes");
-            JOptionPane.showMessageDialog(this, allNotes.searchNoteByKeyword(searchWord));
+            JOptionPane.showMessageDialog(this, "Found " + allNotes.wordOccurrence(searchWord) + " occurrence(s) of " + searchWord + "\n" + allNotes.searchNoteByKeyword(searchWord));
         }
         if ("AddCoursework".equals(e.getActionCommand())) {
             crse = courseList.getSelectedItem().toString();
@@ -696,7 +696,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             toolBar.setVisible(toggleToolbar.isSelected());
         }
         if ("SearchField".equals(e.getActionCommand())) {
-            JOptionPane.showMessageDialog(this, allNotes.searchNoteByKeyword(searchField.getText()));
+            JOptionPane.showMessageDialog(this, "Found " + allNotes.wordOccurrence(searchField.getText()) + " occurrence(s) of " + searchField.getText() + "\n" + allNotes.searchNoteByKeyword(searchField.getText()));
         }
         if ("EditCourseName".equals(e.getActionCommand())) {
             // Ask for new name

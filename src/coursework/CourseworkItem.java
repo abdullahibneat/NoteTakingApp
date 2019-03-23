@@ -138,7 +138,7 @@ public class CourseworkItem {
         }
         else {
             JOptionPane.showMessageDialog(null, "Error saving coursework requirements checkboxes");
-            for (int i = 0; i < courseworkRequirements.size(); i++) {
+            for (String courseworkRequirement: courseworkRequirements) {
                 requirementsFulfilled.add(false);
             }
         }

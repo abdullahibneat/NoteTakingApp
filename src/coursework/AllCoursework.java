@@ -159,4 +159,14 @@ public class AllCoursework extends CommonCode {
             }
         }
     }
+    
+    public void setRequirementsFulfilled(int courseworkID, ArrayList<Boolean> b) {
+        for(CourseworkItem c: allCourseworkItems) {
+            if(c.getCourseworkID() == courseworkID) {
+                c.setRequirementsFulfilled(b);
+                writeAllCoursework();
+                return;
+            }
+        }
+    }
 }

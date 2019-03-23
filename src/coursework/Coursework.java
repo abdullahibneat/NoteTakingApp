@@ -59,6 +59,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     // Coursework items
     private final AllCoursework allCoursework = new AllCoursework();
     private ButtonGroup courseworkButtonGroup = new ButtonGroup();
+    private ArrayList<JCheckBox> allCheckBoxes = new ArrayList<>();
     // Display coursework in sidebar
     private final JPanel sideBarPnl = new JPanel();
     // Dialog
@@ -447,6 +448,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      */
     private void addAllCoursework() {
         sideBarPnl.removeAll();
+        allCheckBoxes = new ArrayList<>();
         courseworkButtonGroup = new ButtonGroup();
         for(CourseworkItem c: allCoursework.getAll()) {
             JLabel courseworkName = new JLabel(c.getCourseworkName());
@@ -462,7 +464,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 sideBarPnl.add(new JLabel("Requirements"));
                 for (int i = 0; i < c.getCourseworkRequirements().size(); i++) {
                     JCheckBox chk = new JCheckBox(c.getCourseworkRequirements().get(i), c.getRequirementsFulfilled().get(i));
+                    chk.setName(Integer.toString(c.getCourseworkID()));
+                    allCheckBoxes.add(chk);
                     chk.setFont(fnt);
+                    chk.addActionListener(this);
+                    chk.setActionCommand("CourseworkRequirementFulfilled");
                     sideBarPnl.add(chk);
                 }
             }
@@ -844,6 +850,16 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                     break;
                 }
             }
+        }
+        if("CourseworkRequirementFulfilled".equals(e.getActionCommand())) {
+            ArrayList<Boolean> fulfilled = new ArrayList<>();
+            int courseworkID = Integer.parseInt(allCheckBoxes.get(allCheckBoxes.indexOf(e.getSource())).getName());
+            for(JCheckBox c: allCheckBoxes) {
+                if(c.getName().equals(Integer.toString(courseworkID))) {
+                    fulfilled.add(c.isSelected());
+                }
+            }
+            allCoursework.setRequirementsFulfilled(courseworkID, fulfilled);
         }
     }
 

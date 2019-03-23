@@ -18,6 +18,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -57,14 +58,19 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     JTextField searchField = new JTextField();
     // Coursework items
     private final AllCoursework allCoursework = new AllCoursework();
+    private ButtonGroup courseworkButtonGroup = new ButtonGroup();
     // Display coursework in sidebar
-    private final JTextArea sideBar = new JTextArea("Coursework");
+    private final JPanel sideBarPnl = new JPanel();
     // Dialog
     private JDialog courseworkInputDialog;
     private JTextArea courseworkOverviewInput;
     private JTextField courseworkNameInput;
+    private JTextArea courseworkRequirementsInput;
     // Edit note dialog
     private int selectedNote = 0;
+    // Edit coursework dialog
+    private int selectedCoursework = 0;
+    private boolean editCoursework = false;
     private final JDialog editNoteDialog = new JDialog(this, "Edit note");
     private final JTextArea editNoteTxt = new JTextArea();
     private final JButton applyButton = new JButton("Apply");
@@ -180,7 +186,13 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      * Add sample coursework
      */
     private void addSampleCourseworkItem() {
-        allCoursework.addNewCoursework(0, "Sample coursework", "You can add multiple coursework for each course!");
+        ArrayList<String> requirements = new ArrayList<>();
+        requirements.add("Sample requirement 1");
+        requirements.add("Example 2");
+        ArrayList<Boolean> fulfilled = new ArrayList<>();
+        fulfilled.add(false);
+        fulfilled.add(true);
+        allCoursework.addNewCoursework(0, "Sample coursework", "You can add multiple coursework for each course!", requirements, fulfilled);
     }
 
     /**
@@ -251,6 +263,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         editMenu.add(cc.makeMenuItem("Delete selected note", "DeleteNote", "Delete the currently selected note", fnt));
         amendMenu.add(cc.makeMenuItem("Course name", "EditCourseName", "Change name of current course", fnt));
         amendMenu.add(cc.makeMenuItem("Selected Note", "EditSelectedNote", "Change the contents of the currently selected note", fnt));
+        amendMenu.add(cc.makeMenuItem("Selected Coursework", "EditSelectedCoursework", "Change the contents of the currently selected coursework", fnt));
         editMenu.add(amendMenu);
         advancedMenu.add(cc.makeMenuItem("Reset notes and courses", "DeleteAll", "Deletes all notes and courses", fnt));
         editMenu.add(advancedMenu);
@@ -355,11 +368,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      */
     private JPanel panelEast() {
         JPanel pnlEast = new JPanel();
+        pnlEast.setAutoscrolls(true);
         pnlEast.setLayout(new BoxLayout(pnlEast, BoxLayout.Y_AXIS));
         
-        sideBar.setFont(fnt);
-        sideBar.setLineWrap(true);
-        JScrollPane scrollPane = new JScrollPane(sideBar, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        sideBarPnl.setLayout(new BoxLayout(sideBarPnl, BoxLayout.Y_AXIS));
+        JScrollPane scrollPane = new JScrollPane(sideBarPnl, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         pnlEast.add(scrollPane);
         
         return pnlEast;
@@ -433,27 +446,37 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      * Load all coursework item into the text area.
      */
     private void addAllCoursework() {
-        String txtCoursework = "";
+        sideBarPnl.removeAll();
+        courseworkButtonGroup = new ButtonGroup();
         for(CourseworkItem c: allCoursework.getAll()) {
-            if(crse.equalsIgnoreCase("All Courses")) {
-                // If "All Courses" is selected, show ALL coursework items
-                int courseID = c.getCourseID();
-                String courseName = allCourses.toCourseName(courseID);
-                txtCoursework += c.getCourseworkName() + "\n" + "Course: " + courseName + "\n" + c.getCourseworkOverview() + "\n\n";
-            }
-            else {
-                // Otherwise, show relevant coursework items if available
-                int courseID = allCourses.toCourseID(crse);
-                if(c.getCourseID() == courseID) {
-                    txtCoursework += c.getCourseworkName() + "\n" + c.getCourseworkOverview() + "\n\n";
+            JLabel courseworkName = new JLabel(c.getCourseworkName());
+            courseworkName.setFont(fnt);
+            sideBarPnl.add(courseworkName);
+            JRadioButton editBtn = new JRadioButton("Edit");
+            editBtn.setName(Integer.toString(c.getCourseworkID()));
+            editBtn.addActionListener(this);
+            editBtn.setActionCommand("EditCoursework");
+            courseworkButtonGroup.add(editBtn);
+            sideBarPnl.add(editBtn);
+            if(c.getCourseworkRequirements().size() > 0) {
+                sideBarPnl.add(new JLabel("Requirements"));
+                for (int i = 0; i < c.getCourseworkRequirements().size(); i++) {
+                    JCheckBox chk = new JCheckBox(c.getCourseworkRequirements().get(i), c.getRequirementsFulfilled().get(i));
+                    chk.setFont(fnt);
+                    sideBarPnl.add(chk);
                 }
             }
+            JTextArea overview = new JTextArea(c.getCourseworkOverview());
+            overview.setFont(fnt);
+            overview.setWrapStyleWord(true);
+            overview.setLineWrap(true);
+            JScrollPane sp = new JScrollPane(overview, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            sp.setPreferredSize(new Dimension(100, 500));
+            sideBarPnl.add(sp);
+            sideBarPnl.add(Box.createRigidArea(new Dimension(0, 20)));
         }
-        if(txtCoursework.equals("")) {
-            // If no coursework for this course, display this text
-            txtCoursework = "No coursework added yet";
-        }
-        sideBar.setText(txtCoursework);
+        sideBarPnl.revalidate();
+        sideBarPnl.repaint();
     }
     
     /**
@@ -476,14 +499,32 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
 
         // Center panel
         JPanel c = new JPanel();
-        c.setLayout(new BoxLayout(c, BoxLayout.X_AXIS));
+        c.setLayout(new BoxLayout(c, BoxLayout.Y_AXIS));
+        JPanel cNorth = new JPanel();
+        cNorth.setLayout(new BoxLayout(cNorth, BoxLayout.X_AXIS));
+        JPanel cSouth = new JPanel();
+        cSouth.setLayout(new BoxLayout(cSouth, BoxLayout.X_AXIS));
 
         JLabel courseworkOverviewLabel = new JLabel("Coursework details");
         courseworkOverviewInput = new JTextArea();
+        courseworkOverviewInput.setWrapStyleWord(true);
+        courseworkOverviewInput.setLineWrap(true);
         JScrollPane scrollPane = new JScrollPane(courseworkOverviewInput, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        c.add(courseworkOverviewLabel);
-        c.add(Box.createRigidArea(new Dimension(10, 0)));
-        c.add(scrollPane);
+        cNorth.add(courseworkOverviewLabel);
+        cNorth.add(Box.createRigidArea(new Dimension(10, 0)));
+        cNorth.add(scrollPane);
+        
+        JLabel courseworkRequirementsLabel = new JLabel("Requirements");
+        courseworkRequirementsInput = new JTextArea();
+        courseworkRequirementsInput.setWrapStyleWord(true);
+        courseworkRequirementsInput.setLineWrap(true);
+        scrollPane = new JScrollPane(courseworkRequirementsInput, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        cSouth.add(courseworkRequirementsLabel);
+        cSouth.add(Box.createRigidArea(new Dimension(10, 0)));
+        cSouth.add(scrollPane);
+        
+        c.add(cNorth);
+        c.add(cSouth);
 
         courseworkInputDialogPanel.add(c, BorderLayout.CENTER);
 
@@ -649,6 +690,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 // Clear fields
                 courseworkNameInput.setText("");
                 courseworkOverviewInput.setText("");
+                courseworkRequirementsInput.setText("");
                 // Show dialog
                 courseworkInputDialog.setVisible(true);
             }
@@ -664,7 +706,21 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 JOptionPane.showMessageDialog(this, "Overview cannot be empty");
             }
             else {
-                allCoursework.addNewCoursework(courseID, courseworkName, courseworkOverview);
+                ArrayList<String> requirements = new ArrayList<>();
+                ArrayList<Boolean> fulfilled = new ArrayList<>();
+                for(String s: courseworkRequirementsInput.getText().split("\n")) {
+                    requirements.add(s);
+                    fulfilled.add(false);
+                }
+                // If editing coursework
+                if(editCoursework) {
+                    allCoursework.editCoursework(selectedCoursework, courseworkName, courseworkOverview, requirements);
+                    editCoursework = false;
+                }
+                // Otherwise is new coursework
+                else {
+                    allCoursework.addNewCoursework(courseID, courseworkName, courseworkOverview, requirements, fulfilled);
+                }
                 addAllCoursework();
                 courseworkInputDialog.dispose();
             }
@@ -762,6 +818,32 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             statsTxt.setText(stats);
             // Show dialog
             statsDialog.setVisible(true);
+        }
+        if("SelectCoursework".equals(e.getActionCommand())) {
+            // Create ArrayList of all radio buttons
+            ArrayList<AbstractButton> courseworkRadioButtons = Collections.list(courseworkButtonGroup.getElements());
+            for(AbstractButton button : courseworkRadioButtons) {
+                // If selected button is found
+                if(button.isSelected()) {
+                    selectedCoursework = Integer.parseInt(button.getName());
+                }
+            }
+        }
+        if("EditSelectedCoursework".equals(e.getActionCommand())) {
+            for(CourseworkItem c: allCoursework.getAll()) {
+                if(c.getCourseworkID() == selectedCoursework) {
+                    courseworkNameInput.setText(c.getCourseworkName());
+                    courseworkOverviewInput.setText(c.getCourseworkOverview());
+                    String requirements = "";
+                    for(String s: c.getCourseworkRequirements()) {
+                        requirements += s + "\n";
+                    }
+                    courseworkRequirementsInput.setText(requirements);
+                    editCoursework = true;
+                    courseworkInputDialog.setVisible(true);
+                    break;
+                }
+            }
         }
     }
 

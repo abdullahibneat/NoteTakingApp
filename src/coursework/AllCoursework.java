@@ -2,6 +2,7 @@ package coursework;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.JOptionPane;
 
 /**
@@ -48,7 +49,12 @@ public class AllCoursework extends CommonCode {
                 String[] tmp = str.split("\t");
                 
                 try {
-                    CourseworkItem c = new CourseworkItem(Integer.parseInt(tmp[0]), tmp[1], Integer.parseInt(tmp[2]), tmp[3]);
+                    ArrayList<String> requirements = new ArrayList<>(Arrays.asList(tmp[4].split("%&")));
+                    ArrayList<Boolean> fulfilled = new ArrayList<>();
+                    for(String s: tmp[5].split("%&")) {
+                        fulfilled.add(Boolean.parseBoolean(s));
+                    }
+                    CourseworkItem c = new CourseworkItem(Integer.parseInt(tmp[0]), tmp[1], Integer.parseInt(tmp[2]), tmp[3], requirements, fulfilled);
                     allCourseworkItems.add(c);
                     if(nextCourseworkID <= c.getCourseworkID()) {
                         nextCourseworkID = c.getCourseworkID() + 1;
@@ -68,9 +74,11 @@ public class AllCoursework extends CommonCode {
      * @param courseID Course ID
      * @param name Course name
      * @param overview Course description
+     * @param requirements List of requirements
+     * @param fulfilled Requirements fulfilled values
      */
-    public void addNewCoursework(int courseID, String name, String overview) {
-        CourseworkItem c = new CourseworkItem(nextCourseworkID(), name, courseID, overview);        
+    public void addNewCoursework(int courseID, String name, String overview, ArrayList<String> requirements, ArrayList<Boolean> fulfilled) {
+        CourseworkItem c = new CourseworkItem(nextCourseworkID(), name, courseID, overview, requirements, fulfilled);
         allCourseworkItems.add(c);
         writeAllCoursework();
     }
@@ -82,7 +90,19 @@ public class AllCoursework extends CommonCode {
         ArrayList<String> writeCoursework = new ArrayList<>();
         
         for(CourseworkItem c: allCourseworkItems) {
-            String tmp = c.getCourseworkID() + "\t" + c.getCourseworkName() + "\t" + c.getCourseID() + "\t" + c.getCourseworkOverview();
+            // Requirements will need to be split and stored as string
+            ArrayList<String> requirements = c.getCourseworkRequirements();
+            String requirementsString = "";
+            for(String s: requirements) {
+                requirementsString += s + "%&";
+            }
+            // Checkbox values also need to be split and stored as string
+            ArrayList<Boolean> fulfilled = c.getRequirementsFulfilled();
+            String fulfilledString = "";
+            for(Boolean b: fulfilled) {
+                fulfilledString += b + "%&";
+            }
+            String tmp = c.getCourseworkID() + "\t" + c.getCourseworkName() + "\t" + c.getCourseID() + "\t" + c.getCourseworkOverview() + "\t" + requirementsString + "\t" + fulfilledString;
             writeCoursework.add(tmp);
         }
         try {
@@ -113,5 +133,30 @@ public class AllCoursework extends CommonCode {
         allCourseworkItems.clear();
         // Reset nextCourseworkID
         nextCourseworkID = 0;
+    }
+    
+    /**
+     * Method to edit a coursework
+     * 
+     * @param crswrkID Coursework ID
+     * @param crswrkName Coursework Name
+     * @param crswrkOverview Coursework Overview
+     * @param requirements Requirements
+     */
+    public void editCoursework(int crswrkID, String crswrkName, String crswrkOverview, ArrayList<String> requirements) {
+        for(CourseworkItem c: allCourseworkItems) {
+            if(c.getCourseworkID() == crswrkID) {
+                c.setCourseworkName(crswrkName);
+                c.setCourseworkOverview(crswrkOverview);
+                c.setCourseworkRequirements(requirements);
+                ArrayList<Boolean> fulfilled = new ArrayList<>();
+                for (String requirement : requirements) {
+                    fulfilled.add(false);
+                }
+                c.setRequirementsFulfilled(fulfilled);
+                writeAllCoursework();
+                return;
+            }
+        }
     }
 }

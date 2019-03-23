@@ -25,6 +25,17 @@ public class AllCoursework extends CommonCode {
     }
     
     /**
+     * Method to increment nextCourseworkID by 1
+     * 
+     * @return next coursework ID
+     */
+    private int nextCourseworkID() {
+        int id = nextCourseworkID;
+        nextCourseworkID++;
+        return id;
+    }
+    
+    /**
      * Method to read all coursework items from file
      */
     private void readAllCourseworkItems() {
@@ -36,22 +47,16 @@ public class AllCoursework extends CommonCode {
                 // tmp should look like: {Integer cID, String cName, Integer courseID, String cOverview}
                 String[] tmp = str.split("\t");
                 
-                CourseworkItem c = new CourseworkItem();
                 try {
-                    c.setCourseworkID(Integer.parseInt(tmp[0]));
-                    c.setCourseworkName(tmp[1]);
-                    c.setCourseID(Integer.parseInt(tmp[2]));
-                    c.setCourseworkOverview(tmp[3]);
-
+                    CourseworkItem c = new CourseworkItem(Integer.parseInt(tmp[0]), tmp[1], Integer.parseInt(tmp[2]), tmp[3]);
                     allCourseworkItems.add(c);
+                    if(nextCourseworkID <= c.getCourseworkID()) {
+                        nextCourseworkID = c.getCourseworkID() + 1;
+                    }
                 } catch(Exception e) {
                     // If any error occurs (e.g. NumberFormatException, IndexOutOfBounds)
                     JOptionPane.showMessageDialog(null, "Error while parsing Coursework.txt file.");
                     return;
-                }
-                
-                if(nextCourseworkID <= c.getCourseworkID()) {
-                    nextCourseworkID = c.getCourseworkID() + 1;
                 }
             }
         }
@@ -65,13 +70,7 @@ public class AllCoursework extends CommonCode {
      * @param overview Course description
      */
     public void addNewCoursework(int courseID, String name, String overview) {
-        CourseworkItem c = new CourseworkItem();
-        c.setCourseID(courseID);
-        c.setCourseworkID(nextCourseworkID);
-        nextCourseworkID++;
-        c.setCourseworkName(name);
-        c.setCourseworkOverview(overview);
-        
+        CourseworkItem c = new CourseworkItem(nextCourseworkID(), name, courseID, overview);        
         allCourseworkItems.add(c);
         writeAllCoursework();
     }

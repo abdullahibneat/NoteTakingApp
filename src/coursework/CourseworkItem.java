@@ -14,8 +14,17 @@ public class CourseworkItem {
     
     /**
      * Constructor
+     * 
+     * @param crswrkID Coursework ID
+     * @param name Coursework name
+     * @param crsID Course ID
+     * @param coursework Coursework overview
      */
-    public CourseworkItem() {
+    public CourseworkItem(int crswrkID, String name, int crsID, String coursework) {
+        courseworkID = crswrkID;
+        courseworkName = name;
+        courseID = crsID;
+        courseworkOverview = coursework;
     }
     
     /**

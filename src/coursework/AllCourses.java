@@ -23,6 +23,17 @@ public class AllCourses extends CommonCode {
     public AllCourses() {
         readAllCourses();
     }
+    
+    /**
+     * Method to increment nextCourseID by 1
+     * 
+     * @return next course ID
+     */
+    private int nextCourseID() {
+        int id = nextCourseID;
+        nextCourseID++;
+        return id;
+    }
 
     /**
      * Function to read all the courses from the "Course.txt" file.
@@ -35,19 +46,17 @@ public class AllCourses extends CommonCode {
             for(String str: readCourses){
                 // tmp should look like {Integer courseID, String courseName}
                 String[] tmp = str.split("\t");
-                Course c = new Course();
                 try {
-                    c.setCourseID(Integer.parseInt(tmp[0]));
-                    c.setCourseName(tmp[1]);
+                    Course c = new Course(Integer.parseInt(tmp[0]), tmp[1]);
+                    allCourses.add(c);
+                    
+                    if(nextCourseID <= c.getCourseID()) {
+                        nextCourseID = c.getCourseID() + 1;
+                    }
                 } catch(Exception e) {
                     // If any error occurs (e.g. NumberFormatException, IndexOutOfBounds)
                     JOptionPane.showMessageDialog(null, "Error while parsing Courses.txt file.");
                     return;
-                }
-                allCourses.add(c);
-                
-                if(nextCourseID <= c.getCourseID()) {
-                    nextCourseID = c.getCourseID() + 1;
                 }
             }
         }
@@ -64,9 +73,7 @@ public class AllCourses extends CommonCode {
      * @param course
      */
     public void addCourse(int courseID, String course) {
-        Course c = new Course();
-        c.setCourseName(course);
-        c.setCourseID(courseID);
+        Course c = new Course(courseID, course);
         allCourses.add(c);
         writeAllCourses();
     }
@@ -77,10 +84,7 @@ public class AllCourses extends CommonCode {
      * @param course
      */
     public void addCourse(String course) {
-        Course c = new Course();
-        c.setCourseName(course);
-        c.setCourseID(nextCourseID);
-        nextCourseID++;
+        Course c = new Course(nextCourseID(), course);
         allCourses.add(c);
         writeAllCourses();
     }

@@ -138,10 +138,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                     }
                     else {
                         allCoursesID.add(n.getCourseID());
-                        Course c = new Course();
-                        c.setCourseID(n.getCourseID());
-                        c.setCourseName("Course name for ID " + n.getCourseID() + " not found");
-                        allCourses.addCourse(c.getCourseID(), c.getCourseName());
+                        allCourses.addCourse(n.getCourseID(), "Course name for ID " + n.getCourseID() + " not found");
                     }
                 }
             }
@@ -167,40 +164,23 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      * Add sample courses
      */
     private void addSampleCourses() {
-        Course c = new Course();
-
-        c.setCourseName("COMP1752");
-        allCourses.addCourse(c.getCourseName());
-
-        c.setCourseName("COMP1753");
-        allCourses.addCourse(c.getCourseName());    
+        allCourses.addCourse("COMP1752");
+        allCourses.addCourse("COMP1753");    
     }
     
     /**
      * Add sample notes
      */
     private void addSampleNotes() {
-        Note nt = new Note();
-
-        nt.setCourseID(0);
-        nt.setNote("Arrays are of fixed length and are inflexible.");
-        allNotes.addNote(nt.getCourseID(), nt.getNote());
-
-        nt.setCourseID(1);
-        nt.setNote("ArrayList can be added to and items can be deleted.");
-        allNotes.addNote(nt.getCourseID(), nt.getNote());
+        allNotes.addNote(0, "Arrays are of fixed length and are inflexible.");
+        allNotes.addNote(1, "ArrayList can be added to and items can be deleted.");
     }
     
     /**
      * Add sample coursework
      */
     private void addSampleCourseworkItem() {
-        CourseworkItem c = new CourseworkItem();
-        
-        c.setCourseID(0);
-        c.setCourseworkName("Sample coursework");
-        c.setCourseworkOverview("You can add multiple coursework for each course!");
-        allCoursework.addNewCoursework(c.getCourseID(), c.getCourseworkName(), c.getCourseworkOverview());
+        allCoursework.addNewCoursework(0, "Sample coursework", "You can add multiple coursework for each course!");
     }
 
     /**

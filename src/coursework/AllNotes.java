@@ -26,6 +26,17 @@ public class AllNotes extends CommonCode {
     public AllNotes() {
         readAllNotes();
     }
+    
+    /**
+     * Method to increment nextNoteID by 1
+     * 
+     * @return next note ID
+     */
+    private int nextNoteID() {
+        int id = nextNoteID;
+        nextNoteID++;
+        return id;
+    }
 
     /**
      * Function to read all the notes from the "Notes.txt" file.
@@ -38,21 +49,16 @@ public class AllNotes extends CommonCode {
             for(String str: readNotes) {
                 // tmp should look like {Integer noteID, Integer courseID, String date, String note}
                 String[] tmp = str.split("\t");
-                Note n = new Note();
                 try {
-                    n.setNoteID(Integer.parseInt(tmp[0]));
-                    n.setCourseID(Integer.parseInt(tmp[1]));
-                    n.setDayte(tmp[2]);
-                    n.setNote(tmp[3]);
+                    Note n = new Note(Integer.parseInt(tmp[0]), Integer.parseInt(tmp[1]), tmp[2], tmp[3]);
+                    allNotes.add(n);
+                    if(nextNoteID <= n.getNoteID()) {
+                        nextNoteID = n.getNoteID() + 1;
+                    }
                 } catch(Exception e) {
                     // If any error occurs (e.g. NumberFormatException, IndexOutOfBounds)
                     JOptionPane.showMessageDialog(null, "Error while parsing Notes.txt file.");
                     return;
-                }
-                allNotes.add(n);
-                
-                if(nextNoteID <= n.getNoteID()) {
-                    nextNoteID = n.getNoteID() + 1;
                 }
             }
         }
@@ -69,12 +75,7 @@ public class AllNotes extends CommonCode {
      * @param note Note contents
      */    
     public void addNote(int courseID, String note) {
-        Note myNote = new Note();
-        myNote.setNoteID(nextNoteID);
-        nextNoteID++;
-        myNote.setCourseID(courseID);
-        myNote.setDayte();
-        myNote.setNote(note);
+        Note myNote = new Note(nextNoteID(), courseID, note);
         allNotes.add(myNote);
         writeAllNotes();    
     }

@@ -12,9 +12,13 @@ public class Course {
     
     /**
      * Constructor
+     * 
+     * @param c Course name
+     * @param id Course ID
      */
-    public Course() {
-        
+    public Course(int id, String c) {
+        courseID = id;
+        courseName = c;
     }
     
     /**

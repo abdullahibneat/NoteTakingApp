@@ -13,10 +13,33 @@ public class Note extends CommonCode {
     private String note = "";
     
     /**
-     * Constructor
+     * Constructor (with automatic date)
+     * 
+     * @param nid Note ID
+     * @param cid Course ID
+     * @param n Note
      */
-    public Note() {
-        
+    public Note(int nid, int cid, String n) {
+        noteID = nid;
+        courseID = cid;
+        dayte = ukDateAndTime;
+        note = n;
+    }
+    
+    /**
+     * WARNING: Only to be used for importing notes.
+     * Constructor (with custom date)
+     * 
+     * @param nid Note ID
+     * @param cid Course ID
+     * @param d Date
+     * @param n Note
+     */
+    public Note(int nid, int cid, String d, String n) {
+        noteID = nid;
+        courseID = cid;
+        dayte = d;
+        note = n;
     }
     
     /**

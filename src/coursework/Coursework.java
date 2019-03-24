@@ -336,9 +336,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         
         // Display notes as radio buttons
         pnlDisplayNotes.setLayout(new BoxLayout(pnlDisplayNotes, BoxLayout.Y_AXIS));
-        pnlDisplayNotes.setPreferredSize(new Dimension(100, pnlDisplayNotes.getPreferredSize().height));
         // Make panel scrollable vertically
-        JScrollPane scrollPane = new JScrollPane(pnlDisplayNotes, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollPane scrollPane = new JScrollPane(pnlDisplayNotes, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         splitPane.setTopComponent(scrollPane);
         
         // Panel with new note textarea and add button
@@ -421,8 +420,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         for (Note n : allNotes.getAllNotes()) {
             // If user selects "All Courses" from dropdown, show all the notes
             if(crse.equals("All Courses") || n.getCourseID() == allCourses.toCourseID(crse)){
-                // HTML tag wraps text around.
-                radioButton = new JRadioButton("<html>" + n.getNote() + "</html>");
+                radioButton = new JRadioButton(n.getNote());
                 // Use the name field as the NoteID
                 radioButton.setName(Integer.toString(n.getNoteID()));
                 radioButton.addActionListener(this);

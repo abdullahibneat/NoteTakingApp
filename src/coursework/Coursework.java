@@ -310,6 +310,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         searchField.setMinimumSize(new Dimension(5000, 30));
         searchField.setMaximumSize(new Dimension(5000, 30));
         searchField.setFont(fnt);
+        searchField.addKeyListener(this);
         toolBar.add(searchField);
         toolBar.addSeparator();
         toolBar.add(cc.makeNavigationButton("Search", "SearchField", "Search for this text", "Search"));
@@ -349,6 +350,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         txtNewNote.setForeground(Color.GRAY);
         txtNewNote.setText("Write a new note here...");
         txtNewNote.addFocusListener(this);
+        txtNewNote.addKeyListener(this);
         // New note button
         JButton addNote = new JButton("Add note");
         addNote.setFont(fnt);
@@ -653,20 +655,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     public void actionPerformed(ActionEvent e) {
         // "Add Note" button
         if ("NewNote".equals(e.getActionCommand())) {
-            String newNote = txtNewNote.getText();
-            if(newNote.equalsIgnoreCase("Write a new note here...") || newNote.equals("")) {
-                JOptionPane.showMessageDialog(this, "Write a note first!");
-            }
-            else {
-                if(crse.equals("All Courses")) {
-                    JOptionPane.showMessageDialog(this, "Select a course first!");
-                }
-                else {
-                    allNotes.addNote(allCourses.toCourseID(crse), newNote);
-                    addAllNotes();
-                    txtNewNote.setText("");
-                }
-            }
+            newNote();
         }
         
         // "Close" button
@@ -776,7 +765,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             toolBar.setVisible(toggleToolbar.isSelected());
         }
         if ("SearchField".equals(e.getActionCommand())) {
-            JOptionPane.showMessageDialog(this, "Found " + allNotes.wordOccurrence(searchField.getText()) + " occurrence(s) of " + searchField.getText() + "\n" + allNotes.searchNoteByKeyword(searchField.getText()));
+            search();
         }
         if ("EditCourseName".equals(e.getActionCommand())) {
             // Ask for new name
@@ -914,6 +903,31 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             addAllCoursework();
         }
     }
+    
+    /**
+     * Method to add a new note
+     */
+    private void newNote() {
+        String newNote = txtNewNote.getText();
+        if (newNote.equalsIgnoreCase("Write a new note here...") || newNote.equals("")) {
+            JOptionPane.showMessageDialog(this, "Write a note first!");
+        } else {
+            if (crse.equals("All Courses")) {
+                JOptionPane.showMessageDialog(this, "Select a course first!");
+            } else {
+                allNotes.addNote(allCourses.toCourseID(crse), newNote);
+                addAllNotes();
+                txtNewNote.setText("");
+            }
+        }
+    }
+    
+    /**
+     * method to perform a search using the search bar
+     */
+    private void search() {
+        JOptionPane.showMessageDialog(this, "Found " + allNotes.wordOccurrence(searchField.getText()) + " occurrence(s) of " + searchField.getText() + "\n" + allNotes.searchNoteByKeyword(searchField.getText()));
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -922,12 +936,29 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("keyPressed  not coded yet.");
+        // If ENTER key is pressed...
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+            // ...in the new note text area
+            if(e.getSource().equals(txtNewNote)) {
+                // add the new note
+                newNote();
+            }
+            // ...in the search bar
+            if(e.getSource().equals(searchField)) {
+                // perform the search
+                search();
+            }
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        System.out.println("keyReleased  not coded yet.");
+        // If ENTER is pressed in the new note text area, after it's released we need to remove the \n character from it.
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if(e.getSource().equals(txtNewNote)) {
+                txtNewNote.setText("");
+            }
+        }
     }
 
     @Override

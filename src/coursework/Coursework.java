@@ -451,35 +451,37 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         allCheckBoxes = new ArrayList<>();
         courseworkButtonGroup = new ButtonGroup();
         for(CourseworkItem c: allCoursework.getAll()) {
-            JLabel courseworkName = new JLabel(c.getCourseworkName());
-            courseworkName.setFont(fnt);
-            sideBarPnl.add(courseworkName);
-            JRadioButton editBtn = new JRadioButton("Edit");
-            editBtn.setName(Integer.toString(c.getCourseworkID()));
-            editBtn.addActionListener(this);
-            editBtn.setActionCommand("EditCoursework");
-            courseworkButtonGroup.add(editBtn);
-            sideBarPnl.add(editBtn);
-            if(c.getCourseworkRequirements().size() > 0) {
-                sideBarPnl.add(new JLabel("Requirements"));
-                for (int i = 0; i < c.getCourseworkRequirements().size(); i++) {
-                    JCheckBox chk = new JCheckBox(c.getCourseworkRequirements().get(i), c.getRequirementsFulfilled().get(i));
-                    chk.setName(Integer.toString(c.getCourseworkID()));
-                    allCheckBoxes.add(chk);
-                    chk.setFont(fnt);
-                    chk.addActionListener(this);
-                    chk.setActionCommand("CourseworkRequirementFulfilled");
-                    sideBarPnl.add(chk);
+            if(crse.equals("All Courses") || c.getCourseID() == allCourses.toCourseID(crse)) {
+                JLabel courseworkName = new JLabel(c.getCourseworkName());
+                courseworkName.setFont(fnt);
+                sideBarPnl.add(courseworkName);
+                JRadioButton editBtn = new JRadioButton("Edit");
+                editBtn.setName(Integer.toString(c.getCourseworkID()));
+                editBtn.addActionListener(this);
+                editBtn.setActionCommand("SelectCoursework");
+                courseworkButtonGroup.add(editBtn);
+                sideBarPnl.add(editBtn);
+                if(c.getCourseworkRequirements().size() > 0) {
+                    sideBarPnl.add(new JLabel("Requirements"));
+                    for (int i = 0; i < c.getCourseworkRequirements().size(); i++) {
+                        JCheckBox chk = new JCheckBox(c.getCourseworkRequirements().get(i), c.getRequirementsFulfilled().get(i));
+                        chk.setName(Integer.toString(c.getCourseworkID()));
+                        allCheckBoxes.add(chk);
+                        chk.setFont(fnt);
+                        chk.addActionListener(this);
+                        chk.setActionCommand("CourseworkRequirementFulfilled");
+                        sideBarPnl.add(chk);
+                    }
                 }
+                JTextArea overview = new JTextArea(c.getCourseworkOverview());
+                overview.setFont(fnt);
+                overview.setWrapStyleWord(true);
+                overview.setLineWrap(true);
+                JScrollPane sp = new JScrollPane(overview, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                sp.setPreferredSize(new Dimension(100, 500));
+                sideBarPnl.add(sp);
+                sideBarPnl.add(Box.createRigidArea(new Dimension(0, 20)));
             }
-            JTextArea overview = new JTextArea(c.getCourseworkOverview());
-            overview.setFont(fnt);
-            overview.setWrapStyleWord(true);
-            overview.setLineWrap(true);
-            JScrollPane sp = new JScrollPane(overview, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-            sp.setPreferredSize(new Dimension(100, 500));
-            sideBarPnl.add(sp);
-            sideBarPnl.add(Box.createRigidArea(new Dimension(0, 20)));
         }
         sideBarPnl.revalidate();
         sideBarPnl.repaint();
@@ -714,9 +716,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             else {
                 ArrayList<String> requirements = new ArrayList<>();
                 ArrayList<Boolean> fulfilled = new ArrayList<>();
-                for(String s: courseworkRequirementsInput.getText().split("\n")) {
-                    requirements.add(s);
-                    fulfilled.add(false);
+                if(courseworkRequirementsInput.getText().length() > 0) {
+                    for(String s: courseworkRequirementsInput.getText().split("\n")) {
+                        requirements.add(s);
+                        fulfilled.add(false);
+                    }
                 }
                 // If editing coursework
                 if(editCoursework) {

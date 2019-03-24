@@ -96,12 +96,14 @@ public class AllCoursework extends CommonCode {
             for(String s: requirements) {
                 requirementsString += s + "%&";
             }
+            if(requirementsString.equals("")) requirementsString += "%&";
             // Checkbox values also need to be split and stored as string
             ArrayList<Boolean> fulfilled = c.getRequirementsFulfilled();
             String fulfilledString = "";
             for(Boolean b: fulfilled) {
                 fulfilledString += b + "%&";
             }
+            if(fulfilledString.equals("")) fulfilledString += "%&";
             String tmp = c.getCourseworkID() + "\t" + c.getCourseworkName() + "\t" + c.getCourseID() + "\t" + c.getCourseworkOverview() + "\t" + requirementsString + "\t" + fulfilledString;
             writeCoursework.add(tmp);
         }

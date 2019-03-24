@@ -147,25 +147,40 @@ public class AllCoursework extends CommonCode {
      */
     public void editCoursework(int crswrkID, String crswrkName, String crswrkOverview, ArrayList<String> requirements) {
         for(CourseworkItem c: allCourseworkItems) {
+            // If CourseworkItem matches CourseworkID
             if(c.getCourseworkID() == crswrkID) {
+                // Update all the variables
                 c.setCourseworkName(crswrkName);
                 c.setCourseworkOverview(crswrkOverview);
                 c.setCourseworkRequirements(requirements);
-                ArrayList<Boolean> fulfilled = new ArrayList<>();
-                for (String requirement : requirements) {
-                    fulfilled.add(false);
+                // If different requirements, create a new ArrayList for fulfilled status, all set to false
+                if(!(c.getCourseworkRequirements().equals(requirements))){
+                    ArrayList<Boolean> fulfilled = new ArrayList<>();
+                    for (String requirement : requirements) {
+                        fulfilled.add(false);
+                    }
+                    c.setRequirementsFulfilled(fulfilled);
                 }
-                c.setRequirementsFulfilled(fulfilled);
+                // Write to disk
                 writeAllCoursework();
                 return;
             }
         }
     }
     
+    /**
+     * Method to update the status of requirements.
+     * 
+     * @param courseworkID Coursework ID
+     * @param b ArrayList of boolean
+     */
     public void setRequirementsFulfilled(int courseworkID, ArrayList<Boolean> b) {
         for(CourseworkItem c: allCourseworkItems) {
+            // If CourseworkID mathces
             if(c.getCourseworkID() == courseworkID) {
+                // Set new fulfilled ArrayList
                 c.setRequirementsFulfilled(b);
+                // Write to disk
                 writeAllCoursework();
                 return;
             }

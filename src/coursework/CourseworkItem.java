@@ -133,15 +133,25 @@ public class CourseworkItem {
      * @param b ArrayList of type boolean
     */
     public void setRequirementsFulfilled(ArrayList<Boolean> b) {
-        if(b.size() == courseworkRequirements.size()) {
-            requirementsFulfilled = b;
-        }
-        else {
-            JOptionPane.showMessageDialog(null, "Error saving coursework requirements checkboxes");
-            for (String courseworkRequirement: courseworkRequirements) {
-                requirementsFulfilled.add(false);
+        // Check the size of the ArrayList (requirements and fulfilled should match)
+        // If doesn't match
+        if(!(b.size() == courseworkRequirements.size())) {
+            // Display warning
+            JOptionPane.showMessageDialog(null, "Error saving coursework requirements checkboxes, they have been all set to unchecked.");
+            // Add "false" if fulfilled < requirements
+            if(b.size() < courseworkRequirements.size()) {
+                for (String courseworkRequirement: courseworkRequirements) {
+                    requirementsFulfilled.add(false);
+                }
+            }
+            else {
+                // Remove items if fulfilled > requirements
+                while(b.size() > courseworkRequirements.size()) {
+                    b.remove(b.size()-1);
+                }
             }
         }
+        requirementsFulfilled = b;
     }
     
     /**

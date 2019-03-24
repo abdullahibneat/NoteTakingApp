@@ -420,12 +420,14 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 // Use the name field as the NoteID
                 radioButton.setName(Integer.toString(n.getNoteID()));
                 radioButton.addActionListener(this);
+                // Assign change in radio button status to an ActionCommand (will change global variable selectedNote with NoteID)
                 radioButton.setActionCommand("SelectNote");
                 radioButton.setFont(fnt);
                 notesRadioGroup.add(radioButton);
                 pnlDisplayNotes.add(radioButton);
             }
         }
+        // Update the interface to display changes
         pnlDisplayNotes.revalidate();
         pnlDisplayNotes.repaint();
     }
@@ -434,42 +436,64 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      * Load all coursework item into the text area.
      */
     private void addAllCoursework() {
+        // Empty the sidebar and ArrayList of JCheckBox buttons
         sideBarPnl.removeAll();
         allCheckBoxes = new ArrayList<>();
         courseworkButtonGroup = new ButtonGroup();
+        
         for(CourseworkItem c: allCoursework.getAll()) {
             if(crse.equals("All Courses") || c.getCourseID() == allCourses.toCourseID(crse)) {
+                // Show coursework name as a label
                 JLabel courseworkName = new JLabel(c.getCourseworkName());
                 courseworkName.setFont(fnt);
                 sideBarPnl.add(courseworkName);
+                
+                // Add an edit radio button
                 JRadioButton editBtn = new JRadioButton("Edit");
+                // Use the name field as the CourseworkID
                 editBtn.setName(Integer.toString(c.getCourseworkID()));
                 editBtn.addActionListener(this);
+                // Assign change in radio button status to an ActionCommand (will change global variable selectedCoursework with CourseworkID)
                 editBtn.setActionCommand("SelectCoursework");
                 courseworkButtonGroup.add(editBtn);
                 sideBarPnl.add(editBtn);
+                
+                // If any requirements are found
                 if(c.getCourseworkRequirements().size() > 0) {
+                    // Show a label
                     sideBarPnl.add(new JLabel("Requirements"));
                     for (int i = 0; i < c.getCourseworkRequirements().size(); i++) {
+                        // Create a JCheckBox for each requirement, get the requirement's name and status (completed or not)
                         JCheckBox chk = new JCheckBox(c.getCourseworkRequirements().get(i), c.getRequirementsFulfilled().get(i));
+                        // Use the name field as the CourseworkID
                         chk.setName(Integer.toString(c.getCourseworkID()));
+                        // Add this JCheckButton to the ArrayList
                         allCheckBoxes.add(chk);
                         chk.setFont(fnt);
                         chk.addActionListener(this);
+                        // Assign change in radio button status to an ActionCommand (will store the new value to file)
                         chk.setActionCommand("CourseworkRequirementFulfilled");
                         sideBarPnl.add(chk);
                     }
                 }
+                
+                // Coursework overview displayed within a text area
                 JTextArea overview = new JTextArea(c.getCourseworkOverview());
                 overview.setFont(fnt);
+                // Wrap words
                 overview.setWrapStyleWord(true);
                 overview.setLineWrap(true);
+                // Scroll pane to allow users to scroll vertically
                 JScrollPane sp = new JScrollPane(overview, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                // Set preferred size
                 sp.setPreferredSize(new Dimension(100, 500));
                 sideBarPnl.add(sp);
+                
+                // Add spacing between coursework
                 sideBarPnl.add(Box.createRigidArea(new Dimension(0, 20)));
             }
         }
+        // Update the interface to display changes
         sideBarPnl.revalidate();
         sideBarPnl.repaint();
     }
@@ -478,7 +502,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      * Dialog to create a new coursework item
      */
     private JDialog addCourseworkDialog() {
+        // Create a new dialog
         courseworkInputDialog = new JDialog(this, "Add a new coursework item");
+        // Set minimum size
         courseworkInputDialog.setMinimumSize(new Dimension(500, 300));
         JPanel courseworkInputDialogPanel = new JPanel(new BorderLayout());
 
@@ -486,6 +512,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         JPanel n = new JPanel();
         n.setLayout(new BoxLayout(n, BoxLayout.X_AXIS));
         JLabel courseworkNameLabel = new JLabel("Coursework name");
+        // Ask user for coursework name
         courseworkNameInput = new JTextField();
         n.add(courseworkNameLabel);
         n.add(courseworkNameInput);
@@ -493,6 +520,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         courseworkInputDialogPanel.add(n, BorderLayout.NORTH);
 
         // Center panel
+        // Contains two panels, one for coursework overview and the other for requirements
         JPanel c = new JPanel();
         c.setLayout(new BoxLayout(c, BoxLayout.Y_AXIS));
         JPanel cNorth = new JPanel();
@@ -501,20 +529,33 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         cSouth.setLayout(new BoxLayout(cSouth, BoxLayout.X_AXIS));
 
         JLabel courseworkOverviewLabel = new JLabel("Coursework details");
+        // Coursework overview input
         courseworkOverviewInput = new JTextArea();
+        // Add line wrap to wrap text around
         courseworkOverviewInput.setWrapStyleWord(true);
         courseworkOverviewInput.setLineWrap(true);
+        // Scroll pane to allow users to scroll vertically
         JScrollPane scrollPane = new JScrollPane(courseworkOverviewInput, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         cNorth.add(courseworkOverviewLabel);
+        // Add spacing
         cNorth.add(Box.createRigidArea(new Dimension(10, 0)));
         cNorth.add(scrollPane);
         
-        JLabel courseworkRequirementsLabel = new JLabel("Requirements");
+        // Requirements label, HTML allows carriage return to create new lines
+        JLabel courseworkRequirementsLabel = new JLabel("<html>Requirements<br><small>Add 1 requirement per line</small></html>");
+        // Set the requirements label to be the same width as "Coursework details"
+        courseworkRequirementsLabel.setPreferredSize(new Dimension(courseworkOverviewLabel.getPreferredSize().width, 50));
+        courseworkRequirementsLabel.setMinimumSize(new Dimension(courseworkOverviewLabel.getPreferredSize().width, 50));
+        courseworkRequirementsLabel.setMaximumSize(new Dimension(courseworkOverviewLabel.getPreferredSize().width, 50));
+        // Requirements input
         courseworkRequirementsInput = new JTextArea();
+        // Add line wrap to wrap text around
         courseworkRequirementsInput.setWrapStyleWord(true);
         courseworkRequirementsInput.setLineWrap(true);
+        // Scroll pane to allow users to scroll vertically
         scrollPane = new JScrollPane(courseworkRequirementsInput, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         cSouth.add(courseworkRequirementsLabel);
+        // Add spacing
         cSouth.add(Box.createRigidArea(new Dimension(10, 0)));
         cSouth.add(scrollPane);
         
@@ -524,6 +565,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         courseworkInputDialogPanel.add(c, BorderLayout.CENTER);
 
         // South panel
+        // Has OK and CANCEL buttons
         JPanel s = new JPanel();
         s.setLayout(new BoxLayout(s, BoxLayout.X_AXIS));
         JButton ok = new JButton("Ok");
@@ -539,7 +581,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         courseworkInputDialogPanel.add(s, BorderLayout.SOUTH);
 
         courseworkInputDialog.add(courseworkInputDialogPanel);
-
+        
+        // Hidden by default
         courseworkInputDialog.setVisible(false);
                 
         return courseworkInputDialog;
@@ -826,9 +869,12 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 }
             }
         }
+        // Editing coursework items
         if("EditSelectedCoursework".equals(e.getActionCommand())) {
             for(CourseworkItem c: allCoursework.getAll()) {
+                // Find the CourseworkItem that matches the ID of the selected coursework
                 if(c.getCourseworkID() == selectedCoursework) {
+                    // Fill in all the input values
                     courseworkNameInput.setText(c.getCourseworkName());
                     courseworkOverviewInput.setText(c.getCourseworkOverview());
                     String requirements = "";
@@ -836,20 +882,27 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                         requirements += s + "\n";
                     }
                     courseworkRequirementsInput.setText(requirements);
+                    // Set this to true so we can re-use the "AddCourseworkItem" action command
                     editCoursework = true;
+                    // Show dialog
                     courseworkInputDialog.setVisible(true);
+                    // Terminate loop
                     break;
                 }
             }
         }
+        // If change in requirements JCheckBox
         if("CourseworkRequirementFulfilled".equals(e.getActionCommand())) {
             ArrayList<Boolean> fulfilled = new ArrayList<>();
+            // Find the JCheckBox that triggered this ActionPerformed
             int courseworkID = Integer.parseInt(allCheckBoxes.get(allCheckBoxes.indexOf(e.getSource())).getName());
+            // Reconstrunt the ArrayList for fulfilled requirements
             for(JCheckBox c: allCheckBoxes) {
                 if(c.getName().equals(Integer.toString(courseworkID))) {
                     fulfilled.add(c.isSelected());
                 }
             }
+            // Replace previous ArrayList with the new one (method will also write to file)
             allCoursework.setRequirementsFulfilled(courseworkID, fulfilled);
         }
     }

@@ -311,6 +311,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         searchField.setMaximumSize(new Dimension(5000, 30));
         searchField.setFont(fnt);
         searchField.addKeyListener(this);
+        // Placeholder text (controlled by FocusListener)
+        searchField.setForeground(Color.GRAY);
+        searchField.setText("Search...");
+        searchField.addFocusListener(this);
         toolBar.add(searchField);
         toolBar.addSeparator();
         toolBar.add(cc.makeNavigationButton("Search", "SearchField", "Search for this text", "Search"));
@@ -961,17 +965,29 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
 
     @Override
     public void focusGained(FocusEvent e) {
+        // If there's placeholder text
         if(txtNewNote.getText().equalsIgnoreCase("Write a new note here...")) {
+            // Allow user to write
             txtNewNote.setForeground(Color.BLACK);
             txtNewNote.setText("");
+        }
+        if(searchField.getText().equalsIgnoreCase("Search...")) {
+            searchField.setForeground(Color.BLACK);
+            searchField.setText("");
         }
     }
 
     @Override
     public void focusLost(FocusEvent e) {
+        // If input is empty
         if(txtNewNote.getText().equalsIgnoreCase("")) {
+            // Set placeholder text
             txtNewNote.setForeground(Color.GRAY);
             txtNewNote.setText("Write a new note here...");
+        }
+        if(searchField.getText().equalsIgnoreCase("")) {
+            searchField.setForeground(Color.GRAY);
+            searchField.setText("Search...");
         }
     }
 }

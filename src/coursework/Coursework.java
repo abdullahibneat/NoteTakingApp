@@ -711,8 +711,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         
         // Search button
         if ("SearchMenu".equals(e.getActionCommand())) {
-            String searchWord = JOptionPane.showInputDialog("Find current notes");
-            JOptionPane.showMessageDialog(this, "Found " + allNotes.wordOccurrence(searchWord) + " occurrence(s) of " + searchWord + "\n" + allNotes.searchNoteByKeyword(searchWord));
+            String searchWord = JOptionPane.showInputDialog("Find in current notes");
+            search(searchWord);
         }
         if ("AddCoursework".equals(e.getActionCommand())) {
             crse = courseList.getSelectedItem().toString();
@@ -767,7 +767,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             toolBar.setVisible(toggleToolbar.isSelected());
         }
         if ("SearchField".equals(e.getActionCommand())) {
-            search();
+            search(searchField.getText());
         }
         if ("EditCourseName".equals(e.getActionCommand())) {
             // Ask for new name
@@ -925,10 +925,28 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     }
     
     /**
-     * method to perform a search using the search bar
+     * Method to perform a search using the search bar
      */
-    private void search() {
-        JOptionPane.showMessageDialog(this, "Found " + allNotes.wordOccurrence(searchField.getText()) + " occurrence(s) of " + searchField.getText() + "\n" + allNotes.searchNoteByKeyword(searchField.getText()));
+    private void search(String keyword) {
+        // Find number of occurrences
+        int occurrences = allNotes.wordOccurrence(keyword);
+        // Get ArrayList of notes containing keyword
+        ArrayList<String> notes = allNotes.searchNoteByKeyword(keyword);
+        // If the keyword was found
+        if(occurrences > 0) {
+            // Construct the output string
+            String output = "Found " + occurrences + " occurrences of " + keyword + "\n";
+            for(String s: notes) {
+                // Add each note to the output
+                output += "\n" + s;
+            }
+            // Display the output
+            JOptionPane.showMessageDialog(this, output);
+        }
+        // If keyword was not found, show a message
+        else {
+            JOptionPane.showMessageDialog(this, keyword + " not found.");
+        }
     }
 
     @Override
@@ -948,7 +966,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             // ...in the search bar
             if(e.getSource().equals(searchField)) {
                 // perform the search
-                search();
+                search(searchField.getText());
             }
         }
     }

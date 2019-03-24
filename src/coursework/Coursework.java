@@ -246,6 +246,8 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         newMenu.setFont(fnt);
         JMenu editMenu = new JMenu("Edit");
         editMenu.setFont(fnt);
+        JMenu deleteMenu = new JMenu("Delete");
+        deleteMenu.setFont(fnt);
         JMenu advancedMenu = new JMenu("Advanced");
         advancedMenu.setFont(fnt);
         JMenu amendMenu = new JMenu("Amend");
@@ -261,7 +263,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         fileMenu.add(newMenu);
         fileMenu.add(cc.makeMenuItem("Exit", "Exit", "Exit from this program", fnt));
         editMenu.add(cc.makeMenuItem("Find...", "SearchMenu", "Find in notes", fnt));
-        editMenu.add(cc.makeMenuItem("Delete selected note", "DeleteNote", "Delete the currently selected note", fnt));
+        deleteMenu.add(cc.makeMenuItem("Delete selected note", "DeleteNote", "Delete the currently selected note", fnt));
+        deleteMenu.add(cc.makeMenuItem("Delete selected coursework", "DeleteCoursework", "Delete the currently selected coursework", fnt));
+        editMenu.add(deleteMenu);
         amendMenu.add(cc.makeMenuItem("Course name", "EditCourseName", "Change name of current course", fnt));
         amendMenu.add(cc.makeMenuItem("Selected Note", "EditSelectedNote", "Change the contents of the currently selected note", fnt));
         amendMenu.add(cc.makeMenuItem("Selected Coursework", "EditSelectedCoursework", "Change the contents of the currently selected coursework", fnt));
@@ -449,7 +453,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 sideBarPnl.add(courseworkName);
                 
                 // Add an edit radio button
-                JRadioButton editBtn = new JRadioButton("Edit");
+                JRadioButton editBtn = new JRadioButton("Select coursework");
                 // Use the name field as the CourseworkID
                 editBtn.setName(Integer.toString(c.getCourseworkID()));
                 editBtn.addActionListener(this);
@@ -904,6 +908,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             }
             // Replace previous ArrayList with the new one (method will also write to file)
             allCoursework.setRequirementsFulfilled(courseworkID, fulfilled);
+        }
+        if("DeleteCoursework".equals(e.getActionCommand())) {
+            allCoursework.deleteCoursework(selectedCoursework);
+            addAllCoursework();
         }
     }
 

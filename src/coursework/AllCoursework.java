@@ -186,4 +186,22 @@ public class AllCoursework extends CommonCode {
             }
         }
     }
+    
+    /**
+     * Method to delete a CourseworkItem
+     * 
+     * @param id Coursework ID
+    */
+    public void deleteCoursework(int id) {
+        for (int i = 0; i < allCourseworkItems.size(); i++) {
+            // If CourseworkID matches
+            if(allCourseworkItems.get(i).getCourseworkID() == id) {
+                // Remove the CourseworkItem object
+                allCourseworkItems.remove(i);
+                // Apply changes to file
+                writeAllCoursework();
+                return;
+            }
+        }
+    }
 }

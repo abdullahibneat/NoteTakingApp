@@ -414,7 +414,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         JRadioButton radioButton;
         for (Note n : allNotes.getAllNotes()) {
             // If user selects "All Courses" from dropdown, show all the notes
-            if(crse.equals("All Courses")){
+            if(crse.equals("All Courses") || n.getCourseID() == allCourses.toCourseID(crse)){
                 // HTML tag wraps text around.
                 radioButton = new JRadioButton("<html>" + n.getNote() + "</html>");
                 // Use the name field as the NoteID
@@ -424,19 +424,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 radioButton.setFont(fnt);
                 notesRadioGroup.add(radioButton);
                 pnlDisplayNotes.add(radioButton);
-            }
-            else {
-                // If user selects a specific course, show its notes
-                int courseID = allCourses.toCourseID(crse);
-                if(n.getCourseID() == courseID){
-                    radioButton = new JRadioButton("<html>" + n.getNote() + "</html>");
-                    radioButton.setName(Integer.toString(n.getNoteID()));
-                    radioButton.addActionListener(this);
-                    radioButton.setActionCommand("SelectNote");
-                    radioButton.setFont(fnt);
-                    notesRadioGroup.add(radioButton);
-                    pnlDisplayNotes.add(radioButton);
-                }
             }
         }
         pnlDisplayNotes.revalidate();

@@ -196,7 +196,8 @@ public class AllNotes extends CommonCode {
         }
         // Split the string when search word is found.
         // -1 because, for example, in string "ABCBD", splitting at "B" produces: "A", "C", "D", 1 more than the actual occurrences.
-        count += allNotes.get(i).getNote().split(s).length -1;
+        // Sometimes it returns a negative number, abs takes its absolute value.
+        count += Math.abs(allNotes.get(i).getNote().split(s).length -1);
         return wordOccurrence(s, count, i+1);
     }
     

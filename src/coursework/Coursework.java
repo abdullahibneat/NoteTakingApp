@@ -863,6 +863,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             else if (courseworkOverview.equals("")) {
                 JOptionPane.showMessageDialog(this, "Overview cannot be empty");
             }
+            else if(cc.semesterWeek(deadline).equals("Incorrect date format") || cc.semesterWeek(alert).equals("Incorrect date format")) {
+                JOptionPane.showMessageDialog(this, "Incorrect date format. Ensure the format is: dd/MM/yyyy");
+            }
             else {
                 ArrayList<String> requirements = new ArrayList<>();
                 ArrayList<Boolean> fulfilled = new ArrayList<>();

@@ -25,7 +25,7 @@ import javax.swing.JMenuItem;
  * @author Andy Wicks
  */
 public class CommonCode {
-    public static final String UK_DATE_TIME_FORMAT_NOW = "dd-MM-yyyy HH:mm:ss";
+    public static final String UK_DATE_TIME_FORMAT_NOW = "dd/MM/yyyy HH:mm:ss";
     public String ukDateAndTime;
     
     // These are some useful items.
@@ -196,7 +196,7 @@ public class CommonCode {
      */
     public String semesterWeek(String d) {
         try {
-            String format = "dd-MM-yyyy";
+            String format = "dd/MM/yyyy";
             SimpleDateFormat df = new SimpleDateFormat(format);
             Date date = df.parse(d);
             Calendar cal = Calendar.getInstance();
@@ -217,7 +217,7 @@ public class CommonCode {
                 return output;
             }
         } catch (Exception e) {
-            System.out.println(e);
+            return "Incorrect date format";
         }
         return "Invalid term date";
     }

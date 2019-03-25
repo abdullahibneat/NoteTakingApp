@@ -49,12 +49,12 @@ public class AllCoursework extends CommonCode {
                 String[] tmp = str.split("\t");
                 
                 try {
-                    ArrayList<String> requirements = new ArrayList<>(Arrays.asList(tmp[4].split("%&")));
+                    ArrayList<String> requirements = new ArrayList<>(Arrays.asList(tmp[7].split("%&")));
                     ArrayList<Boolean> fulfilled = new ArrayList<>();
-                    for(String s: tmp[5].split("%&")) {
+                    for(String s: tmp[8].split("%&")) {
                         fulfilled.add(Boolean.parseBoolean(s));
                     }
-                    CourseworkItem c = new CourseworkItem(Integer.parseInt(tmp[0]), tmp[1], Integer.parseInt(tmp[2]), tmp[3], requirements, fulfilled);
+                    CourseworkItem c = new CourseworkItem(Integer.parseInt(tmp[0]), tmp[1], Integer.parseInt(tmp[2]), tmp[3], tmp[4], Boolean.parseBoolean(tmp[5]), tmp[6], requirements, fulfilled);
                     allCourseworkItems.add(c);
                     if(nextCourseworkID <= c.getCourseworkID()) {
                         nextCourseworkID = c.getCourseworkID() + 1;
@@ -77,8 +77,8 @@ public class AllCoursework extends CommonCode {
      * @param requirements List of requirements
      * @param fulfilled Requirements fulfilled values
      */
-    public void addNewCoursework(int courseID, String name, String overview, ArrayList<String> requirements, ArrayList<Boolean> fulfilled) {
-        CourseworkItem c = new CourseworkItem(nextCourseworkID(), name, courseID, overview, requirements, fulfilled);
+    public void addNewCoursework(int courseID, String name, String deadline, String alert, boolean showAlert, String overview, ArrayList<String> requirements, ArrayList<Boolean> fulfilled) {
+        CourseworkItem c = new CourseworkItem(nextCourseworkID(), name, courseID, deadline, alert, showAlert, overview, requirements, fulfilled);
         allCourseworkItems.add(c);
         writeAllCoursework();
     }
@@ -142,15 +142,21 @@ public class AllCoursework extends CommonCode {
      * 
      * @param crswrkID Coursework ID
      * @param crswrkName Coursework Name
+     * @param deadline Deadline date
+     * @param alert Alert date
+     * @param showAlert Show alert?
      * @param crswrkOverview Coursework Overview
      * @param requirements Requirements
      */
-    public void editCoursework(int crswrkID, String crswrkName, String crswrkOverview, ArrayList<String> requirements) {
+    public void editCoursework(int crswrkID, String crswrkName, String deadline, String alert, boolean showAlert, String crswrkOverview, ArrayList<String> requirements) {
         for(CourseworkItem c: allCourseworkItems) {
             // If CourseworkItem matches CourseworkID
             if(c.getCourseworkID() == crswrkID) {
                 // Update all the variables
                 c.setCourseworkName(crswrkName);
+                c.setDeadlineDate(deadline);
+                c.setAlertDate(alert);
+                c.setDisplayAlert(showAlert);
                 c.setCourseworkOverview(crswrkOverview);
                 c.setCourseworkRequirements(requirements);
                 // If different requirements, create a new ArrayList for fulfilled status, all set to false

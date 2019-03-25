@@ -13,6 +13,7 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -42,6 +43,7 @@ public class CommonCode {
      */
     CommonCode(ActionListener call) {
         calledBy = call;
+        initialiseVariables();
     }
 
     /**
@@ -184,5 +186,39 @@ public class CommonCode {
             System.out.println(e.getMessage());
             throw e;
         }
+    }
+    
+    /**
+     * Method to determine term week for a given date
+     * 
+     * @param d Date
+     * @return term week number
+     */
+    public String semesterWeek(String d) {
+        try {
+            String format = "dd-MM-yyyy";
+            SimpleDateFormat df = new SimpleDateFormat(format);
+            Date date = df.parse(d);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            int week = cal.get(Calendar.WEEK_OF_YEAR);
+            String output = "";
+            if(week < 15 || week > 38) {
+                // Semester 1
+                if(week >= 39) {
+                    week -= 38;
+                    output = "Week 1." + week;
+                }
+                // Semester 2
+                else if(week < 39) {
+                    week -= 2;
+                    output = "Week 2." + week;
+                }
+                return output;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return "Invalid term date";
     }
 }

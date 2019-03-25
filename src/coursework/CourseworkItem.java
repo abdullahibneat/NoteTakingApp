@@ -12,6 +12,9 @@ import javax.swing.JOptionPane;
 public class CourseworkItem {
     private int courseworkID = 0;
     private String courseworkName = "";
+    private String deadlineDate = "";
+    private String alertDate = "";
+    private boolean showAlert = false;
     private int courseID = 0;
     private String courseworkOverview = "";
     private ArrayList<String> courseworkRequirements;
@@ -27,10 +30,13 @@ public class CourseworkItem {
      * @param crswrkRequirements Requirements
      * @param crswrkFulfilled Requirements fulfilled
      */
-    public CourseworkItem(int crswrkID, String name, int crsID, String coursework, ArrayList<String> crswrkRequirements, ArrayList<Boolean> crswrkFulfilled) {
+    public CourseworkItem(int crswrkID, String name, int crsID, String deadline, String alert, Boolean alertB, String coursework, ArrayList<String> crswrkRequirements, ArrayList<Boolean> crswrkFulfilled) {
         courseworkID = crswrkID;
         courseworkName = name;
         courseID = crsID;
+        deadlineDate = deadline;
+        showAlert = alertB;
+        alertDate = alert;
         courseworkOverview = coursework;
         courseworkRequirements = crswrkRequirements;
         requirementsFulfilled = crswrkFulfilled;
@@ -161,5 +167,57 @@ public class CourseworkItem {
      */
     public ArrayList<Boolean> getRequirementsFulfilled() {
         return requirementsFulfilled;
+    }
+    
+    /**
+     * Method to set deadlineDate
+     */
+    public void setDeadlineDate(String d) {
+        deadlineDate = d;
+    }
+    
+    /**
+     * Method to retrieve deadlineDate
+     * 
+     * @return deadlineDate
+     */
+    public String getDeadlineDate() {
+        return deadlineDate;
+    }
+    
+    /**
+     * Method to set alertDate date
+     * 
+     * @param s Alert date
+     */
+    public void setAlertDate(String s) {
+        alertDate = s;
+    }
+    
+    /**
+     * Method to retrieve alertDate date
+     * 
+     * @return Alert date
+     */
+    public String getAlertDate() {
+        return alertDate;
+    }
+    
+    /**
+     * Method to set whether to show alertDate or not
+     * 
+     * @param b boolean
+     */
+    public void setDisplayAlert(boolean b) {
+        showAlert = b;
+    }
+    
+    /**
+     * Method to retrieve boolean to show alertDate
+     * 
+     * @return boolean
+     */
+    public boolean getDisplayAlert() {
+        return showAlert;
     }
 }

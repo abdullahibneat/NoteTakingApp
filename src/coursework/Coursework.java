@@ -49,7 +49,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private final JPanel pnlDisplayNotes = new JPanel();
     private ButtonGroup notesRadioGroup = new ButtonGroup();    
     // Add <String> to fix raw type warning
+    // JComboBox to store list of courses
     private final JComboBox<String> courseList = new JComboBox<>();
+    // JComboBox to store list of term weeks
+    private final JComboBox<String> semesterWeeksList = new JComboBox<>();
     private String crse = "";
     private final AllNotes allNotes = new AllNotes();
     private final CommonCode cc = new CommonCode(this);
@@ -62,11 +65,21 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private ArrayList<JCheckBox> allCheckBoxes = new ArrayList<>();
     // Display coursework in sidebar
     private final JPanel sideBarPnl = new JPanel();
-    // Dialog
+    // New coursework dialog
     private JDialog courseworkInputDialog;
-    private JTextArea courseworkOverviewInput;
-    private JTextField courseworkNameInput;
-    private JTextArea courseworkRequirementsInput;
+    private final JTextField courseworkDeadline = new JTextField();
+    private final JTextField courseworkAlert = new JTextField();
+    private final JCheckBox alertOption = new JCheckBox("Show alert");
+    private JTextArea courseworkOverviewInput = new JTextArea();
+    private final JTextField courseworkNameInput = new JTextField();
+    private final JTextArea courseworkRequirementsInput = new JTextArea();
+    private boolean showCourseworkAlert = true;
+    // ArrayLists containing details on dates for each coursework
+    JLabel courseDueText = new JLabel();
+    ArrayList<String> alerts = new ArrayList<>();
+    ArrayList<String> courseworkNames = new ArrayList<>();
+    ArrayList<String> dueDates = new ArrayList<>();
+    ArrayList<Boolean> showAlert = new ArrayList<>();
     // Edit note dialog
     private int selectedNote = 0;
     // Edit coursework dialog
@@ -193,12 +206,13 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         ArrayList<Boolean> fulfilled = new ArrayList<>();
         fulfilled.add(false);
         fulfilled.add(true);
-        allCoursework.addNewCoursework(0, "Sample coursework", "You can add multiple coursework for each course!", requirements, fulfilled);
+        // Get date without time
+        String date = cc.ukDateAndTime.split(" ")[0];
+        allCoursework.addNewCoursework(0, "Sample coursework", date, date, false, "You can add multiple coursework for each course!", requirements, fulfilled);
     }
 
     /**
      * View
-     *
      */
     private void view() {
         setTitle("Note Taking App");
@@ -215,7 +229,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         // Main view
         JSplitPane mainView = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         mainView.setOneTouchExpandable(true);
-        mainView.setResizeWeight(0.8);
+        mainView.setResizeWeight(0.7);
         
         // Add the center panel
         mainView.setLeftComponent(panelCentre());
@@ -290,6 +304,14 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         courseList.setMaximumSize(new Dimension(3000, 30));
         // Place the combobox on the right side
         menuBar.add(Box.createHorizontalGlue());
+        
+        // JComboBox storing term weeks
+        semesterWeeksList.setFont(fnt);
+        semesterWeeksList.addActionListener(this);
+        semesterWeeksList.setActionCommand("TermDate");
+        semesterWeeksList.setMaximumSize(new Dimension(1000, 30));
+        
+        menuBar.add(semesterWeeksList);
         menuBar.add(courseList);
         
         this.setJMenuBar(menuBar);
@@ -299,7 +321,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      * Tool bar
      */
     private void toolBar() {
-        JButton button = null;
         // makeButton(imgName, actionCommand, toolTipText, altText)
         toolBar.add(cc.makeNavigationButton("Create", "NewNote", "New Note", "New"));
         toolBar.add(cc.makeNavigationButton("No", "Close", "Close this note", "Close"));
@@ -311,10 +332,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         searchField.setMaximumSize(new Dimension(5000, 30));
         searchField.setFont(fnt);
         searchField.addKeyListener(this);
-        // Placeholder text (controlled by FocusListener)
-        searchField.setForeground(Color.GRAY);
-        searchField.setText("Search...");
-        searchField.addFocusListener(this);
         toolBar.add(searchField);
         toolBar.addSeparator();
         toolBar.add(cc.makeNavigationButton("Search", "SearchField", "Search for this text", "Search"));
@@ -342,7 +359,16 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         pnlDisplayNotes.setLayout(new BoxLayout(pnlDisplayNotes, BoxLayout.Y_AXIS));
         // Make panel scrollable vertically
         JScrollPane scrollPane = new JScrollPane(pnlDisplayNotes, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        splitPane.setTopComponent(scrollPane);
+        
+        // Create a new JPanel, will contain pnlDisplayNotes (as JScrollPane) and a JLabel to show when a course is due.
+        JPanel cenContainer = new JPanel();
+        cenContainer.setLayout(new BoxLayout(cenContainer, BoxLayout.Y_AXIS));
+        cenContainer.add(scrollPane);
+        // JLabel showing when coursework is due
+        courseDueText.setFont(fnt);
+        cenContainer.add(courseDueText);
+        
+        splitPane.setTopComponent(cenContainer);
         
         // Panel with new note textarea and add button
         JPanel noteInputPanel = new JPanel();
@@ -393,9 +419,43 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      *
      */
     private void controller() {
+        addTermWeeks();
         addAllCourses();
         addAllNotes();
         addAllCoursework();
+    }
+    
+    /**
+     * Method to add term weeks to the JComboBox
+     */
+    private void addTermWeeks() {
+        // Add all term times to the JComboBox
+        semesterWeeksList.addItem("Semester 1");
+        semesterWeeksList.addItem("Semester 2");
+        semesterWeeksList.addItem("Week 1.1");
+        semesterWeeksList.addItem("Week 1.2");
+        semesterWeeksList.addItem("Week 1.3");
+        semesterWeeksList.addItem("Week 1.4");
+        semesterWeeksList.addItem("Week 1.5");
+        semesterWeeksList.addItem("Week 1.6");
+        semesterWeeksList.addItem("Week 1.7");
+        semesterWeeksList.addItem("Week 1.8");
+        semesterWeeksList.addItem("Week 1.9");
+        semesterWeeksList.addItem("Week 1.10");
+        semesterWeeksList.addItem("Week 1.11");
+        semesterWeeksList.addItem("Week 1.12");
+        semesterWeeksList.addItem("Week 2.1");
+        semesterWeeksList.addItem("Week 2.2");
+        semesterWeeksList.addItem("Week 2.3");
+        semesterWeeksList.addItem("Week 2.4");
+        semesterWeeksList.addItem("Week 2.5");
+        semesterWeeksList.addItem("Week 2.6");
+        semesterWeeksList.addItem("Week 2.7");
+        semesterWeeksList.addItem("Week 2.8");
+        semesterWeeksList.addItem("Week 2.9");
+        semesterWeeksList.addItem("Week 2.10");
+        semesterWeeksList.addItem("Week 2.11");
+        semesterWeeksList.addItem("Week 2.12");
     }
     
     /**
@@ -449,6 +509,13 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         allCheckBoxes = new ArrayList<>();
         courseworkButtonGroup = new ButtonGroup();
         
+        // Empty the ArrayLists with dates
+        // Used to determine if an alert is to be displayed or not.
+        alerts = new ArrayList<>();
+        courseworkNames = new ArrayList<>();
+        dueDates = new ArrayList<>();
+        showAlert = new ArrayList<>();
+        
         for(CourseworkItem c: allCoursework.getAll()) {
             if(crse.equals("All Courses") || c.getCourseID() == allCourses.toCourseID(crse)) {
                 // Show coursework name as a label
@@ -465,6 +532,14 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 editBtn.setActionCommand("SelectCoursework");
                 courseworkButtonGroup.add(editBtn);
                 sideBarPnl.add(editBtn);
+                
+                // Add dates to ArrayList
+                courseworkNames.add(c.getCourseworkName());
+                alerts.add(c.getAlertDate());
+                dueDates.add(c.getDeadlineDate());
+                showAlert.add(c.getDisplayAlert());
+                sideBarPnl.add(new JLabel("Alert on: " + c.getAlertDate()));
+                sideBarPnl.add(new JLabel("Due on: " + c.getDeadlineDate()));
                 
                 // If any requirements are found
                 if(c.getCourseworkRequirements().size() > 0) {
@@ -501,9 +576,22 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 sideBarPnl.add(Box.createRigidArea(new Dimension(0, 20)));
             }
         }
+        
         // Update the interface to display changes
         sideBarPnl.revalidate();
         sideBarPnl.repaint();
+        
+        // If program was just started, show alerts as popups
+        if(showCourseworkAlert) {
+            for (int i = 0; i < alerts.size(); i++) {
+                // Check that alert date = todays date,
+                // and if user wanted alert to be displayed.
+                if(alerts.get(i).equals(cc.ukDateAndTime.split(" ")[0]) && showAlert.get(i)) {
+                    JOptionPane.showMessageDialog(this, courseworkNames.get(i) + " is due on " + dueDates.get(i));
+                }
+                showCourseworkAlert = false;
+            }
+        }
     }
     
     /**
@@ -518,12 +606,41 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
 
         // North panel
         JPanel n = new JPanel();
-        n.setLayout(new BoxLayout(n, BoxLayout.X_AXIS));
+        n.setLayout(new BoxLayout(n, BoxLayout.Y_AXIS));
+        
+        // Coursework name panel
+        JPanel courseworkName = new JPanel();
+        courseworkName.setLayout(new BoxLayout(courseworkName, BoxLayout.X_AXIS));
+        // label
         JLabel courseworkNameLabel = new JLabel("Coursework name");
-        // Ask user for coursework name
-        courseworkNameInput = new JTextField();
-        n.add(courseworkNameLabel);
-        n.add(courseworkNameInput);
+        courseworkName.add(courseworkNameLabel);
+        // Add name input
+        courseworkName.add(courseworkNameInput);
+        
+        // Coursework deadline panel
+        JPanel deadlineInputPanel = new JPanel();
+        deadlineInputPanel.setLayout(new BoxLayout(deadlineInputPanel, BoxLayout.X_AXIS));
+        // Label
+        JLabel dateLabel = new JLabel("Deadline date: ");
+        deadlineInputPanel.add(dateLabel);
+        // Add date input
+        deadlineInputPanel.add(courseworkDeadline);
+        
+        // Coursework alert date panel
+        JPanel alertInputPanel = new JPanel();
+        alertInputPanel.setLayout(new BoxLayout(alertInputPanel, BoxLayout.X_AXIS));
+        // Label
+        JLabel alertLabel = new JLabel("Alert date: ");
+        alertLabel.setPreferredSize(dateLabel.getPreferredSize());
+        alertInputPanel.add(alertLabel);
+        // Add date input
+        alertInputPanel.add(courseworkAlert);
+        // Add JCheckBox
+        alertInputPanel.add(alertOption);
+        
+        n.add(courseworkName);
+        n.add(deadlineInputPanel);
+        n.add(alertInputPanel);
 
         courseworkInputDialogPanel.add(n, BorderLayout.NORTH);
 
@@ -556,7 +673,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         courseworkRequirementsLabel.setMinimumSize(new Dimension(courseworkOverviewLabel.getPreferredSize().width, 50));
         courseworkRequirementsLabel.setMaximumSize(new Dimension(courseworkOverviewLabel.getPreferredSize().width, 50));
         // Requirements input
-        courseworkRequirementsInput = new JTextArea();
         // Add line wrap to wrap text around
         courseworkRequirementsInput.setWrapStyleWord(true);
         courseworkRequirementsInput.setLineWrap(true);
@@ -729,8 +845,17 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             }
         }
         if ("AddCourseworkItem".equals(e.getActionCommand())) {
+            // Get coursework name
             String courseworkName = courseworkNameInput.getText();
+            // Get coursework deadline date
+            String deadline = courseworkDeadline.getText();
+            // Get coursework alert date
+            String alert = courseworkAlert.getText();
+            // Get alert JCheckBox
+            boolean alertShow = alertOption.isSelected();
+            // Get coursework overview
             String courseworkOverview = courseworkOverviewInput.getText();
+            // Get the course ID
             int courseID = allCourses.toCourseID(crse);
             if(courseworkName.equals("")) {
                 JOptionPane.showMessageDialog(this, "Name cannot be empty");
@@ -749,12 +874,12 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 }
                 // If editing coursework
                 if(editCoursework) {
-                    allCoursework.editCoursework(selectedCoursework, courseworkName, courseworkOverview, requirements);
+                    allCoursework.editCoursework(selectedCoursework, courseworkName, deadline, alert, alertShow, courseworkOverview, requirements);
                     editCoursework = false;
                 }
                 // Otherwise is new coursework
                 else {
-                    allCoursework.addNewCoursework(courseID, courseworkName, courseworkOverview, requirements, fulfilled);
+                    allCoursework.addNewCoursework(courseID, courseworkName, deadline, alert, alertShow, courseworkOverview, requirements, fulfilled);
                 }
                 addAllCoursework();
                 courseworkInputDialog.dispose();
@@ -871,6 +996,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 if(c.getCourseworkID() == selectedCoursework) {
                     // Fill in all the input values
                     courseworkNameInput.setText(c.getCourseworkName());
+                    courseworkDeadline.setText(c.getDeadlineDate());
+                    courseworkAlert.setText(c.getAlertDate());
+                    alertOption.setSelected(c.getDisplayAlert());
                     courseworkOverviewInput.setText(c.getCourseworkOverview());
                     String requirements = "";
                     for(String s: c.getCourseworkRequirements()) {
@@ -903,6 +1031,21 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         if("DeleteCoursework".equals(e.getActionCommand())) {
             allCoursework.deleteCoursework(selectedCoursework);
             addAllCoursework();
+        }
+        if("TermDate".equals(e.getActionCommand())) {
+            String output = "";
+            for(int i = 0; i < dueDates.size(); i++) {
+                // Long if statement:
+                // If "Semester 1" is selected AND the due date converted to week number contains "Week 1" in it, OR
+                // "Semester 2" is selected AND the due date onverted to week number contains "Week 2", OR
+                // due date converted to week number matches selection in JComboBox
+                if((semesterWeeksList.getSelectedItem().equals("Semester 1") && cc.semesterWeek(dueDates.get(i)).contains("Week 1")) || (semesterWeeksList.getSelectedItem().equals("Semester 2") && cc.semesterWeek(dueDates.get(i)).contains("Week 2")) || (cc.semesterWeek(dueDates.get(i)).equals(semesterWeeksList.getSelectedItem()))) {
+                    // Construct an output string
+                    output += courseworkNames.get(i) + " is due on " + dueDates.get(i) + "\n";
+                }
+            }
+            // Set the output to be displayed under "display all notes"
+            courseDueText.setText(output);
         }
     }
     
@@ -940,17 +1083,12 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 // Add each note to the output
                 output += "\n" + s;
             }
-            // Display the output
-            JOptionPane.showMessageDialog(this, output);
-        }
-        // If keyword was not found, show a message
-        else {
-            JOptionPane.showMessageDialog(this, keyword + " not found.");
         }
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
+        System.out.println("keyTyped  not coded yet.");
     }
 
     @Override
@@ -982,29 +1120,17 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
 
     @Override
     public void focusGained(FocusEvent e) {
-        // If there's placeholder text
         if(txtNewNote.getText().equalsIgnoreCase("Write a new note here...")) {
-            // Allow user to write
             txtNewNote.setForeground(Color.BLACK);
             txtNewNote.setText("");
-        }
-        if(searchField.getText().equalsIgnoreCase("Search...")) {
-            searchField.setForeground(Color.BLACK);
-            searchField.setText("");
         }
     }
 
     @Override
     public void focusLost(FocusEvent e) {
-        // If input is empty
         if(txtNewNote.getText().equalsIgnoreCase("")) {
-            // Set placeholder text
             txtNewNote.setForeground(Color.GRAY);
             txtNewNote.setText("Write a new note here...");
-        }
-        if(searchField.getText().equalsIgnoreCase("")) {
-            searchField.setForeground(Color.GRAY);
-            searchField.setText("Search...");
         }
     }
 }

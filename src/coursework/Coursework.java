@@ -1047,9 +1047,10 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 // due date converted to week number matches selection in JComboBox
                 if((semesterWeeksList.getSelectedItem().equals("Semester 1") && cc.semesterWeek(dueDates.get(i)).contains("Week 1")) || (semesterWeeksList.getSelectedItem().equals("Semester 2") && cc.semesterWeek(dueDates.get(i)).contains("Week 2")) || (cc.semesterWeek(dueDates.get(i)).equals(semesterWeeksList.getSelectedItem()))) {
                     // Construct an output string
-                    output += courseworkNames.get(i) + " is due on " + dueDates.get(i) + "\n";
+                    output += " " + courseworkNames.get(i) + " is due on " + cc.semesterWeek(dueDates.get(i)) + ".";
                 }
             }
+            if(output.equals("")) output = "No coursework due in " + semesterWeeksList.getSelectedItem();
             // Set the output to be displayed under "display all notes"
             courseDueText.setText(output);
         }

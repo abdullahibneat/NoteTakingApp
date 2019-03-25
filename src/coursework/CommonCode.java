@@ -198,6 +198,7 @@ public class CommonCode {
         try {
             String format = "dd/MM/yyyy";
             SimpleDateFormat df = new SimpleDateFormat(format);
+            df.setLenient(false);
             Date date = df.parse(d);
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);

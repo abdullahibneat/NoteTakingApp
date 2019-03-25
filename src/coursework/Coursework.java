@@ -838,6 +838,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             else {
                 // Clear fields
                 courseworkNameInput.setText("");
+                courseworkDeadline.setText("");
+                courseworkAlert.setText("");
+                alertOption.setSelected(false);
                 courseworkOverviewInput.setText("");
                 courseworkRequirementsInput.setText("");
                 // Show dialog
@@ -864,7 +867,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 JOptionPane.showMessageDialog(this, "Overview cannot be empty");
             }
             else if(cc.semesterWeek(deadline).equals("Incorrect date format") || cc.semesterWeek(alert).equals("Incorrect date format")) {
-                JOptionPane.showMessageDialog(this, "Incorrect date format. Ensure the format is: dd/MM/yyyy");
+                JOptionPane.showMessageDialog(this, "Incorrect date format, or date is invalid.\nEnsure the format is: DD/MM/YYYY");
             }
             else {
                 ArrayList<String> requirements = new ArrayList<>();

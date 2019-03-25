@@ -517,6 +517,14 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         showAlert = new ArrayList<>();
         
         for(CourseworkItem c: allCoursework.getAll()) {
+            // Add dates to ArrayList to later determine if to display alert
+            courseworkNames.add(c.getCourseworkName());
+            alerts.add(c.getAlertDate());
+            dueDates.add(c.getDeadlineDate());
+            showAlert.add(c.getDisplayAlert());
+            sideBarPnl.add(new JLabel("Alert on: " + c.getAlertDate()));
+            sideBarPnl.add(new JLabel("Due on: " + c.getDeadlineDate()));
+            
             if(crse.equals("All Courses") || c.getCourseID() == allCourses.toCourseID(crse)) {
                 // Show coursework name as a label
                 JLabel courseworkName = new JLabel(c.getCourseworkName());
@@ -532,14 +540,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
                 editBtn.setActionCommand("SelectCoursework");
                 courseworkButtonGroup.add(editBtn);
                 sideBarPnl.add(editBtn);
-                
-                // Add dates to ArrayList
-                courseworkNames.add(c.getCourseworkName());
-                alerts.add(c.getAlertDate());
-                dueDates.add(c.getDeadlineDate());
-                showAlert.add(c.getDisplayAlert());
-                sideBarPnl.add(new JLabel("Alert on: " + c.getAlertDate()));
-                sideBarPnl.add(new JLabel("Due on: " + c.getDeadlineDate()));
                 
                 // If any requirements are found
                 if(c.getCourseworkRequirements().size() > 0) {
@@ -715,7 +715,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     /**
      * Dialog to edit a note
      */
-    private JDialog editNoteDialog() {
+    private void editNoteDialog() {
         // Dialog minimum size
         editNoteDialog.setMinimumSize(new Dimension(500, 300));
         JPanel editNotePnl = new JPanel(new BorderLayout());
@@ -725,13 +725,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         editNoteTxt.setFont(fnt);
         editNoteTxt.setLineWrap(true);
         editNoteTxt.setWrapStyleWord(true);
-        // Retrieve note's content
-        for(Note n: allNotes.getAllNotes()) {
-            if(n.getNoteID() == selectedNote) {
-                editNoteTxt.setText(n.getNote());
-                break;
-            }
-        }
+        
         JScrollPane edtiNoteTxtScroll = new JScrollPane(editNoteTxt, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         cen.add(edtiNoteTxtScroll);
         
@@ -747,7 +741,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         editNoteDialog.add(editNotePnl);
         // Dialog hidden at startup
         editNoteDialog.setVisible(false);
-        return editNoteDialog;
     }
     
     private JDialog showStatistics() {
@@ -938,6 +931,13 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             }
         }
         if("EditSelectedNote".equals(e.getActionCommand())) {
+            // Retrieve note's content
+            for(Note n: allNotes.getAllNotes()) {
+                if(n.getNoteID() == selectedNote) {
+                    editNoteTxt.setText(n.getNote());
+                    break;
+                }
+            }
             editNoteDialog.setVisible(true);
         }
         if("EditNote".equals(e.getActionCommand())) {

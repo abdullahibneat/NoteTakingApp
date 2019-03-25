@@ -73,6 +73,9 @@ public class AllCoursework extends CommonCode {
      * 
      * @param courseID Course ID
      * @param name Course name
+     * @param deadline Deadline date
+     * @param alert Alert date
+     * @param showAlert Is alert to be displayed?
      * @param overview Course description
      * @param requirements List of requirements
      * @param fulfilled Requirements fulfilled values
@@ -104,7 +107,7 @@ public class AllCoursework extends CommonCode {
                 fulfilledString += b + "%&";
             }
             if(fulfilledString.equals("")) fulfilledString += "%&";
-            String tmp = c.getCourseworkID() + "\t" + c.getCourseworkName() + "\t" + c.getCourseID() + "\t" + c.getCourseworkOverview() + "\t" + requirementsString + "\t" + fulfilledString;
+            String tmp = c.getCourseworkID() + "\t" + c.getCourseworkName() + "\t" + c.getCourseID() + "\t" + c.getDeadlineDate() + "\t" + c.getAlertDate() + "\t" + c.getDisplayAlert() + "\t" + c.getCourseworkOverview() + "\t" + requirementsString + "\t" + fulfilledString;
             writeCoursework.add(tmp);
         }
         try {

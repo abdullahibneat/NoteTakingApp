@@ -1080,17 +1080,22 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private void search(String keyword) {
         // Find number of occurrences
         int occurrences = allNotes.wordOccurrence(keyword);
+        // Output to be displayed
+        String output;
         // Get ArrayList of notes containing keyword
         ArrayList<String> notes = allNotes.searchNoteByKeyword(keyword);
         // If the keyword was found
         if(occurrences > 0) {
             // Construct the output string
-            String output = "Found " + occurrences + " occurrences of " + keyword + "\n";
+            output = "Found " + occurrences + " occurrences of " + keyword + ":";
             for(String s: notes) {
                 // Add each note to the output
                 output += "\n" + s;
             }
+        } else {
+            output = keyword + " not found";
         }
+        JOptionPane.showMessageDialog(this, output);
     }
 
     @Override

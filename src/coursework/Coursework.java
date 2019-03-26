@@ -332,6 +332,9 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         searchField.setMaximumSize(new Dimension(5000, 30));
         searchField.setFont(fnt);
         searchField.addKeyListener(this);
+        searchField.addFocusListener(this);
+        searchField.setForeground(Color.GRAY);
+        searchField.setText("Search...");
         toolBar.add(searchField);
         toolBar.addSeparator();
         toolBar.add(cc.makeNavigationButton("Search", "SearchField", "Search for this text", "Search"));
@@ -1132,17 +1135,29 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
 
     @Override
     public void focusGained(FocusEvent e) {
-        if(txtNewNote.getText().equalsIgnoreCase("Write a new note here...")) {
+        // If user presses on new note text area, remove placeholder
+        if(e.getSource().equals(txtNewNote) && txtNewNote.getText().equalsIgnoreCase("Write a new note here...")) {
             txtNewNote.setForeground(Color.BLACK);
             txtNewNote.setText("");
+        }
+        // If user presses on search field, remove placeholder
+        if(e.getSource().equals(searchField) && searchField.getText().equalsIgnoreCase("Search...")) {
+            searchField.setForeground(Color.BLACK);
+            searchField.setText("");
         }
     }
 
     @Override
     public void focusLost(FocusEvent e) {
-        if(txtNewNote.getText().equalsIgnoreCase("")) {
+        // If new note text area is empty, display placeholder
+        if(e.getSource().equals(txtNewNote) && txtNewNote.getText().equalsIgnoreCase("")) {
             txtNewNote.setForeground(Color.GRAY);
             txtNewNote.setText("Write a new note here...");
+        }
+        // If search field is empty, display placeholder
+        if(e.getSource().equals(searchField) && searchField.getText().equalsIgnoreCase("")) {
+            searchField.setForeground(Color.GRAY);
+            searchField.setText("Search...");
         }
     }
 }

@@ -581,6 +581,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             }
         }
         
+        // If coursework not found
+        if(sideBarPnl.getComponents().length == 0) {
+            sideBarPnl.add(new JLabel("No coursework"));
+        }
+        
         // Update the interface to display changes
         sideBarPnl.revalidate();
         sideBarPnl.repaint();
@@ -1039,8 +1044,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             allCoursework.setRequirementsFulfilled(courseworkID, fulfilled);
         }
         if("DeleteCoursework".equals(e.getActionCommand())) {
-            allCoursework.deleteCoursework(selectedCoursework);
-            addAllCoursework();
+            int confirmDialog = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this coursework?");
+            if(confirmDialog == JOptionPane.YES_OPTION) {
+                allCoursework.deleteCoursework(selectedCoursework);
+                addAllCoursework();
+            }
         }
         if("TermDate".equals(e.getActionCommand())) {
             String output = "";

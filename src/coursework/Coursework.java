@@ -1082,24 +1082,29 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      * Method to perform a search using the search bar
      */
     private void search(String keyword) {
-        // Find number of occurrences
-        int occurrences = allNotes.wordOccurrence(keyword);
-        // Output to be displayed
-        String output;
-        // Get ArrayList of notes containing keyword
-        ArrayList<String> notes = allNotes.searchNoteByKeyword(keyword);
-        // If the keyword was found
-        if(occurrences > 0) {
-            // Construct the output string
-            output = "Found " + occurrences + " occurrences of " + keyword + ":";
-            for(String s: notes) {
-                // Add each note to the output
-                output += "\n" + s;
+        // If keyword is not empty
+        if(keyword.length() > 0) {
+            // Find number of occurrences
+            int occurrences = allNotes.wordOccurrence(keyword);
+            // Output to be displayed
+            String output;
+            // Get ArrayList of notes containing keyword
+            ArrayList<String> notes = allNotes.searchNoteByKeyword(keyword);
+            // If the keyword was found
+            if(occurrences > 0) {
+                // Construct the output string
+                output = "Found " + occurrences + " occurrences of " + keyword + ":";
+                for(String s: notes) {
+                    // Add each note to the output
+                    output += "\n" + s;
+                }
+            } else {
+                output = keyword + " not found";
             }
+            JOptionPane.showMessageDialog(this, output);
         } else {
-            output = keyword + " not found";
+            JOptionPane.showMessageDialog(this, "Enter a keyword to search!");
         }
-        JOptionPane.showMessageDialog(this, output);
     }
 
     @Override

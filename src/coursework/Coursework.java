@@ -525,10 +525,11 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             alerts.add(c.getAlertDate());
             dueDates.add(c.getDeadlineDate());
             showAlert.add(c.getDisplayAlert());
-            sideBarPnl.add(new JLabel("Alert on: " + c.getAlertDate()));
-            sideBarPnl.add(new JLabel("Due on: " + c.getDeadlineDate()));
             
             if(crse.equals("All Courses") || c.getCourseID() == allCourses.toCourseID(crse)) {
+                // Show alert and due dates
+                sideBarPnl.add(new JLabel("Alert on: " + c.getAlertDate()));
+                sideBarPnl.add(new JLabel("Due on: " + c.getDeadlineDate()));
                 // Show coursework name as a label
                 JLabel courseworkName = new JLabel(c.getCourseworkName());
                 courseworkName.setFont(fnt);

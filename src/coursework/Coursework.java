@@ -1132,7 +1132,6 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
 
     @Override
     public void keyTyped(KeyEvent e) {
-        System.out.println("keyTyped  not coded yet.");
     }
 
     @Override

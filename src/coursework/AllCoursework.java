@@ -162,14 +162,12 @@ public class AllCoursework extends CommonCode {
                 c.setDisplayAlert(showAlert);
                 c.setCourseworkOverview(crswrkOverview);
                 c.setCourseworkRequirements(requirements);
-                // If different requirements, create a new ArrayList for fulfilled status, all set to false
-                if(!(c.getCourseworkRequirements().equals(requirements))){
-                    ArrayList<Boolean> fulfilled = new ArrayList<>();
-                    for (String requirement : requirements) {
-                        fulfilled.add(false);
-                    }
-                    c.setRequirementsFulfilled(fulfilled);
+                // Create a new ArrayList for fulfilled status, all set to false
+                ArrayList<Boolean> fulfilled = new ArrayList<>();
+                for (String requirement : requirements) {
+                    fulfilled.add(false);
                 }
+                c.setRequirementsFulfilled(fulfilled);
                 // Write to disk
                 writeAllCoursework();
                 return;

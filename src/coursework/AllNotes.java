@@ -179,7 +179,7 @@ public class AllNotes extends CommonCode {
      * @return Number of occurrences
      */
     public Integer wordOccurrence(String s) {
-        return wordOccurrence(s, 0, 0);
+        return wordOccurrence(s.toLowerCase(), 0, 0);
     }
     
     /**
@@ -197,7 +197,7 @@ public class AllNotes extends CommonCode {
         // Split the string when search word is found.
         // -1 because, for example, in string "ABCBD", splitting at "B" produces: "A", "C", "D", 1 more than the actual occurrences.
         // Sometimes it returns a negative number, abs takes its absolute value.
-        count += Math.abs(allNotes.get(i).getNote().split(s).length -1);
+        count += (allNotes.get(i).getNote().toLowerCase()+" ").split(s).length -1;
         return wordOccurrence(s, count, i+1);
     }
     

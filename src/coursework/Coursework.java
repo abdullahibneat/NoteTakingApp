@@ -13,6 +13,7 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -482,6 +483,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
      */
     private void addAllNotes() {
         pnlDisplayNotes.removeAll();
+        selectedNote = -1;
         notesRadioGroup = new ButtonGroup();
         JRadioButton radioButton;
         for (Note n : allNotes.getAllNotes()) {
@@ -509,6 +511,7 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
     private void addAllCoursework() {
         // Empty the sidebar and ArrayList of JCheckBox buttons
         sideBarPnl.removeAll();
+        selectedCoursework = -1;
         allCheckBoxes = new ArrayList<>();
         courseworkButtonGroup = new ButtonGroup();
         
@@ -940,14 +943,20 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
             }
         }
         if("EditSelectedNote".equals(e.getActionCommand())) {
-            // Retrieve note's content
-            for(Note n: allNotes.getAllNotes()) {
-                if(n.getNoteID() == selectedNote) {
-                    editNoteTxt.setText(n.getNote());
-                    break;
+            // If a note is actually selected
+            if(selectedNote > -1) {
+                // Retrieve note's content
+                for(Note n: allNotes.getAllNotes()) {
+                    if(n.getNoteID() == selectedNote) {
+                        editNoteTxt.setText(n.getNote());
+                        break;
+                    }
                 }
+                editNoteDialog.setVisible(true);
+            } else {
+                // No note is selected
+                JOptionPane.showMessageDialog(this, "No note selected");
             }
-            editNoteDialog.setVisible(true);
         }
         if("EditNote".equals(e.getActionCommand())) {
             if(editNoteTxt.getText().equals("")) {
@@ -1006,27 +1015,33 @@ public class Coursework extends JFrame implements ActionListener, KeyListener, F
         }
         // Editing coursework items
         if("EditSelectedCoursework".equals(e.getActionCommand())) {
-            for(CourseworkItem c: allCoursework.getAll()) {
-                // Find the CourseworkItem that matches the ID of the selected coursework
-                if(c.getCourseworkID() == selectedCoursework) {
-                    // Fill in all the input values
-                    courseworkNameInput.setText(c.getCourseworkName());
-                    courseworkDeadline.setText(c.getDeadlineDate());
-                    courseworkAlert.setText(c.getAlertDate());
-                    alertOption.setSelected(c.getDisplayAlert());
-                    courseworkOverviewInput.setText(c.getCourseworkOverview());
-                    String requirements = "";
-                    for(String s: c.getCourseworkRequirements()) {
-                        requirements += s + "\n";
+            // If a coursework is selected
+            if(selectedCoursework > -1) {
+                for(CourseworkItem c: allCoursework.getAll()) {
+                    // Find the CourseworkItem that matches the ID of the selected coursework
+                    if(c.getCourseworkID() == selectedCoursework) {
+                        // Fill in all the input values
+                        courseworkNameInput.setText(c.getCourseworkName());
+                        courseworkDeadline.setText(c.getDeadlineDate());
+                        courseworkAlert.setText(c.getAlertDate());
+                        alertOption.setSelected(c.getDisplayAlert());
+                        courseworkOverviewInput.setText(c.getCourseworkOverview());
+                        String requirements = "";
+                        for(String s: c.getCourseworkRequirements()) {
+                            requirements += s + "\n";
+                        }
+                        courseworkRequirementsInput.setText(requirements);
+                        // Set this to true so we can re-use the "AddCourseworkItem" action command
+                        editCoursework = true;
+                        // Show dialog
+                        courseworkInputDialog.setVisible(true);
+                        // Terminate loop
+                        break;
                     }
-                    courseworkRequirementsInput.setText(requirements);
-                    // Set this to true so we can re-use the "AddCourseworkItem" action command
-                    editCoursework = true;
-                    // Show dialog
-                    courseworkInputDialog.setVisible(true);
-                    // Terminate loop
-                    break;
                 }
+            } else {
+                // No coursework selected
+                JOptionPane.showMessageDialog(this, "No coursework selected");
             }
         }
         // If change in requirements JCheckBox

@@ -195,8 +195,8 @@ public class AllNotes extends CommonCode {
             return count;
         }
         // Split the string when search word is found.
+        // Add space at the end of the note so that if keywork is at the end it still gets counted.
         // -1 because, for example, in string "ABCBD", splitting at "B" produces: "A", "C", "D", 1 more than the actual occurrences.
-        // Sometimes it returns a negative number, abs takes its absolute value.
         count += (allNotes.get(i).getNote().toLowerCase()+" ").split(s).length -1;
         return wordOccurrence(s, count, i+1);
     }
